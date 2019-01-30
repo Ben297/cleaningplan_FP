@@ -3,11 +3,25 @@
   "version": "1.0.0",
   "description": "App with backend skeleton for PM102 and MI133 classes.",
   "scripts": {
-    "start": "npx nodemon --exec npx babel-node -- ./src/backend/index.js",
+    "start": "npx nodemon --watch ./src/app -e elm --exec npx babel-node -- ./src/backend/index.js",
     "app": "./scripts/start-app.sh",
     "backend": "./scripts/start-backend.sh",
     "deploy": "export PROJECT_NAME=`cat project_name` && cd dist && gcloud app deploy --project $PROJECT_NAME",
     "test": "npx jest --coverage"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      ".git",
+      "node_modules/**/node_modules"
+    ],
+    "verbose": true,
+    "events": {
+      "restart": "elm make ./src/app/Main.elm --output ./public/elm.js"
+    },
+    "watch": [
+      "./src/",
+      "./public"
+    ]
   },
   "author": "Michael Jonathan Lee",
   "dependencies": {
@@ -37,6 +51,7 @@
     "html-webpack-plugin": "^3.1.0",
     "jest": "^23.6.0",
     "jest-extended": "^0.11.0",
+    "koa-livereload": "^0.2.0",
     "node-sass": "^4.8.3",
     "nodemon": "^1.18.4",
     "sass-loader": "^7.1.0",
