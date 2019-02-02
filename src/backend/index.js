@@ -45,15 +45,20 @@ app.use(render);
 app.use(koaBody());
 
 //defining the endpoints
+router.get('/people', async function (ctx) {
+     // await ctx.body= 'Hello';
+});
 router.get('/index', async function (ctx) {
-        await ctx.render('index');
+       // await ctx.render('index');
+
     });
-router.get('/', async function (ctx) {
-        await ctx.render('list');
-    });
-router.get('/post/new', async function add(ctx) {
-        await ctx.render('new');
-    });
+//example for retriving all tasks via api
+router.get('/alltasks', async function (ctx) {
+    const tasks = await Task.find({displayName: 'Bennet'});
+    ctx.body = tasks;
+
+});
+
 router.get('/post/:id', async function show(ctx) {
         const id = ctx.params.id;
         const post = posts[id];
@@ -71,5 +76,5 @@ router.post('/post', async function create(ctx) {
 app.use(router.routes());
 
 // listen
-app.listen(3000);
-console.log("listening to port 3000");
+app.listen(4000);
+console.log("listening to port 4000");
