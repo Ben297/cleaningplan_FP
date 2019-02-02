@@ -27,6 +27,16 @@ let TestPerson = new Person({name: "Bennet",blameCounter: 50});
 TestPerson.save();
 console.log(TestPerson);
 
+//update Entry
+let newtask = Task.findOneAndUpdate({displayName: 'Bennet'},{description:'FLur saugen'});
+newtask.exec(function (err, user){});
+
+// find records
+Task.find({displayName: 'Bennet'},function (err, tasks) {
+    if (err) return handleError(err);
+    // 'athletes' contains the list of athletes that match the criteria.
+});
+
 // middleware
 app.use(livereload());
 app.use(logger());
