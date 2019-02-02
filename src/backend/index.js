@@ -11,6 +11,11 @@ const livereload = require('koa-livereload');
 const router = new Router();
 const app = module.exports = new Koa();
 db(app);
+
+//models
+import Task  from  '.models/task.js'
+import Person from '.models/person.js'
+
 // "database" from example
 const posts = [];
 
