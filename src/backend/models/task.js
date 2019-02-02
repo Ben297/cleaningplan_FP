@@ -6,11 +6,11 @@ let task = new Schema({
     displayName       : String,
     description : String,
     currentlyResponsible  : String,
-    dueDate: [String],
-    lastDone: String,
-    lastDoneB: String,
-    creationDate: String,
-    isDeleted: String,
+    dueDate: Date, //manual
+    lastDone: Date,//manual
+    lastDoneBy: String,
+    creationDate:{ type: Date, default: Date.now },
+    isDeleted: Boolean,
 });
 
 module.exports = mongoose.model('Task', task);

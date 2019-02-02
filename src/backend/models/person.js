@@ -4,7 +4,7 @@ let Schema = mongoose.Schema;
 
 let person = new Schema({
     name       : String,
-    blameCounter : String,
+    blameCounter : Number,
 });
 
 module.exports = mongoose.model('Person', person);

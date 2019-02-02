@@ -13,11 +13,19 @@ const app = module.exports = new Koa();
 db(app);
 
 //models
-import Task  from  '.models/task.js'
-import Person from '.models/person.js'
+import Task  from  './models/task.js'
+import Person from './models/person.js'
 
 // "database" from example
 const posts = [];
+
+//example db calls
+let TestTask = new Task({displayName : 'Bennet', description: 'Küche putzen',dueDate: new Date()});
+    TestTask.save();
+console.log(TestTask);
+let TestPerson = new Person({name: "Bennet",blameCounter: 50});
+TestPerson.save();
+console.log(TestPerson);
 
 // middleware
 app.use(livereload());
