@@ -1,5 +1,5 @@
 import Router from 'koa-router'
-
+import db from './database/db'
 const render    = require('./render');
 const logger    = require('koa-logger');
 const koaBody   = require('koa-body');
@@ -7,9 +7,10 @@ const serve     = require('koa-static');
 const Koa       = require('koa');
 const livereload = require('koa-livereload');
 
-const router = new Router()
-const app = module.exports = new Koa();
 
+const router = new Router();
+const app = module.exports = new Koa();
+db(app);
 // "database" from example
 const posts = [];
 

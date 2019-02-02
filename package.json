@@ -29,11 +29,12 @@
     "koa-body": "^4.0.6",
     "koa-logger": "^3.2.0",
     "koa-router": "^7.4.0",
+    "koa-send": "latest",
     "koa-static": "^5.0.0",
     "koa-views": "^6.1.5",
     "lodash": "^4.17.10",
-    "swig": "^1.4.2",
-    "koa-send": "latest"
+    "mongoose": "^5.4.9",
+    "swig": "^1.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
