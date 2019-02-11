@@ -55,8 +55,7 @@ router.get('/index', async function (ctx) {
 //example for retriving all tasks via api
 router.get('/alltasks', async function (ctx) {
     const tasks = await Task.find({displayName: 'Bennet'});
-    ctx.body = tasks;
-
+    ctx.body = tasks + "Hallo?";
 });
 
 router.get('/post/:id', async function show(ctx) {

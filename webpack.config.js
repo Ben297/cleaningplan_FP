@@ -13,7 +13,7 @@ module.exports = (env, argv) => {
         'verbose=true&warn=false&debug=true'
 
     return {
-        entry: './src/app/index.js',
+        entry: './src/app/server.js',
         output: {
             path: OUTPUT_FOLDER,
             filename: 'bundle.js',
