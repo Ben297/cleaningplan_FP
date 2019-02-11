@@ -28,13 +28,12 @@ TestPerson.save();
 console.log(TestPerson);
 
 //update Entry
-let newtask = Task.findOneAndUpdate({displayName: 'Bennet'},{description:'FLur saugen'});
-newtask.exec(function (err, user){});
+let newTask = Task.findOneAndUpdate({displayName: 'Bennet'},{description:'FLur saugen'});
+newTask.exec(function (err, user){});
 
 // find records
 Task.find({displayName: 'Bennet'},function (err, tasks) {
     if (err) return handleError(err);
-    // 'athletes' contains the list of athletes that match the criteria.
 });
 
 // middleware
@@ -48,14 +47,16 @@ app.use(koaBody());
 router.get('/people', async function (ctx) {
      // await ctx.body= 'Hello';
 });
+
 router.get('/index', async function (ctx) {
        // await ctx.render('index');
 
-    });
+});
+
 //example for retriving all tasks via api
 router.get('/alltasks', async function (ctx) {
     const tasks = await Task.find({displayName: 'Bennet'});
-    ctx.body = tasks + "Hallo?";
+    ctx.body = tasks;
 });
 
 router.get('/post/:id', async function show(ctx) {
@@ -64,6 +65,7 @@ router.get('/post/:id', async function show(ctx) {
         if (!post) ctx.throw(404, 'invalid post id');
         await ctx.render('show', { post: post });
     });
+
 router.post('/post', async function create(ctx) {
         const post = ctx.request.body;
         const id = posts.push(post) - 1;
