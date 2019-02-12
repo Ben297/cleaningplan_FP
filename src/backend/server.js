@@ -22,10 +22,10 @@ const posts = [];
 //example db calls
 let TestTask = new Task({displayName : 'Bennet', description: 'Küche putzen',dueDate: new Date()});
     TestTask.save();
-console.log(TestTask);
+//console.log(TestTask);
 let TestPerson = new Person({name: "Bennet",blameCounter: 50});
 TestPerson.save();
-console.log(TestPerson);
+//console.log(TestPerson);
 
 //update Entry
 let newTask = Task.findOneAndUpdate({displayName: 'Bennet'},{description:'FLur saugen'});
