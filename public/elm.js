@@ -5904,6 +5904,26 @@ var author$project$Update$update = F2(
 					elm$core$Platform$Cmd$none);
 		}
 	});
+var justinmimbs$time_extra$Time$Extra$posixToParts = F2(
+	function (zone, posix) {
+		return {
+			day: A2(elm$time$Time$toDay, zone, posix),
+			hour: A2(elm$time$Time$toHour, zone, posix),
+			millisecond: A2(elm$time$Time$toMillis, zone, posix),
+			minute: A2(elm$time$Time$toMinute, zone, posix),
+			month: A2(elm$time$Time$toMonth, zone, posix),
+			second: A2(elm$time$Time$toSecond, zone, posix),
+			year: A2(elm$time$Time$toYear, zone, posix)
+		};
+	});
+var author$project$DayTasksComponent$getBeginningOfDay = F2(
+	function (timeZone, date) {
+		var asParts = A2(justinmimbs$time_extra$Time$Extra$posixToParts, timeZone, date);
+		var newDate = _Utils_update(
+			asParts,
+			{hour: 0, minute: 0});
+		return A2(justinmimbs$time_extra$Time$Extra$partsToPosix, timeZone, newDate);
+	});
 var author$project$Formatters$monthToInt = function (month) {
 	switch (month.$) {
 		case 'Jan':
@@ -7252,8 +7272,8 @@ var justinmimbs$time_extra$Time$Extra$diff = F4(
 	});
 var author$project$DayTasksComponent$taskIsStillValid = F3(
 	function (timeZone, currentTime, task) {
-		var diffBeforeNow = A4(justinmimbs$time_extra$Time$Extra$diff, justinmimbs$time_extra$Time$Extra$Minute, timeZone, task.dueDate, currentTime);
-		return diffBeforeNow < 0;
+		var diffBeforeNow = A4(justinmimbs$time_extra$Time$Extra$diff, justinmimbs$time_extra$Time$Extra$Minute, timeZone, currentTime, task.dueDate);
+		return diffBeforeNow >= 0;
 	});
 var elm$core$List$filter = F2(
 	function (isGood, list) {
@@ -7403,18 +7423,6 @@ var justinmimbs$time_extra$Time$Extra$add = F4(
 			}
 		}
 	});
-var justinmimbs$time_extra$Time$Extra$posixToParts = F2(
-	function (zone, posix) {
-		return {
-			day: A2(elm$time$Time$toDay, zone, posix),
-			hour: A2(elm$time$Time$toHour, zone, posix),
-			millisecond: A2(elm$time$Time$toMillis, zone, posix),
-			minute: A2(elm$time$Time$toMinute, zone, posix),
-			month: A2(elm$time$Time$toMonth, zone, posix),
-			second: A2(elm$time$Time$toSecond, zone, posix),
-			year: A2(elm$time$Time$toYear, zone, posix)
-		};
-	});
 var author$project$DayTasksComponent$dayTasks = function (model) {
 	var timeZone = model.timeZone;
 	var time = model.time;
@@ -7499,7 +7507,10 @@ var author$project$DayTasksComponent$dayTasks = function (model) {
 						author$project$DayTasksComponent$getTaskCardFromTasks(timeZone),
 						A2(
 							elm$core$List$filter,
-							A2(author$project$DayTasksComponent$taskIsStillValid, timeZone, mondayTime),
+							A2(
+								author$project$DayTasksComponent$taskIsStillValid,
+								timeZone,
+								A2(author$project$DayTasksComponent$getBeginningOfDay, timeZone, mondayTime)),
 							tasks)))),
 				A2(
 				rundis$elm_bootstrap$Bootstrap$Grid$col,
@@ -7527,7 +7538,10 @@ var author$project$DayTasksComponent$dayTasks = function (model) {
 						author$project$DayTasksComponent$getTaskCardFromTasks(timeZone),
 						A2(
 							elm$core$List$filter,
-							A2(author$project$DayTasksComponent$taskIsStillValid, timeZone, tuesdayTime),
+							A2(
+								author$project$DayTasksComponent$taskIsStillValid,
+								timeZone,
+								A2(author$project$DayTasksComponent$getBeginningOfDay, timeZone, tuesdayTime)),
 							tasks)))),
 				A2(
 				rundis$elm_bootstrap$Bootstrap$Grid$col,
@@ -7555,7 +7569,10 @@ var author$project$DayTasksComponent$dayTasks = function (model) {
 						author$project$DayTasksComponent$getTaskCardFromTasks(timeZone),
 						A2(
 							elm$core$List$filter,
-							A2(author$project$DayTasksComponent$taskIsStillValid, timeZone, wednesdayTime),
+							A2(
+								author$project$DayTasksComponent$taskIsStillValid,
+								timeZone,
+								A2(author$project$DayTasksComponent$getBeginningOfDay, timeZone, wednesdayTime)),
 							tasks)))),
 				A2(
 				rundis$elm_bootstrap$Bootstrap$Grid$col,
@@ -7583,7 +7600,10 @@ var author$project$DayTasksComponent$dayTasks = function (model) {
 						author$project$DayTasksComponent$getTaskCardFromTasks(timeZone),
 						A2(
 							elm$core$List$filter,
-							A2(author$project$DayTasksComponent$taskIsStillValid, timeZone, thursdayTime),
+							A2(
+								author$project$DayTasksComponent$taskIsStillValid,
+								timeZone,
+								A2(author$project$DayTasksComponent$getBeginningOfDay, timeZone, thursdayTime)),
 							tasks)))),
 				A2(
 				rundis$elm_bootstrap$Bootstrap$Grid$col,
@@ -7611,7 +7631,10 @@ var author$project$DayTasksComponent$dayTasks = function (model) {
 						author$project$DayTasksComponent$getTaskCardFromTasks(timeZone),
 						A2(
 							elm$core$List$filter,
-							A2(author$project$DayTasksComponent$taskIsStillValid, timeZone, fridayTime),
+							A2(
+								author$project$DayTasksComponent$taskIsStillValid,
+								timeZone,
+								A2(author$project$DayTasksComponent$getBeginningOfDay, timeZone, fridayTime)),
 							tasks)))),
 				A2(
 				rundis$elm_bootstrap$Bootstrap$Grid$col,
@@ -7639,7 +7662,10 @@ var author$project$DayTasksComponent$dayTasks = function (model) {
 						author$project$DayTasksComponent$getTaskCardFromTasks(timeZone),
 						A2(
 							elm$core$List$filter,
-							A2(author$project$DayTasksComponent$taskIsStillValid, timeZone, saturdayTime),
+							A2(
+								author$project$DayTasksComponent$taskIsStillValid,
+								timeZone,
+								A2(author$project$DayTasksComponent$getBeginningOfDay, timeZone, saturdayTime)),
 							tasks)))),
 				A2(
 				rundis$elm_bootstrap$Bootstrap$Grid$col,
@@ -7667,7 +7693,10 @@ var author$project$DayTasksComponent$dayTasks = function (model) {
 						author$project$DayTasksComponent$getTaskCardFromTasks(timeZone),
 						A2(
 							elm$core$List$filter,
-							A2(author$project$DayTasksComponent$taskIsStillValid, timeZone, sundayTime),
+							A2(
+								author$project$DayTasksComponent$taskIsStillValid,
+								timeZone,
+								A2(author$project$DayTasksComponent$getBeginningOfDay, timeZone, sundayTime)),
 							tasks))))
 			]));
 };

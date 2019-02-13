@@ -1,6 +1,6 @@
 module DayTasksComponent exposing (dayTasks)
 
-import Time exposing (Posix)
+import Time exposing (Month(..), Posix)
 import Time.Extra exposing (Interval(..))
 import Html exposing (..)
 import Bootstrap.CDN as CDN
@@ -14,7 +14,6 @@ import Model exposing (Model)
 import Formatters exposing (getFormatedStringFromDate)
 
 
---  floor : Interval -> Zone -> Posix -> Posix
 dayTasks: Model -> Html Msg
 dayTasks model =
     let
@@ -42,7 +41,7 @@ dayTasks model =
                     text ("Monday: " ++ (getFormatedStringFromDate timeZone mondayTime))
                 ]
            ]
-        ] ++ (List.map (getTaskCardFromTasks timeZone) (List.filter (taskIsStillValid timeZone mondayTime) tasks)) )
+        ] ++ (List.map (getTaskCardFromTasks timeZone) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone mondayTime)) tasks)) )
         , Grid.col []
         ( [
             div []
@@ -52,7 +51,7 @@ dayTasks model =
                     text ("Tuesday: " ++ (getFormatedStringFromDate timeZone tuesdayTime))
                 ]
             ]
-        ] ++ (List.map (getTaskCardFromTasks timeZone) (List.filter (taskIsStillValid timeZone tuesdayTime) tasks)) )
+        ] ++ (List.map (getTaskCardFromTasks timeZone) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone tuesdayTime)) tasks)) )
         , Grid.col []
         ( [
             div []
@@ -62,7 +61,7 @@ dayTasks model =
                     text ("Wednesday: " ++ (getFormatedStringFromDate timeZone wednesdayTime))
                 ]
             ]
-        ] ++ (List.map (getTaskCardFromTasks timeZone) (List.filter (taskIsStillValid timeZone wednesdayTime) tasks)) )
+        ] ++ (List.map (getTaskCardFromTasks timeZone) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone wednesdayTime)) tasks)) )
         , Grid.col []
         ( [
             div []
@@ -72,7 +71,7 @@ dayTasks model =
                     text ("Thursday: " ++ (getFormatedStringFromDate timeZone thursdayTime))
                 ]
             ]
-        ] ++ (List.map (getTaskCardFromTasks timeZone) (List.filter (taskIsStillValid timeZone thursdayTime) tasks)) )
+        ] ++ (List.map (getTaskCardFromTasks timeZone) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone thursdayTime)) tasks)) )
         , Grid.col []
         ( [
             div []
@@ -82,7 +81,7 @@ dayTasks model =
                     text ("Friday: " ++ (getFormatedStringFromDate timeZone fridayTime))
                 ]
             ]
-        ] ++ (List.map (getTaskCardFromTasks timeZone) (List.filter (taskIsStillValid timeZone fridayTime) tasks)) )
+        ] ++ (List.map (getTaskCardFromTasks timeZone) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone fridayTime)) tasks)) )
         , Grid.col []
         ( [
             div []
@@ -92,7 +91,7 @@ dayTasks model =
                     text ("Saturday: " ++ (getFormatedStringFromDate timeZone saturdayTime))
                 ]
             ]
-        ] ++ (List.map (getTaskCardFromTasks timeZone) (List.filter (taskIsStillValid timeZone saturdayTime) tasks)) )
+        ] ++ (List.map (getTaskCardFromTasks timeZone) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone saturdayTime)) tasks)) )
         , Grid.col []
         ( [
             div []
@@ -102,16 +101,25 @@ dayTasks model =
                     text ("Sunday: " ++ (getFormatedStringFromDate timeZone sundayTime))
                 ]
             ]
-        ] ++ (List.map (getTaskCardFromTasks timeZone) (List.filter (taskIsStillValid timeZone sundayTime) tasks)) )
+        ] ++ (List.map (getTaskCardFromTasks timeZone) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone sundayTime)) tasks)) )
     ]
+--  12.2.2019; 23:59:0
+--  12.2.2019; 15:30:0
 
+getBeginningOfDay: Time.Zone -> Posix -> Posix
+getBeginningOfDay timeZone date =
+        let
+            asParts = Time.Extra.posixToParts timeZone date
+            newDate = {asParts | hour = 0, minute = 0}
+        in
+            Time.Extra.partsToPosix timeZone newDate
 
 taskIsStillValid: Time.Zone -> Posix -> Task -> Bool
 taskIsStillValid timeZone currentTime task =
     let
-        diffBeforeNow = Time.Extra.diff Minute timeZone task.dueDate currentTime
+        diffBeforeNow = Time.Extra.diff Minute timeZone currentTime task.dueDate
     in
-        diffBeforeNow < 0
+        diffBeforeNow >= 0
 
 
 getTaskCardFromTasks: Time.Zone -> Task -> Html Msg
