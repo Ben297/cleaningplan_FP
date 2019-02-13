@@ -11,3 +11,13 @@ update msg model =
 
         Decrement ->
             ({ model | count = model.count - 1 }, Cmd.none)
+
+        Tick newTime ->
+            ( { model | time = newTime }
+                , Cmd.none
+            )
+
+        AdjustTimeZone newTimezone ->
+            ( { model | timeZone = newTimezone }
+                , Cmd.none
+            )

@@ -5,6 +5,7 @@ import Msg exposing (..)
 import Model exposing (init, Model, initMockup)
 import View exposing (view)
 import Update exposing (update)
+import Time
 
 
 main : Program Int Model Msg
@@ -17,4 +18,4 @@ main =
         }
 
 subscriptions : Model -> Sub Msg
-subscriptions _ = Sub.none
+subscriptions _ = Time.every 1000 Tick

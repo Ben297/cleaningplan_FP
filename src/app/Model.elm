@@ -8,20 +8,23 @@ import Maybe
 --import Time exposing (Posix)
 import Time exposing (Month(..), utc, Posix)
 import Time.Extra exposing (Parts, partsToPosix)
+import Task as SystemTask
 
 type alias Model =
     {
         count : Int
         , people : List Person
         , tasks : List Task
+        , time : Posix
+        , timeZone: Time.Zone
     }
 
 
 init : Int -> (Model, Cmd Msg)
-init flags = (Model 0 [] [], Cmd.none)
+init flags = (Model 0 [] [] (Time.millisToPosix 0) Time.utc, Cmd.none)
 
 initMockup : Int -> (Model, Cmd Msg)
-initMockup flags = (Model 0 mockupPeople mockupTasks, Cmd.none)
+initMockup flags = (Model 0 mockupPeople mockupTasks (Time.millisToPosix 0) Time.utc, SystemTask.perform Msg.AdjustTimeZone Time.here)
 
 mockupPeople : List Person
 mockupPeople = [
@@ -58,13 +61,13 @@ mockupTasks =
     -- , isDeleted : Bool
 --Mockup dates for use in mockup tasks
 mockupExampleDueDate1 : Posix
-mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Feb 26 14 30 0 0)
+mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Feb 12 14 30 0 0)
 
 mockupExampleCreationDate1 : Posix
-mockupExampleCreationDate1 = partsToPosix utc (Parts 2019 Feb 12 16 17 0 0)
+mockupExampleCreationDate1 = partsToPosix utc (Parts 2019 Feb 12 10 17 0 0)
 
 mockupExampleLastDoneDate1 : Posix
-mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Sep 26 14 30 0 0)
+mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Feb 12 10 17 0 0)
 
 mockupExampleDueDate2 : Posix
 mockupExampleDueDate2 = partsToPosix utc (Parts 2019 Sep 26 14 30 0 0)
