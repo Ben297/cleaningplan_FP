@@ -1,4 +1,4 @@
-module Msg exposing (..)
+module Msg exposing (Msg(..), DisplayType(..))
 import Time
 
 type Msg
@@ -6,3 +6,11 @@ type Msg
     | Decrement
     | AdjustTimeZone Time.Zone
     | Tick Time.Posix
+    | ChangeViewTo DisplayType
+
+type DisplayType =
+    MainView
+    | NextWeekView
+    | PreviousWeekView
+    | AddPersonView
+    | AddTaskView

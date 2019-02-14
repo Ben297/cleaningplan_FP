@@ -13,14 +13,14 @@ import Msg exposing (Msg)
 import Model exposing (Model)
 import Formatters exposing (getFormatedStringFromDate)
 
-
-dayTasks: Model -> Html Msg
-dayTasks model =
+--  add : Interval -> Int -> Zone -> Posix -> Posix
+dayTasks: Model -> Int -> Html Msg
+dayTasks model weekOffset=
     let
         timeZone = model.timeZone
         time = model.time
         tasks = model.tasks
-        beginningOfWeekAtNow = Time.Extra.posixToParts timeZone (Time.Extra.floor Week timeZone time)
+        beginningOfWeekAtNow = Time.Extra.posixToParts timeZone (Time.Extra.add Week weekOffset timeZone (Time.Extra.floor Week timeZone time))
         beginningOfWeekAtNowBeginning = {beginningOfWeekAtNow | hour = 23, minute = 59}
         mondayTime      =   Time.Extra.add Day 0 timeZone (Time.Extra.partsToPosix timeZone beginningOfWeekAtNowBeginning)
         tuesdayTime     =   Time.Extra.add Day 1 timeZone (Time.Extra.partsToPosix timeZone beginningOfWeekAtNowBeginning)

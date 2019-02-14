@@ -21,3 +21,8 @@ update msg model =
             ( { model | timeZone = newTimezone }
                 , Cmd.none
             )
+
+        ChangeViewTo displayType ->
+            ( {model | view = displayType}
+                , Cmd.none
+            )
