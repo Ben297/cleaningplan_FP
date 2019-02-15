@@ -37,5 +37,4 @@ addPersonView model =
                 , button [ onClick Decrement ] [ text "-1" ]
             ]
         ]
-        , dayTasks model 0
     ]

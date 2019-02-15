@@ -4,6 +4,7 @@ import Time
 type Msg
     = Increment
     | Decrement
+    | TaskDone String
     | AdjustTimeZone Time.Zone
     | Tick Time.Posix
     | ChangeViewTo DisplayType

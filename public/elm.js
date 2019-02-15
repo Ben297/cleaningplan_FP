@@ -5704,11 +5704,11 @@ var justinmimbs$time_extra$Time$Extra$partsToPosix = F2(
 var author$project$Model$mockupExampleCreationDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 10, 17, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2018, elm$time$Time$Feb, 11, 10, 17, 0, 0));
 var author$project$Model$mockupExampleCreationDate2 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 16, 17, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 10, 16, 17, 0, 0));
 var author$project$Model$mockupExampleCreationDate3 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
@@ -5798,8 +5798,8 @@ var author$project$Model$mockupTasks = function () {
 	return _List_fromArray(
 		[
 			author$project$HouseTask$Task('id1')('clean the floor')(firstPerson)('just clean the damn floor!')(author$project$Model$mockupExampleDueDate1)(author$project$Model$mockupExampleCreationDate1)(author$project$Model$mockupExampleLastDoneDate1)(firstPerson)(true)(false),
-			author$project$HouseTask$Task('id1')('dispose garbage')(secondPerson)('dispose all unnecessary garbage in the provided containers!')(author$project$Model$mockupExampleDueDate2)(author$project$Model$mockupExampleCreationDate2)(author$project$Model$mockupExampleLastDoneDate2)(secondPerson)(true)(false),
-			author$project$HouseTask$Task('id1')('kill roaches in the cellar')(thirdPerson)('kill all the roaches!!!')(author$project$Model$mockupExampleDueDate3)(author$project$Model$mockupExampleCreationDate3)(author$project$Model$mockupExampleLastDoneDate3)(thirdPerson)(true)(false)
+			author$project$HouseTask$Task('id2')('dispose garbage')(secondPerson)('dispose all unnecessary garbage in the provided containers!')(author$project$Model$mockupExampleDueDate2)(author$project$Model$mockupExampleCreationDate2)(author$project$Model$mockupExampleLastDoneDate2)(secondPerson)(true)(false),
+			author$project$HouseTask$Task('id3')('kill roaches in the cellar')(thirdPerson)('kill all the roaches!!!')(author$project$Model$mockupExampleDueDate3)(author$project$Model$mockupExampleCreationDate3)(author$project$Model$mockupExampleLastDoneDate3)(thirdPerson)(true)(false)
 		]);
 }();
 var author$project$Msg$AdjustTimeZone = function (a) {
@@ -5873,6 +5873,12 @@ var author$project$Model$initMockup = function (flags) {
 			author$project$Msg$MainView),
 		A2(elm$core$Task$perform, author$project$Msg$AdjustTimeZone, elm$time$Time$here));
 };
+var author$project$Update$findAndUpdateLastDone = F3(
+	function (id, time, task) {
+		return _Utils_eq(task.id, id) ? _Utils_update(
+			task,
+			{lastDone: time}) : task;
+	});
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Update$update = F2(
@@ -5904,79 +5910,25 @@ var author$project$Update$update = F2(
 						model,
 						{timeZone: newTimezone}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'ChangeViewTo':
 				var displayType = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{view: displayType}),
 					elm$core$Platform$Cmd$none);
+			default:
+				var id = msg.a;
+				var tasks = A2(
+					elm$core$List$map,
+					A2(author$project$Update$findAndUpdateLastDone, id, model.time),
+					model.tasks);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tasks: tasks}),
+					elm$core$Platform$Cmd$none);
 		}
-	});
-var justinmimbs$time_extra$Time$Extra$posixToParts = F2(
-	function (zone, posix) {
-		return {
-			day: A2(elm$time$Time$toDay, zone, posix),
-			hour: A2(elm$time$Time$toHour, zone, posix),
-			millisecond: A2(elm$time$Time$toMillis, zone, posix),
-			minute: A2(elm$time$Time$toMinute, zone, posix),
-			month: A2(elm$time$Time$toMonth, zone, posix),
-			second: A2(elm$time$Time$toSecond, zone, posix),
-			year: A2(elm$time$Time$toYear, zone, posix)
-		};
-	});
-var author$project$DayTasksComponent$getBeginningOfDay = F2(
-	function (timeZone, date) {
-		var asParts = A2(justinmimbs$time_extra$Time$Extra$posixToParts, timeZone, date);
-		var newDate = _Utils_update(
-			asParts,
-			{hour: 0, minute: 0});
-		return A2(justinmimbs$time_extra$Time$Extra$partsToPosix, timeZone, newDate);
-	});
-var author$project$Formatters$monthToInt = function (month) {
-	switch (month.$) {
-		case 'Jan':
-			return 1;
-		case 'Feb':
-			return 2;
-		case 'Mar':
-			return 3;
-		case 'Apr':
-			return 4;
-		case 'May':
-			return 5;
-		case 'Jun':
-			return 6;
-		case 'Jul':
-			return 7;
-		case 'Aug':
-			return 8;
-		case 'Sep':
-			return 9;
-		case 'Oct':
-			return 10;
-		case 'Nov':
-			return 11;
-		default:
-			return 12;
-	}
-};
-var author$project$Formatters$getFormatedStringFromDate = F2(
-	function (timeZone, date) {
-		var year = elm$core$String$fromInt(
-			A2(elm$time$Time$toYear, timeZone, date));
-		var second = elm$core$String$fromInt(
-			A2(elm$time$Time$toSecond, timeZone, date));
-		var month = elm$core$String$fromInt(
-			author$project$Formatters$monthToInt(
-				A2(elm$time$Time$toMonth, timeZone, date)));
-		var minute = elm$core$String$fromInt(
-			A2(elm$time$Time$toMinute, timeZone, date));
-		var hour = elm$core$String$fromInt(
-			A2(elm$time$Time$toHour, timeZone, date));
-		var day = elm$core$String$fromInt(
-			A2(elm$time$Time$toDay, timeZone, date));
-		return day + ('.' + (month + ('.' + (year + ('; ' + (hour + (':' + (minute + (':' + second)))))))));
 	});
 var elm$json$Json$Decode$map = _Json_map1;
 var elm$json$Json$Decode$map2 = _Json_map2;
@@ -5996,6 +5948,15 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var author$project$ListPeopleComponent$getTextFromPerson = function (person) {
+	return A2(
+		elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				elm$html$Html$text(person.name)
+			]));
+};
 var rundis$elm_bootstrap$Bootstrap$Grid$Column = function (a) {
 	return {$: 'Column', a: a};
 };
@@ -6003,6 +5964,92 @@ var rundis$elm_bootstrap$Bootstrap$Grid$col = F2(
 	function (options, children) {
 		return rundis$elm_bootstrap$Bootstrap$Grid$Column(
 			{children: children, options: options});
+	});
+var author$project$ListPeopleComponent$listPeople = function (people) {
+	return A2(
+		rundis$elm_bootstrap$Bootstrap$Grid$col,
+		_List_Nil,
+		A2(elm$core$List$map, author$project$ListPeopleComponent$getTextFromPerson, people));
+};
+var author$project$ListTasksComponent$getTextFromTasks = function (task) {
+	return A2(
+		elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				elm$html$Html$text(task.displayName)
+			]));
+};
+var author$project$ListTasksComponent$listTasks = function (tasks) {
+	return A2(
+		rundis$elm_bootstrap$Bootstrap$Grid$col,
+		_List_Nil,
+		A2(elm$core$List$map, author$project$ListTasksComponent$getTextFromTasks, tasks));
+};
+var author$project$Msg$ChangeViewTo = function (a) {
+	return {$: 'ChangeViewTo', a: a};
+};
+var author$project$Msg$Decrement = {$: 'Decrement'};
+var author$project$Msg$Increment = {$: 'Increment'};
+var elm$html$Html$button = _VirtualDom_node('button');
+var elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		elm$html$Html$Events$on,
+		'click',
+		elm$json$Json$Decode$succeed(msg));
+};
+var elm$virtual_dom$VirtualDom$node = function (tag) {
+	return _VirtualDom_node(
+		_VirtualDom_noScript(tag));
+};
+var elm$html$Html$node = elm$virtual_dom$VirtualDom$node;
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
+var rundis$elm_bootstrap$Bootstrap$CDN$stylesheet = A3(
+	elm$html$Html$node,
+	'link',
+	_List_fromArray(
+		[
+			elm$html$Html$Attributes$rel('stylesheet'),
+			elm$html$Html$Attributes$href('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')
+		]),
+	_List_Nil);
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
+var rundis$elm_bootstrap$Bootstrap$Grid$container = F2(
+	function (attributes, children) {
+		return A2(
+			elm$html$Html$div,
+			_Utils_ap(
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('container')
+					]),
+				attributes),
+			children);
 	});
 var elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
 	return _VirtualDom_keyedNode(
@@ -6296,15 +6343,6 @@ var elm$core$Maybe$map = F2(
 			return elm$core$Maybe$Nothing;
 		}
 	});
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
-var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption = function (size) {
 	switch (size.$) {
 		case 'XS':
@@ -6846,63 +6884,183 @@ var rundis$elm_bootstrap$Bootstrap$Grid$row = F2(
 			rundis$elm_bootstrap$Bootstrap$Grid$Internal$rowAttributes(options),
 			A2(elm$core$List$map, rundis$elm_bootstrap$Bootstrap$Grid$renderCol, cols));
 	});
-var author$project$DayTasksComponent$getTaskCardFromTasks = F2(
-	function (timeZone, task) {
-		return A2(
-			rundis$elm_bootstrap$Bootstrap$Grid$row,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					rundis$elm_bootstrap$Bootstrap$Grid$col,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							elm$html$Html$div,
-							_List_Nil,
-							_List_fromArray(
-								[
-									elm$html$Html$text('Task: ')
-								])),
-							A2(
-							elm$html$Html$div,
-							_List_Nil,
-							_List_fromArray(
-								[
-									elm$html$Html$text(task.displayName)
-								])),
-							A2(
-							elm$html$Html$div,
-							_List_Nil,
-							_List_fromArray(
-								[
-									elm$html$Html$text('Responsible: ')
-								])),
-							A2(
-							elm$html$Html$div,
-							_List_Nil,
-							_List_fromArray(
-								[
-									elm$html$Html$text(task.currentlyResponsible.name)
-								])),
-							A2(
-							elm$html$Html$div,
-							_List_Nil,
-							_List_fromArray(
-								[
-									elm$html$Html$text('To-Do until: ')
-								])),
-							A2(
-							elm$html$Html$div,
-							_List_Nil,
-							_List_fromArray(
-								[
-									elm$html$Html$text(
-									A2(author$project$Formatters$getFormatedStringFromDate, timeZone, task.dueDate))
-								]))
-						]))
-				]));
+var author$project$AddPersonView$addPersonView = function (model) {
+	return A2(
+		rundis$elm_bootstrap$Bootstrap$Grid$container,
+		_List_Nil,
+		_List_fromArray(
+			[
+				rundis$elm_bootstrap$Bootstrap$CDN$stylesheet,
+				A2(
+				rundis$elm_bootstrap$Bootstrap$Grid$row,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						rundis$elm_bootstrap$Bootstrap$Grid$col,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text('AddPersonView.elm'),
+								A2(
+								elm$html$Html$button,
+								_List_fromArray(
+									[
+										elm$html$Html$Events$onClick(
+										author$project$Msg$ChangeViewTo(author$project$Msg$MainView))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('return to Main')
+									]))
+							])),
+						author$project$ListPeopleComponent$listPeople(model.people),
+						author$project$ListTasksComponent$listTasks(model.tasks),
+						A2(
+						rundis$elm_bootstrap$Bootstrap$Grid$col,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text(
+								'Number of people: ' + (elm$core$String$fromInt(
+									elm$core$List$length(model.people)) + ('\nNumber of Tasks: ' + elm$core$String$fromInt(
+									elm$core$List$length(model.tasks)))))
+							])),
+						A2(
+						rundis$elm_bootstrap$Bootstrap$Grid$col,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$button,
+								_List_fromArray(
+									[
+										elm$html$Html$Events$onClick(author$project$Msg$Increment)
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('+1')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										elm$html$Html$text(
+										elm$core$String$fromInt(model.count))
+									])),
+								A2(
+								elm$html$Html$button,
+								_List_fromArray(
+									[
+										elm$html$Html$Events$onClick(author$project$Msg$Decrement)
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('-1')
+									]))
+							]))
+					]))
+			]));
+};
+var author$project$AddTaskView$addTaskView = function (model) {
+	return A2(
+		rundis$elm_bootstrap$Bootstrap$Grid$container,
+		_List_Nil,
+		_List_fromArray(
+			[
+				rundis$elm_bootstrap$Bootstrap$CDN$stylesheet,
+				A2(
+				rundis$elm_bootstrap$Bootstrap$Grid$row,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						rundis$elm_bootstrap$Bootstrap$Grid$col,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text('AddTaskView'),
+								A2(
+								elm$html$Html$button,
+								_List_fromArray(
+									[
+										elm$html$Html$Events$onClick(
+										author$project$Msg$ChangeViewTo(author$project$Msg$MainView))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('return to Main')
+									]))
+							])),
+						author$project$ListPeopleComponent$listPeople(model.people),
+						author$project$ListTasksComponent$listTasks(model.tasks),
+						A2(
+						rundis$elm_bootstrap$Bootstrap$Grid$col,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text(
+								'Number of people: ' + (elm$core$String$fromInt(
+									elm$core$List$length(model.people)) + ('\nNumber of Tasks: ' + elm$core$String$fromInt(
+									elm$core$List$length(model.tasks)))))
+							])),
+						A2(
+						rundis$elm_bootstrap$Bootstrap$Grid$col,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$button,
+								_List_fromArray(
+									[
+										elm$html$Html$Events$onClick(author$project$Msg$Increment)
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('+1')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										elm$html$Html$text(
+										elm$core$String$fromInt(model.count))
+									])),
+								A2(
+								elm$html$Html$button,
+								_List_fromArray(
+									[
+										elm$html$Html$Events$onClick(author$project$Msg$Decrement)
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('-1')
+									]))
+							]))
+					]))
+			]));
+};
+var justinmimbs$time_extra$Time$Extra$posixToParts = F2(
+	function (zone, posix) {
+		return {
+			day: A2(elm$time$Time$toDay, zone, posix),
+			hour: A2(elm$time$Time$toHour, zone, posix),
+			millisecond: A2(elm$time$Time$toMillis, zone, posix),
+			minute: A2(elm$time$Time$toMinute, zone, posix),
+			month: A2(elm$time$Time$toMonth, zone, posix),
+			second: A2(elm$time$Time$toSecond, zone, posix),
+			year: A2(elm$time$Time$toYear, zone, posix)
+		};
+	});
+var author$project$DayTasksComponent$getBeginningOfDay = F2(
+	function (timeZone, date) {
+		var asParts = A2(justinmimbs$time_extra$Time$Extra$posixToParts, timeZone, date);
+		var newDate = _Utils_update(
+			asParts,
+			{hour: 0, minute: 0});
+		return A2(justinmimbs$time_extra$Time$Extra$partsToPosix, timeZone, newDate);
 	});
 var justinmimbs$time_extra$Time$Extra$Minute = {$: 'Minute'};
 var elm$core$Basics$truncate = _Basics_truncate;
@@ -7279,23 +7437,72 @@ var justinmimbs$time_extra$Time$Extra$diff = F4(
 			}
 		}
 	});
-var author$project$DayTasksComponent$taskIsStillValid = F3(
-	function (timeZone, currentTime, task) {
-		var diffBeforeNow = A4(justinmimbs$time_extra$Time$Extra$diff, justinmimbs$time_extra$Time$Extra$Minute, timeZone, currentTime, task.dueDate);
-		return diffBeforeNow >= 0;
+var author$project$DayTasksComponent$isBefore = F3(
+	function (timeZone, time, time2) {
+		var timeDiff = A4(justinmimbs$time_extra$Time$Extra$diff, justinmimbs$time_extra$Time$Extra$Minute, timeZone, time, time2);
+		return timeDiff > 0;
 	});
-var elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
+var author$project$Msg$TaskDone = function (a) {
+	return {$: 'TaskDone', a: a};
+};
+var elm$json$Json$Encode$bool = _Json_wrap;
+var elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$bool(bool));
 	});
-var elm$html$Html$h1 = _VirtualDom_node('h1');
+var elm$html$Html$Attributes$disabled = elm$html$Html$Attributes$boolProperty('disabled');
+var author$project$DayTasksComponent$displayConditionalButton = F5(
+	function (timeZone, endOfWeek, time, weekOffset, task) {
+		return (!weekOffset) ? (A3(author$project$DayTasksComponent$isBefore, timeZone, time, task.dueDate) ? (A3(author$project$DayTasksComponent$isBefore, timeZone, time, task.lastDone) ? A2(
+			elm$html$Html$button,
+			_List_fromArray(
+				[
+					elm$html$Html$Events$onClick(
+					author$project$Msg$TaskDone(task.id))
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text('Done!')
+				])) : A2(
+			elm$html$Html$button,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$disabled(true)
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text('already Done!')
+				]))) : A2(
+			elm$html$Html$button,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$disabled(true)
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text('too late!')
+				]))) : A2(
+			elm$html$Html$button,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$disabled(true)
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text('Done!')
+				]));
+	});
+var author$project$DayTasksComponent$getEndOfDay = F2(
+	function (timeZone, date) {
+		var asParts = A2(justinmimbs$time_extra$Time$Extra$posixToParts, timeZone, date);
+		var newDate = _Utils_update(
+			asParts,
+			{hour: 23, minute: 59});
+		return A2(justinmimbs$time_extra$Time$Extra$partsToPosix, timeZone, newDate);
+	});
 var justinmimbs$date$Date$Days = {$: 'Days'};
 var justinmimbs$date$Date$Months = {$: 'Months'};
 var elm$core$Basics$min = F2(
@@ -7432,11 +7639,164 @@ var justinmimbs$time_extra$Time$Extra$add = F4(
 			}
 		}
 	});
+var author$project$DayTasksComponent$getEndOfWeek = F2(
+	function (timeZone, date) {
+		var newDate = A2(
+			author$project$DayTasksComponent$getEndOfDay,
+			timeZone,
+			A4(
+				justinmimbs$time_extra$Time$Extra$add,
+				justinmimbs$time_extra$Time$Extra$Day,
+				-1,
+				timeZone,
+				A4(justinmimbs$time_extra$Time$Extra$add, justinmimbs$time_extra$Time$Extra$Week, 1, timeZone, date)));
+		return newDate;
+	});
+var author$project$Formatters$monthToInt = function (month) {
+	switch (month.$) {
+		case 'Jan':
+			return 1;
+		case 'Feb':
+			return 2;
+		case 'Mar':
+			return 3;
+		case 'Apr':
+			return 4;
+		case 'May':
+			return 5;
+		case 'Jun':
+			return 6;
+		case 'Jul':
+			return 7;
+		case 'Aug':
+			return 8;
+		case 'Sep':
+			return 9;
+		case 'Oct':
+			return 10;
+		case 'Nov':
+			return 11;
+		default:
+			return 12;
+	}
+};
+var author$project$Formatters$getFormatedStringFromDate = F2(
+	function (timeZone, date) {
+		var year = elm$core$String$fromInt(
+			A2(elm$time$Time$toYear, timeZone, date));
+		var second = elm$core$String$fromInt(
+			A2(elm$time$Time$toSecond, timeZone, date));
+		var month = elm$core$String$fromInt(
+			author$project$Formatters$monthToInt(
+				A2(elm$time$Time$toMonth, timeZone, date)));
+		var minute = elm$core$String$fromInt(
+			A2(elm$time$Time$toMinute, timeZone, date));
+		var hour = elm$core$String$fromInt(
+			A2(elm$time$Time$toHour, timeZone, date));
+		var day = elm$core$String$fromInt(
+			A2(elm$time$Time$toDay, timeZone, date));
+		return day + ('.' + (month + ('.' + (year + ('; ' + (hour + (':' + (minute + (':' + second)))))))));
+	});
+var author$project$DayTasksComponent$getTaskCardFromTasks = F4(
+	function (timeZone, time, weekOffset, task) {
+		return A2(
+			rundis$elm_bootstrap$Bootstrap$Grid$row,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					rundis$elm_bootstrap$Bootstrap$Grid$col,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Task: ')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text(task.displayName)
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('Responsible: ')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text(task.currentlyResponsible.name)
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('To-Do until: ')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text(
+									A2(author$project$Formatters$getFormatedStringFromDate, timeZone, task.dueDate))
+								])),
+							A5(
+							author$project$DayTasksComponent$displayConditionalButton,
+							timeZone,
+							A2(author$project$DayTasksComponent$getEndOfWeek, timeZone, time),
+							time,
+							weekOffset,
+							task)
+						]))
+				]));
+	});
+var author$project$DayTasksComponent$offsetWeeksForTask = F4(
+	function (timeZone, offset, beginningOfWeek, task) {
+		var newDueDate = A4(justinmimbs$time_extra$Time$Extra$add, justinmimbs$time_extra$Time$Extra$Week, offset, timeZone, task.dueDate);
+		var endOfWeek = A2(author$project$DayTasksComponent$getEndOfWeek, timeZone, beginningOfWeek);
+		return task.isRepetitiveTask ? (A3(author$project$DayTasksComponent$isBefore, timeZone, endOfWeek, task.dueDate) ? task : _Utils_update(
+			task,
+			{dueDate: newDueDate})) : task;
+	});
+var author$project$DayTasksComponent$taskIsStillValid = F3(
+	function (timeZone, currentTime, task) {
+		var diffBeforeNow2 = A4(
+			justinmimbs$time_extra$Time$Extra$diff,
+			justinmimbs$time_extra$Time$Extra$Minute,
+			timeZone,
+			currentTime,
+			A2(author$project$DayTasksComponent$getEndOfDay, timeZone, task.creationDate));
+		var diffBeforeNow = A4(justinmimbs$time_extra$Time$Extra$diff, justinmimbs$time_extra$Time$Extra$Minute, timeZone, currentTime, task.dueDate);
+		return (diffBeforeNow >= 0) && (diffBeforeNow2 <= 0);
+	});
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var elm$html$Html$h1 = _VirtualDom_node('h1');
 var author$project$DayTasksComponent$dayTasks = F2(
 	function (model, weekOffset) {
 		var timeZone = model.timeZone;
 		var time = model.time;
-		var tasks = model.tasks;
 		var beginningOfWeekAtNow = A2(
 			justinmimbs$time_extra$Time$Extra$posixToParts,
 			timeZone,
@@ -7461,6 +7821,10 @@ var author$project$DayTasksComponent$dayTasks = F2(
 			0,
 			timeZone,
 			A2(justinmimbs$time_extra$Time$Extra$partsToPosix, timeZone, beginningOfWeekAtNowBeginning));
+		var tasks = A2(
+			elm$core$List$map,
+			A3(author$project$DayTasksComponent$offsetWeeksForTask, timeZone, weekOffset, mondayTime),
+			model.tasks);
 		var saturdayTime = A4(
 			justinmimbs$time_extra$Time$Extra$add,
 			justinmimbs$time_extra$Time$Extra$Day,
@@ -7519,7 +7883,7 @@ var author$project$DayTasksComponent$dayTasks = F2(
 							]),
 						A2(
 							elm$core$List$map,
-							author$project$DayTasksComponent$getTaskCardFromTasks(timeZone),
+							A3(author$project$DayTasksComponent$getTaskCardFromTasks, timeZone, time, weekOffset),
 							A2(
 								elm$core$List$filter,
 								A2(
@@ -7550,7 +7914,7 @@ var author$project$DayTasksComponent$dayTasks = F2(
 							]),
 						A2(
 							elm$core$List$map,
-							author$project$DayTasksComponent$getTaskCardFromTasks(timeZone),
+							A3(author$project$DayTasksComponent$getTaskCardFromTasks, timeZone, time, weekOffset),
 							A2(
 								elm$core$List$filter,
 								A2(
@@ -7581,7 +7945,7 @@ var author$project$DayTasksComponent$dayTasks = F2(
 							]),
 						A2(
 							elm$core$List$map,
-							author$project$DayTasksComponent$getTaskCardFromTasks(timeZone),
+							A3(author$project$DayTasksComponent$getTaskCardFromTasks, timeZone, time, weekOffset),
 							A2(
 								elm$core$List$filter,
 								A2(
@@ -7612,7 +7976,7 @@ var author$project$DayTasksComponent$dayTasks = F2(
 							]),
 						A2(
 							elm$core$List$map,
-							author$project$DayTasksComponent$getTaskCardFromTasks(timeZone),
+							A3(author$project$DayTasksComponent$getTaskCardFromTasks, timeZone, time, weekOffset),
 							A2(
 								elm$core$List$filter,
 								A2(
@@ -7643,7 +8007,7 @@ var author$project$DayTasksComponent$dayTasks = F2(
 							]),
 						A2(
 							elm$core$List$map,
-							author$project$DayTasksComponent$getTaskCardFromTasks(timeZone),
+							A3(author$project$DayTasksComponent$getTaskCardFromTasks, timeZone, time, weekOffset),
 							A2(
 								elm$core$List$filter,
 								A2(
@@ -7674,7 +8038,7 @@ var author$project$DayTasksComponent$dayTasks = F2(
 							]),
 						A2(
 							elm$core$List$map,
-							author$project$DayTasksComponent$getTaskCardFromTasks(timeZone),
+							A3(author$project$DayTasksComponent$getTaskCardFromTasks, timeZone, time, weekOffset),
 							A2(
 								elm$core$List$filter,
 								A2(
@@ -7705,7 +8069,7 @@ var author$project$DayTasksComponent$dayTasks = F2(
 							]),
 						A2(
 							elm$core$List$map,
-							author$project$DayTasksComponent$getTaskCardFromTasks(timeZone),
+							A3(author$project$DayTasksComponent$getTaskCardFromTasks, timeZone, time, weekOffset),
 							A2(
 								elm$core$List$filter,
 								A2(
@@ -7715,252 +8079,6 @@ var author$project$DayTasksComponent$dayTasks = F2(
 								tasks))))
 				]));
 	});
-var author$project$ListPeopleComponent$getTextFromPerson = function (person) {
-	return A2(
-		elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				elm$html$Html$text(person.name)
-			]));
-};
-var author$project$ListPeopleComponent$listPeople = function (people) {
-	return A2(
-		rundis$elm_bootstrap$Bootstrap$Grid$col,
-		_List_Nil,
-		A2(elm$core$List$map, author$project$ListPeopleComponent$getTextFromPerson, people));
-};
-var author$project$ListTasksComponent$getTextFromTasks = function (task) {
-	return A2(
-		elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				elm$html$Html$text(task.displayName)
-			]));
-};
-var author$project$ListTasksComponent$listTasks = function (tasks) {
-	return A2(
-		rundis$elm_bootstrap$Bootstrap$Grid$col,
-		_List_Nil,
-		A2(elm$core$List$map, author$project$ListTasksComponent$getTextFromTasks, tasks));
-};
-var author$project$Msg$ChangeViewTo = function (a) {
-	return {$: 'ChangeViewTo', a: a};
-};
-var author$project$Msg$Decrement = {$: 'Decrement'};
-var author$project$Msg$Increment = {$: 'Increment'};
-var elm$html$Html$button = _VirtualDom_node('button');
-var elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'click',
-		elm$json$Json$Decode$succeed(msg));
-};
-var elm$virtual_dom$VirtualDom$node = function (tag) {
-	return _VirtualDom_node(
-		_VirtualDom_noScript(tag));
-};
-var elm$html$Html$node = elm$virtual_dom$VirtualDom$node;
-var elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
-};
-var elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
-var rundis$elm_bootstrap$Bootstrap$CDN$stylesheet = A3(
-	elm$html$Html$node,
-	'link',
-	_List_fromArray(
-		[
-			elm$html$Html$Attributes$rel('stylesheet'),
-			elm$html$Html$Attributes$href('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')
-		]),
-	_List_Nil);
-var rundis$elm_bootstrap$Bootstrap$Grid$container = F2(
-	function (attributes, children) {
-		return A2(
-			elm$html$Html$div,
-			_Utils_ap(
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('container')
-					]),
-				attributes),
-			children);
-	});
-var author$project$AddPersonView$addPersonView = function (model) {
-	return A2(
-		rundis$elm_bootstrap$Bootstrap$Grid$container,
-		_List_Nil,
-		_List_fromArray(
-			[
-				rundis$elm_bootstrap$Bootstrap$CDN$stylesheet,
-				A2(
-				rundis$elm_bootstrap$Bootstrap$Grid$row,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('AddPersonView.elm'),
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(
-										author$project$Msg$ChangeViewTo(author$project$Msg$MainView))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('return to Main')
-									]))
-							])),
-						author$project$ListPeopleComponent$listPeople(model.people),
-						author$project$ListTasksComponent$listTasks(model.tasks),
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text(
-								'Number of people: ' + (elm$core$String$fromInt(
-									elm$core$List$length(model.people)) + ('\nNumber of Tasks: ' + elm$core$String$fromInt(
-									elm$core$List$length(model.tasks)))))
-							])),
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(author$project$Msg$Increment)
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('+1')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text(
-										elm$core$String$fromInt(model.count))
-									])),
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(author$project$Msg$Decrement)
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('-1')
-									]))
-							]))
-					])),
-				A2(author$project$DayTasksComponent$dayTasks, model, 0)
-			]));
-};
-var author$project$AddTaskView$addTaskView = function (model) {
-	return A2(
-		rundis$elm_bootstrap$Bootstrap$Grid$container,
-		_List_Nil,
-		_List_fromArray(
-			[
-				rundis$elm_bootstrap$Bootstrap$CDN$stylesheet,
-				A2(
-				rundis$elm_bootstrap$Bootstrap$Grid$row,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('AddTaskView'),
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(
-										author$project$Msg$ChangeViewTo(author$project$Msg$MainView))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('return to Main')
-									]))
-							])),
-						author$project$ListPeopleComponent$listPeople(model.people),
-						author$project$ListTasksComponent$listTasks(model.tasks),
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text(
-								'Number of people: ' + (elm$core$String$fromInt(
-									elm$core$List$length(model.people)) + ('\nNumber of Tasks: ' + elm$core$String$fromInt(
-									elm$core$List$length(model.tasks)))))
-							])),
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(author$project$Msg$Increment)
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('+1')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text(
-										elm$core$String$fromInt(model.count))
-									])),
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(author$project$Msg$Decrement)
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('-1')
-									]))
-							]))
-					])),
-				A2(author$project$DayTasksComponent$dayTasks, model, 0)
-			]));
-};
 var author$project$Msg$AddPersonView = {$: 'AddPersonView'};
 var author$project$Msg$AddTaskView = {$: 'AddTaskView'};
 var author$project$Msg$NextWeekView = {$: 'NextWeekView'};

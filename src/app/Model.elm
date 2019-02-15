@@ -44,8 +44,8 @@ mockupTasks =
     in
     [
         Task "id1" "clean the floor" firstPerson "just clean the damn floor!" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 firstPerson True False
-        , Task "id1" "dispose garbage" secondPerson "dispose all unnecessary garbage in the provided containers!" mockupExampleDueDate2 mockupExampleCreationDate2 mockupExampleLastDoneDate2 secondPerson True False
-        , Task "id1" "kill roaches in the cellar" thirdPerson "kill all the roaches!!!" mockupExampleDueDate3 mockupExampleCreationDate3 mockupExampleLastDoneDate3 thirdPerson True False
+        , Task "id2" "dispose garbage" secondPerson "dispose all unnecessary garbage in the provided containers!" mockupExampleDueDate2 mockupExampleCreationDate2 mockupExampleLastDoneDate2 secondPerson True False
+        , Task "id3" "kill roaches in the cellar" thirdPerson "kill all the roaches!!!" mockupExampleDueDate3 mockupExampleCreationDate3 mockupExampleLastDoneDate3 thirdPerson True False
         -- , Task id : String , displayName : String , currentlyResponsible : Person , description : String , dueDate : Posix , creationDate : Posix , lastDone : Posix , lastDoneBy : Person , isRepetitiveTask : Bool , isDeleted :Bool
     ]
 
@@ -65,7 +65,7 @@ mockupExampleDueDate1 : Posix
 mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Feb 12 14 30 0 0)
 
 mockupExampleCreationDate1 : Posix
-mockupExampleCreationDate1 = partsToPosix utc (Parts 2019 Feb 12 10 17 0 0)
+mockupExampleCreationDate1 = partsToPosix utc (Parts 2018 Feb 11 10 17 0 0)
 
 mockupExampleLastDoneDate1 : Posix
 mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Feb 12 10 17 0 0)
@@ -74,7 +74,7 @@ mockupExampleDueDate2 : Posix
 mockupExampleDueDate2 = partsToPosix utc (Parts 2019 Sep 26 14 30 0 0)
 
 mockupExampleCreationDate2 : Posix
-mockupExampleCreationDate2 = partsToPosix utc (Parts 2019 Feb 12 16 17 0 0)
+mockupExampleCreationDate2 = partsToPosix utc (Parts 2019 Feb 10 16 17 0 0)
 
 mockupExampleLastDoneDate2 : Posix
 mockupExampleLastDoneDate2 = partsToPosix utc (Parts 2019 Sep 26 14 30 0 0)
