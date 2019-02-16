@@ -13,6 +13,10 @@ type Msg
     | SubmitPerson
     | AddTaskPersonDropdown Int
     | MyDrop1Msg Dropdown.State
+    | AddTaskName String
+    | SubmitTask
+
+
 
 type DisplayType =
     MainView

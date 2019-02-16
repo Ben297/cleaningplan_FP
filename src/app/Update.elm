@@ -7,6 +7,10 @@ import Model exposing (Model)
 import Maybe exposing (..)
 import HouseTask as Task exposing (Task)
 import Person exposing (Person)
+import List.Extra exposing (find)
+import Time exposing (Posix, utc, Month(..))
+import Time.Extra exposing (Parts, partsToPosix)
+
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -65,9 +69,41 @@ update msg model =
             )
 
         AddTaskPersonDropdown id ->
-            ( model
+            let
+                maybePerson = find (\ln-> ln.id == id ) model.people
+            in
+                case maybePerson of
+                     Just person ->
+                      let
+                          newTask = model.tmpTask
+                          tmpNewTask = {newTask | currentlyResponsible = person }
+                      in
+                         ( { model | tmpTask = tmpNewTask  }
+                            , Cmd.none
+                         )
+                     Nothing ->
+                        ( model
+                          ,Cmd.none
+                        )
+        SubmitTask ->
+            let
+                newTask = model.tmpTask
+                tmpNewTask = {newTask | id = getNextIdTask model.tasks}
+                tasks = List.append model.tasks [tmpNewTask]
+            in
+            ( {model | tasks = tasks, tmpTask = (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) True False)}
                 , Cmd.none
             )
+
+        AddTaskName displayName ->
+            let
+                tmp = model.tmpTask
+                newTask = {tmp | displayName = displayName}
+            in
+                ({model | tmpTask = newTask}
+                    ,Cmd.none
+                )
+
 
 getNextIdPerson: List Person -> Int
 getNextIdPerson people =
@@ -98,3 +134,12 @@ findAndUpdateLastDone id time task =
         {task | lastDone = time}
     else
         task
+
+mockupExampleDueDate1 : Posix
+mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Feb 12 14 30 0 0)
+
+mockupExampleCreationDate1 : Posix
+mockupExampleCreationDate1 = partsToPosix utc (Parts 2018 Feb 11 10 17 0 0)
+
+mockupExampleLastDoneDate1 : Posix
+mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Feb 12 10 17 0 0)

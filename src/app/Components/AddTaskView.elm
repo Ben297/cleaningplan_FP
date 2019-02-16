@@ -10,6 +10,7 @@ import Msg exposing (Msg(..), DisplayType(..))
 import ListPeopleComponent exposing (listPeople)
 import ListTasksComponent exposing (listTasks)
 import DayTasksComponent exposing (dayTasks)
+import  AddTaskComponent exposing (addTask)
 
 
 addTaskView : Model -> Html Msg
@@ -21,7 +22,7 @@ addTaskView model =
         [
             Grid.col []
             [
-                text "AddTaskView"
+                text "AddTaskView.elm"
                 , button [ onClick (ChangeViewTo MainView) ] [ text "return to Main" ]
             ]
             , listPeople model.people
@@ -30,11 +31,7 @@ addTaskView model =
             [
                 text ( "Number of people: " ++ (String.fromInt (List.length model.people)) ++ "\nNumber of Tasks: " ++ (String.fromInt (List.length model.tasks)) )
             ]
-            , Grid.col[]
-            [
-                button [ onClick Increment ] [ text "+1" ]
-                , div [] [ text <| String.fromInt model.count ]
-                , button [ onClick Decrement ] [ text "-1" ]
-            ]
+
         ]
+        ,addTask model
     ]
