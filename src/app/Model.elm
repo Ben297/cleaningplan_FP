@@ -19,33 +19,36 @@ type alias Model =
         , time : Posix
         , timeZone : Time.Zone
         , view : DisplayType
+        , tmpPerson : Person
+        , tmpTask : Task
     }
 
 init : Int -> (Model, Cmd Msg)
-init flags = (Model 0 [] [] (Time.millisToPosix 0) Time.utc MainView, Cmd.none)
+init flags = (Model 0 [] [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) True False), Cmd.none)
 
 initMockup : Int -> (Model, Cmd Msg)
-initMockup flags = (Model 0 mockupPeople mockupTasks (Time.millisToPosix 0) Time.utc MainView, SystemTask.perform Msg.AdjustTimeZone Time.here)
+initMockup flags = (Model 0 mockupPeople mockupTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) True False), SystemTask.perform Msg.AdjustTimeZone Time.here)
 
 mockupPeople : List Person
-mockupPeople = [
-        Person "1" "Peter" 0
-        , Person "2" "Paul" 0
-        , Person "3" "Marry" 0
+mockupPeople =
+    [
+        Person 1 "Peter2" 0
+        , Person 2 "Paul" 0
+        , Person 3 "Marry" 0
     ]
 
 mockupTasks : List Task
 mockupTasks =
     let
-        defaultPerson = Person "" "Default" 0
+        defaultPerson = Person 0 "Default" 0
         firstPerson = (Maybe.withDefault defaultPerson (getAt 0 mockupPeople))
         secondPerson = (Maybe.withDefault defaultPerson (getAt 1 mockupPeople))
         thirdPerson = (Maybe.withDefault defaultPerson (getAt 2 mockupPeople))
     in
     [
-        Task "id1" "clean the floor" firstPerson "just clean the damn floor!" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 firstPerson True False
-        , Task "id2" "dispose garbage" secondPerson "dispose all unnecessary garbage in the provided containers!" mockupExampleDueDate2 mockupExampleCreationDate2 mockupExampleLastDoneDate2 secondPerson True False
-        , Task "id3" "kill roaches in the cellar" thirdPerson "kill all the roaches!!!" mockupExampleDueDate3 mockupExampleCreationDate3 mockupExampleLastDoneDate3 thirdPerson True False
+        Task 1 "clean the floor" firstPerson "just clean the damn floor!" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 firstPerson True False
+        , Task 2 "dispose garbage" secondPerson "dispose all unnecessary garbage in the provided containers!" mockupExampleDueDate2 mockupExampleCreationDate2 mockupExampleLastDoneDate2 secondPerson True False
+        , Task 3 "kill roaches in the cellar" thirdPerson "kill all the roaches!!!" mockupExampleDueDate3 mockupExampleCreationDate3 mockupExampleLastDoneDate3 thirdPerson True False
         -- , Task id : String , displayName : String , currentlyResponsible : Person , description : String , dueDate : Posix , creationDate : Posix , lastDone : Posix , lastDoneBy : Person , isRepetitiveTask : Bool , isDeleted :Bool
     ]
 

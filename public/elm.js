@@ -5349,20 +5349,6 @@ var elm$time$Time$every = F2(
 var author$project$Main$subscriptions = function (_n0) {
 	return A2(elm$time$Time$every, 1000, author$project$Msg$Tick);
 };
-var author$project$Model$Model = F6(
-	function (count, people, tasks, time, timeZone, view) {
-		return {count: count, people: people, tasks: tasks, time: time, timeZone: timeZone, view: view};
-	});
-var author$project$Person$Person = F3(
-	function (id, name, blameCounter) {
-		return {blameCounter: blameCounter, id: id, name: name};
-	});
-var author$project$Model$mockupPeople = _List_fromArray(
-	[
-		A3(author$project$Person$Person, '1', 'Peter', 0),
-		A3(author$project$Person$Person, '2', 'Paul', 0),
-		A3(author$project$Person$Person, '3', 'Marry', 0)
-	]);
 var author$project$HouseTask$Task = function (id) {
 	return function (displayName) {
 		return function (currentlyResponsible) {
@@ -5384,6 +5370,10 @@ var author$project$HouseTask$Task = function (id) {
 		};
 	};
 };
+var author$project$Model$Model = F8(
+	function (count, people, tasks, time, timeZone, view, tmpPerson, tmpTask) {
+		return {count: count, people: people, tasks: tasks, time: time, timeZone: timeZone, tmpPerson: tmpPerson, tmpTask: tmpTask, view: view};
+	});
 var elm$time$Time$Feb = {$: 'Feb'};
 var elm$time$Time$utc = A2(elm$time$Time$Zone, 0, _List_Nil);
 var justinmimbs$time_extra$Time$Extra$Parts = F7(
@@ -5705,6 +5695,24 @@ var author$project$Model$mockupExampleCreationDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
 	A7(justinmimbs$time_extra$Time$Extra$Parts, 2018, elm$time$Time$Feb, 11, 10, 17, 0, 0));
+var author$project$Model$mockupExampleDueDate1 = A2(
+	justinmimbs$time_extra$Time$Extra$partsToPosix,
+	elm$time$Time$utc,
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 14, 30, 0, 0));
+var author$project$Model$mockupExampleLastDoneDate1 = A2(
+	justinmimbs$time_extra$Time$Extra$partsToPosix,
+	elm$time$Time$utc,
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 10, 17, 0, 0));
+var author$project$Person$Person = F3(
+	function (id, name, blameCounter) {
+		return {blameCounter: blameCounter, id: id, name: name};
+	});
+var author$project$Model$mockupPeople = _List_fromArray(
+	[
+		A3(author$project$Person$Person, 1, 'Peter2', 0),
+		A3(author$project$Person$Person, 2, 'Paul', 0),
+		A3(author$project$Person$Person, 3, 'Marry', 0)
+	]);
 var author$project$Model$mockupExampleCreationDate2 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
@@ -5713,10 +5721,6 @@ var author$project$Model$mockupExampleCreationDate3 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
 	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 16, 17, 0, 0));
-var author$project$Model$mockupExampleDueDate1 = A2(
-	justinmimbs$time_extra$Time$Extra$partsToPosix,
-	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 14, 30, 0, 0));
 var author$project$Model$mockupExampleDueDate2 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
@@ -5725,10 +5729,6 @@ var author$project$Model$mockupExampleDueDate3 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
 	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Sep, 26, 14, 30, 0, 0));
-var author$project$Model$mockupExampleLastDoneDate1 = A2(
-	justinmimbs$time_extra$Time$Extra$partsToPosix,
-	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 10, 17, 0, 0));
 var author$project$Model$mockupExampleLastDoneDate2 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
@@ -5782,7 +5782,7 @@ var elm_community$list_extra$List$Extra$getAt = F2(
 			A2(elm$core$List$drop, idx, xs));
 	});
 var author$project$Model$mockupTasks = function () {
-	var defaultPerson = A3(author$project$Person$Person, '', 'Default', 0);
+	var defaultPerson = A3(author$project$Person$Person, 0, 'Default', 0);
 	var firstPerson = A2(
 		elm$core$Maybe$withDefault,
 		defaultPerson,
@@ -5797,9 +5797,9 @@ var author$project$Model$mockupTasks = function () {
 		A2(elm_community$list_extra$List$Extra$getAt, 2, author$project$Model$mockupPeople));
 	return _List_fromArray(
 		[
-			author$project$HouseTask$Task('id1')('clean the floor')(firstPerson)('just clean the damn floor!')(author$project$Model$mockupExampleDueDate1)(author$project$Model$mockupExampleCreationDate1)(author$project$Model$mockupExampleLastDoneDate1)(firstPerson)(true)(false),
-			author$project$HouseTask$Task('id2')('dispose garbage')(secondPerson)('dispose all unnecessary garbage in the provided containers!')(author$project$Model$mockupExampleDueDate2)(author$project$Model$mockupExampleCreationDate2)(author$project$Model$mockupExampleLastDoneDate2)(secondPerson)(true)(false),
-			author$project$HouseTask$Task('id3')('kill roaches in the cellar')(thirdPerson)('kill all the roaches!!!')(author$project$Model$mockupExampleDueDate3)(author$project$Model$mockupExampleCreationDate3)(author$project$Model$mockupExampleLastDoneDate3)(thirdPerson)(true)(false)
+			author$project$HouseTask$Task(1)('clean the floor')(firstPerson)('just clean the damn floor!')(author$project$Model$mockupExampleDueDate1)(author$project$Model$mockupExampleCreationDate1)(author$project$Model$mockupExampleLastDoneDate1)(firstPerson)(true)(false),
+			author$project$HouseTask$Task(2)('dispose garbage')(secondPerson)('dispose all unnecessary garbage in the provided containers!')(author$project$Model$mockupExampleDueDate2)(author$project$Model$mockupExampleCreationDate2)(author$project$Model$mockupExampleLastDoneDate2)(secondPerson)(true)(false),
+			author$project$HouseTask$Task(3)('kill roaches in the cellar')(thirdPerson)('kill all the roaches!!!')(author$project$Model$mockupExampleDueDate3)(author$project$Model$mockupExampleCreationDate3)(author$project$Model$mockupExampleLastDoneDate3)(thirdPerson)(true)(false)
 		]);
 }();
 var author$project$Msg$AdjustTimeZone = function (a) {
@@ -5863,14 +5863,18 @@ var elm$core$Task$perform = F2(
 var elm$time$Time$here = _Time_here(_Utils_Tuple0);
 var author$project$Model$initMockup = function (flags) {
 	return _Utils_Tuple2(
-		A6(
+		A8(
 			author$project$Model$Model,
 			0,
 			author$project$Model$mockupPeople,
 			author$project$Model$mockupTasks,
 			elm$time$Time$millisToPosix(0),
 			elm$time$Time$utc,
-			author$project$Msg$MainView),
+			author$project$Msg$MainView,
+			A3(author$project$Person$Person, 0, '', 0),
+			author$project$HouseTask$Task(0)('')(
+				A3(author$project$Person$Person, 0, '', 0))('')(author$project$Model$mockupExampleDueDate1)(author$project$Model$mockupExampleCreationDate1)(author$project$Model$mockupExampleLastDoneDate1)(
+				A3(author$project$Person$Person, 0, '', 0))(true)(false)),
 		A2(elm$core$Task$perform, author$project$Msg$AdjustTimeZone, elm$time$Time$here));
 };
 var author$project$Update$findAndUpdateLastDone = F3(
@@ -5878,6 +5882,24 @@ var author$project$Update$findAndUpdateLastDone = F3(
 		return _Utils_eq(task.id, id) ? _Utils_update(
 			task,
 			{lastDone: time}) : task;
+	});
+var author$project$Update$getNextIdPerson = function (people) {
+	var tmpPerson = elm$core$List$head(
+		elm$core$List$reverse(people));
+	if (tmpPerson.$ === 'Just') {
+		var val = tmpPerson.a;
+		return val.id + 1;
+	} else {
+		return 0;
+	}
+};
+var elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
+		}
 	});
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
@@ -5917,7 +5939,7 @@ var author$project$Update$update = F2(
 						model,
 						{view: displayType}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'TaskDone':
 				var id = msg.a;
 				var tasks = A2(
 					elm$core$List$map,
@@ -5927,6 +5949,37 @@ var author$project$Update$update = F2(
 					_Utils_update(
 						model,
 						{tasks: tasks}),
+					elm$core$Platform$Cmd$none);
+			case 'AddPersonName':
+				var name = msg.a;
+				var tmp = model.tmpPerson;
+				var newPerson = _Utils_update(
+					tmp,
+					{name: name});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tmpPerson: newPerson}),
+					elm$core$Platform$Cmd$none);
+			default:
+				var newPerson = model.tmpPerson;
+				var tmpNewPerson = _Utils_update(
+					newPerson,
+					{
+						id: author$project$Update$getNextIdPerson(model.people)
+					});
+				var persons = A2(
+					elm$core$List$append,
+					model.people,
+					_List_fromArray(
+						[tmpNewPerson]));
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							people: persons,
+							tmpPerson: A3(author$project$Person$Person, 0, '', 0)
+						}),
 					elm$core$Platform$Cmd$none);
 		}
 	});
@@ -5945,57 +5998,75 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
-var elm$html$Html$div = _VirtualDom_node('div');
+var elm$html$Html$input = _VirtualDom_node('input');
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
+var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
+var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
+var elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var elm$json$Json$Decode$field = _Json_decodeField;
+var elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
+	});
+var elm$json$Json$Decode$string = _Json_decodeString;
+var elm$html$Html$Events$targetValue = A2(
+	elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	elm$json$Json$Decode$string);
+var elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			elm$json$Json$Decode$map,
+			elm$html$Html$Events$alwaysStop,
+			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
+};
+var author$project$AddPersonComponent$viewInput = F4(
+	function (t, p, v, toMsg) {
+		return A2(
+			elm$html$Html$input,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$type_(t),
+					elm$html$Html$Attributes$placeholder(p),
+					elm$html$Html$Attributes$value(v),
+					elm$html$Html$Events$onInput(toMsg)
+				]),
+			_List_Nil);
+	});
+var author$project$Msg$AddPersonName = function (a) {
+	return {$: 'AddPersonName', a: a};
+};
+var author$project$Msg$SubmitPerson = {$: 'SubmitPerson'};
+var elm$html$Html$button = _VirtualDom_node('button');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
-var author$project$ListPeopleComponent$getTextFromPerson = function (person) {
-	return A2(
-		elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				elm$html$Html$text(person.name)
-			]));
-};
-var rundis$elm_bootstrap$Bootstrap$Grid$Column = function (a) {
-	return {$: 'Column', a: a};
-};
-var rundis$elm_bootstrap$Bootstrap$Grid$col = F2(
-	function (options, children) {
-		return rundis$elm_bootstrap$Bootstrap$Grid$Column(
-			{children: children, options: options});
-	});
-var author$project$ListPeopleComponent$listPeople = function (people) {
-	return A2(
-		rundis$elm_bootstrap$Bootstrap$Grid$col,
-		_List_Nil,
-		A2(elm$core$List$map, author$project$ListPeopleComponent$getTextFromPerson, people));
-};
-var author$project$ListTasksComponent$getTextFromTasks = function (task) {
-	return A2(
-		elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				elm$html$Html$text(task.displayName)
-			]));
-};
-var author$project$ListTasksComponent$listTasks = function (tasks) {
-	return A2(
-		rundis$elm_bootstrap$Bootstrap$Grid$col,
-		_List_Nil,
-		A2(elm$core$List$map, author$project$ListTasksComponent$getTextFromTasks, tasks));
-};
-var author$project$Msg$ChangeViewTo = function (a) {
-	return {$: 'ChangeViewTo', a: a};
-};
-var author$project$Msg$Decrement = {$: 'Decrement'};
-var author$project$Msg$Increment = {$: 'Increment'};
-var elm$html$Html$button = _VirtualDom_node('button');
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
 var elm$html$Html$Events$on = F2(
 	function (event, decoder) {
 		return A2(
@@ -6009,48 +6080,15 @@ var elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		elm$json$Json$Decode$succeed(msg));
 };
-var elm$virtual_dom$VirtualDom$node = function (tag) {
-	return _VirtualDom_node(
-		_VirtualDom_noScript(tag));
+var rundis$elm_bootstrap$Bootstrap$Grid$Column = function (a) {
+	return {$: 'Column', a: a};
 };
-var elm$html$Html$node = elm$virtual_dom$VirtualDom$node;
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
+var rundis$elm_bootstrap$Bootstrap$Grid$col = F2(
+	function (options, children) {
+		return rundis$elm_bootstrap$Bootstrap$Grid$Column(
+			{children: children, options: options});
 	});
-var elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
-};
-var elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
-var rundis$elm_bootstrap$Bootstrap$CDN$stylesheet = A3(
-	elm$html$Html$node,
-	'link',
-	_List_fromArray(
-		[
-			elm$html$Html$Attributes$rel('stylesheet'),
-			elm$html$Html$Attributes$href('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')
-		]),
-	_List_Nil);
-var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
-var rundis$elm_bootstrap$Bootstrap$Grid$container = F2(
-	function (attributes, children) {
-		return A2(
-			elm$html$Html$div,
-			_Utils_ap(
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('container')
-					]),
-				attributes),
-			children);
-	});
+var elm$html$Html$div = _VirtualDom_node('div');
 var elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
 	return _VirtualDom_keyedNode(
 		_VirtualDom_noScript(tag));
@@ -6343,6 +6381,7 @@ var elm$core$Maybe$map = F2(
 			return elm$core$Maybe$Nothing;
 		}
 	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption = function (size) {
 	switch (size.$) {
 		case 'XS':
@@ -6884,6 +6923,102 @@ var rundis$elm_bootstrap$Bootstrap$Grid$row = F2(
 			rundis$elm_bootstrap$Bootstrap$Grid$Internal$rowAttributes(options),
 			A2(elm$core$List$map, rundis$elm_bootstrap$Bootstrap$Grid$renderCol, cols));
 	});
+var author$project$AddPersonComponent$addPerson = function (model) {
+	return A2(
+		rundis$elm_bootstrap$Bootstrap$Grid$row,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				rundis$elm_bootstrap$Bootstrap$Grid$col,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A4(author$project$AddPersonComponent$viewInput, 'text', 'Name', model.tmpPerson.name, author$project$Msg$AddPersonName),
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Events$onClick(author$project$Msg$SubmitPerson)
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('Submit')
+							]))
+					]))
+			]));
+};
+var author$project$ListPeopleComponent$getTextFromPerson = function (person) {
+	return A2(
+		elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				elm$html$Html$text(
+				_Utils_ap(
+					elm$core$String$fromInt(person.id),
+					person.name))
+			]));
+};
+var author$project$ListPeopleComponent$listPeople = function (people) {
+	return A2(
+		rundis$elm_bootstrap$Bootstrap$Grid$col,
+		_List_Nil,
+		A2(elm$core$List$map, author$project$ListPeopleComponent$getTextFromPerson, people));
+};
+var author$project$ListTasksComponent$getTextFromTasks = function (task) {
+	return A2(
+		elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				elm$html$Html$text(task.displayName)
+			]));
+};
+var author$project$ListTasksComponent$listTasks = function (tasks) {
+	return A2(
+		rundis$elm_bootstrap$Bootstrap$Grid$col,
+		_List_Nil,
+		A2(elm$core$List$map, author$project$ListTasksComponent$getTextFromTasks, tasks));
+};
+var author$project$Msg$ChangeViewTo = function (a) {
+	return {$: 'ChangeViewTo', a: a};
+};
+var author$project$Msg$Decrement = {$: 'Decrement'};
+var author$project$Msg$Increment = {$: 'Increment'};
+var elm$virtual_dom$VirtualDom$node = function (tag) {
+	return _VirtualDom_node(
+		_VirtualDom_noScript(tag));
+};
+var elm$html$Html$node = elm$virtual_dom$VirtualDom$node;
+var elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
+var rundis$elm_bootstrap$Bootstrap$CDN$stylesheet = A3(
+	elm$html$Html$node,
+	'link',
+	_List_fromArray(
+		[
+			elm$html$Html$Attributes$rel('stylesheet'),
+			elm$html$Html$Attributes$href('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')
+		]),
+	_List_Nil);
+var rundis$elm_bootstrap$Bootstrap$Grid$container = F2(
+	function (attributes, children) {
+		return A2(
+			elm$html$Html$div,
+			_Utils_ap(
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('container')
+					]),
+				attributes),
+			children);
+	});
 var author$project$AddPersonView$addPersonView = function (model) {
 	return A2(
 		rundis$elm_bootstrap$Bootstrap$Grid$container,
@@ -6960,7 +7095,8 @@ var author$project$AddPersonView$addPersonView = function (model) {
 										elm$html$Html$text('-1')
 									]))
 							]))
-					]))
+					])),
+				author$project$AddPersonComponent$addPerson(model)
 			]));
 };
 var author$project$AddTaskView$addTaskView = function (model) {

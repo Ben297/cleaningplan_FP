@@ -1,7 +1,7 @@
 module Person exposing (Person)
 
 type alias Person = {
-        id : String
+        id : Int
         , name : String
         , blameCounter : Int
     }

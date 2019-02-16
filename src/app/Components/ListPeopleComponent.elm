@@ -15,5 +15,5 @@ listPeople people = Grid.col [] (List.map getTextFromPerson people)
 
 
 getTextFromPerson : Person -> Html Msg
-getTextFromPerson person = div [] [text person.name]
+getTextFromPerson person = div [] [text ((String.fromInt person.id) ++ person.name)]
 

@@ -9,7 +9,7 @@ import Model exposing (Model)
 import Msg exposing (Msg(..), DisplayType(..))
 import ListPeopleComponent exposing (listPeople)
 import ListTasksComponent exposing (listTasks)
-import DayTasksComponent exposing (dayTasks)
+import AddPersonComponent exposing (addPerson)
 
 
 addPersonView : Model -> Html Msg
@@ -37,4 +37,5 @@ addPersonView model =
                 , button [ onClick Decrement ] [ text "-1" ]
             ]
         ]
+        , addPerson model
     ]

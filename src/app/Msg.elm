@@ -4,10 +4,12 @@ import Time
 type Msg
     = Increment
     | Decrement
-    | TaskDone String
+    | TaskDone Int
     | AdjustTimeZone Time.Zone
     | Tick Time.Posix
     | ChangeViewTo DisplayType
+    | AddPersonName String
+    | SubmitPerson
 
 type DisplayType =
     MainView

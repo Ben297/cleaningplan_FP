@@ -4,7 +4,7 @@ import Person exposing (Person)
 import Time exposing (Posix)
 
 type alias Task = {
-        id : String
+        id : Int
         , displayName : String
         , currentlyResponsible : Person
         , description : String
