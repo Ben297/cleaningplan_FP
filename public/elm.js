@@ -5894,14 +5894,44 @@ var rundis$elm_bootstrap$Bootstrap$Dropdown$initialState = rundis$elm_bootstrap$
 	});
 var author$project$Model$initMockup = function (flags) {
 	return _Utils_Tuple2(
-		author$project$Model$Model(0)(author$project$Model$mockupPeople)(author$project$Model$mockupTasks)(
+		author$project$Model$Model('0')(author$project$Model$mockupPeople)(author$project$Model$mockupTasks)(
 			elm$time$Time$millisToPosix(0))(elm$time$Time$utc)(author$project$Msg$MainView)(
 			A3(author$project$Person$Person, 0, '', 0))(
 			author$project$HouseTask$Task(0)('')(
 				A3(author$project$Person$Person, 0, '', 0))('')(author$project$Model$mockupExampleDueDate1)(author$project$Model$mockupExampleCreationDate1)(author$project$Model$mockupExampleLastDoneDate1)(
-				A3(author$project$Person$Person, 0, '', 0))(true)(false))(
+				A3(author$project$Person$Person, 0, '', 0))(false)(false))(
 			A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 14, 30, 0, 0))(rundis$elm_bootstrap$Bootstrap$Dropdown$initialState),
 		A2(elm$core$Task$perform, author$project$Msg$AdjustTimeZone, elm$time$Time$here));
+};
+var author$project$Formatters$intToMonth = function (_int) {
+	switch (_int) {
+		case 1:
+			return elm$time$Time$Jan;
+		case 2:
+			return elm$time$Time$Feb;
+		case 3:
+			return elm$time$Time$Mar;
+		case 4:
+			return elm$time$Time$Apr;
+		case 5:
+			return elm$time$Time$May;
+		case 6:
+			return elm$time$Time$Jun;
+		case 7:
+			return elm$time$Time$Jul;
+		case 8:
+			return elm$time$Time$Aug;
+		case 9:
+			return elm$time$Time$Sep;
+		case 10:
+			return elm$time$Time$Oct;
+		case 11:
+			return elm$time$Time$Nov;
+		case 12:
+			return elm$time$Time$Dec;
+		default:
+			return elm$time$Time$Jan;
+	}
 };
 var author$project$Update$findAndUpdateLastDone = F3(
 	function (id, time, task) {
@@ -5941,6 +5971,16 @@ var author$project$Update$mockupExampleLastDoneDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
 	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 10, 17, 0, 0));
+var elm$core$String$toInt = _String_toInt;
+var author$project$Update$stringElmToInt = function (elm) {
+	var maybeInt = elm$core$String$toInt(elm);
+	if (maybeInt.$ === 'Just') {
+		var _int = maybeInt.a;
+		return _int;
+	} else {
+		return 0;
+	}
+};
 var elm$core$List$append = F2(
 	function (xs, ys) {
 		if (!ys.b) {
@@ -5972,6 +6012,18 @@ var elm_community$list_extra$List$Extra$find = F2(
 			}
 		}
 	});
+var justinmimbs$time_extra$Time$Extra$posixToParts = F2(
+	function (zone, posix) {
+		return {
+			day: A2(elm$time$Time$toDay, zone, posix),
+			hour: A2(elm$time$Time$toHour, zone, posix),
+			millisecond: A2(elm$time$Time$toMillis, zone, posix),
+			minute: A2(elm$time$Time$toMinute, zone, posix),
+			month: A2(elm$time$Time$toMonth, zone, posix),
+			second: A2(elm$time$Time$toSecond, zone, posix),
+			year: A2(elm$time$Time$toYear, zone, posix)
+		};
+	});
 var author$project$Update$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -5979,13 +6031,13 @@ var author$project$Update$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{count: model.count + 1}),
+						{count: model.count + '1'}),
 					elm$core$Platform$Cmd$none);
 			case 'Decrement':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{count: model.count - 1}),
+						{count: model.count + '1'}),
 					elm$core$Platform$Cmd$none);
 			case 'Tick':
 				var newTime = msg.a;
@@ -6059,23 +6111,29 @@ var author$project$Update$update = F2(
 					elm$core$Platform$Cmd$none);
 			case 'AddTaskPersonDropdown':
 				var id = msg.a;
-				var maybePerson = A2(
-					elm_community$list_extra$List$Extra$find,
-					function (ln) {
-						return _Utils_eq(ln.id, id);
-					},
-					model.people);
-				if (maybePerson.$ === 'Just') {
-					var person = maybePerson.a;
-					var newTask = model.tmpTask;
-					var tmpNewTask = _Utils_update(
-						newTask,
-						{currentlyResponsible: person});
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{tmpTask: tmpNewTask}),
-						elm$core$Platform$Cmd$none);
+				var maybeID = elm$core$String$toInt(id);
+				if (maybeID.$ === 'Just') {
+					var id2 = maybeID.a;
+					var maybePerson = A2(
+						elm_community$list_extra$List$Extra$find,
+						function (ln) {
+							return _Utils_eq(ln.id, id2);
+						},
+						model.people);
+					if (maybePerson.$ === 'Just') {
+						var person = maybePerson.a;
+						var newTask = model.tmpTask;
+						var tmpNewTask = _Utils_update(
+							newTask,
+							{currentlyResponsible: person});
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{tmpTask: tmpNewTask}),
+							elm$core$Platform$Cmd$none);
+					} else {
+						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+					}
 				} else {
 					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 				}
@@ -6098,15 +6156,107 @@ var author$project$Update$update = F2(
 							tasks: tasks,
 							tmpTask: author$project$HouseTask$Task(0)('')(
 								A3(author$project$Person$Person, 0, '', 0))('')(author$project$Update$mockupExampleDueDate1)(author$project$Update$mockupExampleCreationDate1)(author$project$Update$mockupExampleLastDoneDate1)(
-								A3(author$project$Person$Person, 0, '', 0))(true)(false)
+								A3(author$project$Person$Person, 0, '', 0))(false)(false)
 						}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'AddTaskName':
 				var displayName = msg.a;
 				var tmp = model.tmpTask;
 				var newTask = _Utils_update(
 					tmp,
 					{displayName: displayName});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tmpTask: newTask}),
+					elm$core$Platform$Cmd$none);
+			case 'AddTaskDescription':
+				var description = msg.a;
+				var tmp = model.tmpTask;
+				var newTask = _Utils_update(
+					tmp,
+					{description: description});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tmpTask: newTask}),
+					elm$core$Platform$Cmd$none);
+			case 'AddTaskDueDate':
+				var time = msg.a;
+				var tmpDueDateParts = A2(justinmimbs$time_extra$Time$Extra$posixToParts, model.timeZone, model.tmpTask.dueDate);
+				var stringList = A2(elm$core$String$split, '-', time);
+				var intList = A2(elm$core$List$map, author$project$Update$stringElmToInt, stringList);
+				var secondElm = A2(elm_community$list_extra$List$Extra$getAt, 1, intList);
+				var thirdElm = A2(elm_community$list_extra$List$Extra$getAt, 2, intList);
+				var firstElm = A2(elm_community$list_extra$List$Extra$getAt, 0, intList);
+				if (firstElm.$ === 'Just') {
+					var year = firstElm.a;
+					if (secondElm.$ === 'Just') {
+						var month = secondElm.a;
+						if (thirdElm.$ === 'Just') {
+							var day = thirdElm.a;
+							var newTask = model.tmpTask;
+							var newDueDateParts = _Utils_update(
+								tmpDueDateParts,
+								{
+									day: day,
+									month: author$project$Formatters$intToMonth(month),
+									year: year
+								});
+							var dueDate = A2(justinmimbs$time_extra$Time$Extra$partsToPosix, model.timeZone, newDueDateParts);
+							var tmpNewTask = _Utils_update(
+								newTask,
+								{dueDate: dueDate});
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{tmpTask: tmpNewTask}),
+								elm$core$Platform$Cmd$none);
+						} else {
+							return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+						}
+					} else {
+						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+					}
+				} else {
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				}
+			case 'AddTaskDueTime':
+				var time = msg.a;
+				var tmpDueDateParts = A2(justinmimbs$time_extra$Time$Extra$posixToParts, model.timeZone, model.tmpTask.dueDate);
+				var stringList = A2(elm$core$String$split, ':', time);
+				var intList = A2(elm$core$List$map, author$project$Update$stringElmToInt, stringList);
+				var secondElm = A2(elm_community$list_extra$List$Extra$getAt, 1, intList);
+				var firstElm = A2(elm_community$list_extra$List$Extra$getAt, 0, intList);
+				if (firstElm.$ === 'Just') {
+					var hour = firstElm.a;
+					if (secondElm.$ === 'Just') {
+						var minute = secondElm.a;
+						var newTask = model.tmpTask;
+						var newDueDateParts = _Utils_update(
+							tmpDueDateParts,
+							{hour: hour, minute: minute});
+						var dueDate = A2(justinmimbs$time_extra$Time$Extra$partsToPosix, model.timeZone, newDueDateParts);
+						var tmpNewTask = _Utils_update(
+							newTask,
+							{dueDate: dueDate});
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{tmpTask: tmpNewTask}),
+							elm$core$Platform$Cmd$none);
+					} else {
+						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+					}
+				} else {
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				}
+			default:
+				var isRepetitiveTask = msg.a;
+				var tmp = model.tmpTask;
+				var newTask = _Utils_update(
+					tmp,
+					{isRepetitiveTask: isRepetitiveTask});
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -7097,20 +7247,77 @@ var author$project$ListPeopleComponent$listPeople = function (people) {
 		_List_Nil,
 		A2(elm$core$List$map, author$project$ListPeopleComponent$getTextFromPerson, people));
 };
-var author$project$ListTasksComponent$getTextFromTasks = function (task) {
-	return A2(
-		elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				elm$html$Html$text(task.displayName + ('\n currently resposible:' + task.currentlyResponsible.name))
-			]));
+var author$project$Formatters$boolToString = function (bool) {
+	if (bool) {
+		return 'True';
+	} else {
+		return 'False';
+	}
 };
-var author$project$ListTasksComponent$listTasks = function (tasks) {
+var author$project$Formatters$monthToInt = function (month) {
+	switch (month.$) {
+		case 'Jan':
+			return 1;
+		case 'Feb':
+			return 2;
+		case 'Mar':
+			return 3;
+		case 'Apr':
+			return 4;
+		case 'May':
+			return 5;
+		case 'Jun':
+			return 6;
+		case 'Jul':
+			return 7;
+		case 'Aug':
+			return 8;
+		case 'Sep':
+			return 9;
+		case 'Oct':
+			return 10;
+		case 'Nov':
+			return 11;
+		default:
+			return 12;
+	}
+};
+var author$project$Formatters$getFormatedStringFromDate = F2(
+	function (timeZone, date) {
+		var year = elm$core$String$fromInt(
+			A2(elm$time$Time$toYear, timeZone, date));
+		var second = elm$core$String$fromInt(
+			A2(elm$time$Time$toSecond, timeZone, date));
+		var month = elm$core$String$fromInt(
+			author$project$Formatters$monthToInt(
+				A2(elm$time$Time$toMonth, timeZone, date)));
+		var minute = elm$core$String$fromInt(
+			A2(elm$time$Time$toMinute, timeZone, date));
+		var hour = elm$core$String$fromInt(
+			A2(elm$time$Time$toHour, timeZone, date));
+		var day = elm$core$String$fromInt(
+			A2(elm$time$Time$toDay, timeZone, date));
+		return day + ('.' + (month + ('.' + (year + ('; ' + (hour + (':' + (minute + (':' + second)))))))));
+	});
+var author$project$ListTasksComponent$getTextFromTasks = F2(
+	function (timeZone, task) {
+		return A2(
+			elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					elm$html$Html$text(
+					'\n Displayname:' + (task.displayName + ('\n Description:' + (task.description + ('\n currently resposible:' + (task.currentlyResponsible.name + ('\n DueDate:' + (A2(author$project$Formatters$getFormatedStringFromDate, timeZone, task.dueDate) + ('\n isRepetitiveTask?:' + author$project$Formatters$boolToString(task.isRepetitiveTask))))))))))
+				]));
+	});
+var author$project$ListTasksComponent$listTasks = function (model) {
 	return A2(
 		rundis$elm_bootstrap$Bootstrap$Grid$col,
 		_List_Nil,
-		A2(elm$core$List$map, author$project$ListTasksComponent$getTextFromTasks, tasks));
+		A2(
+			elm$core$List$map,
+			author$project$ListTasksComponent$getTextFromTasks(model.timeZone),
+			model.tasks));
 };
 var author$project$Msg$ChangeViewTo = function (a) {
 	return {$: 'ChangeViewTo', a: a};
@@ -7181,7 +7388,7 @@ var author$project$AddPersonView$addPersonView = function (model) {
 									]))
 							])),
 						author$project$ListPeopleComponent$listPeople(model.people),
-						author$project$ListTasksComponent$listTasks(model.tasks),
+						author$project$ListTasksComponent$listTasks(model),
 						A2(
 						rundis$elm_bootstrap$Bootstrap$Grid$col,
 						_List_Nil,
@@ -7212,8 +7419,7 @@ var author$project$AddPersonView$addPersonView = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										elm$html$Html$text(
-										elm$core$String$fromInt(model.count))
+										elm$html$Html$text(model.count)
 									])),
 								A2(
 								elm$html$Html$button,
@@ -7230,59 +7436,48 @@ var author$project$AddPersonView$addPersonView = function (model) {
 				author$project$AddPersonComponent$addPerson(model)
 			]));
 };
-var author$project$Msg$AddTaskPersonDropdown = function (a) {
-	return {$: 'AddTaskPersonDropdown', a: a};
+var elm$html$Html$option = _VirtualDom_node('option');
+var rundis$elm_bootstrap$Bootstrap$Form$Select$Item = function (a) {
+	return {$: 'Item', a: a};
 };
-var rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem = function (a) {
-	return {$: 'DropdownItem', a: a};
-};
-var rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem = F2(
+var rundis$elm_bootstrap$Bootstrap$Form$Select$item = F2(
 	function (attributes, children) {
-		return rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownItem(
-			A2(
-				elm$html$Html$button,
-				_Utils_ap(
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$type_('button'),
-							elm$html$Html$Attributes$class('dropdown-item')
-						]),
-					attributes),
-				children));
+		return rundis$elm_bootstrap$Bootstrap$Form$Select$Item(
+			A2(elm$html$Html$option, attributes, children));
 	});
 var author$project$AddTaskComponent$peopleToItems = function (person) {
 	return A2(
-		rundis$elm_bootstrap$Bootstrap$Dropdown$buttonItem,
+		rundis$elm_bootstrap$Bootstrap$Form$Select$item,
 		_List_fromArray(
 			[
-				elm$html$Html$Events$onClick(
-				author$project$Msg$AddTaskPersonDropdown(person.id))
+				elm$html$Html$Attributes$value(
+				elm$core$String$fromInt(person.id))
 			]),
 		_List_fromArray(
 			[
 				elm$html$Html$text(person.name)
 			]));
 };
-var author$project$AddTaskComponent$viewInput = F4(
-	function (t, p, v, toMsg) {
-		return A2(
-			elm$html$Html$input,
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$type_(t),
-					elm$html$Html$Attributes$placeholder(p),
-					elm$html$Html$Attributes$value(v),
-					elm$html$Html$Events$onInput(toMsg)
-				]),
-			_List_Nil);
-	});
+var author$project$Msg$AddTaskDescription = function (a) {
+	return {$: 'AddTaskDescription', a: a};
+};
+var author$project$Msg$AddTaskDueDate = function (a) {
+	return {$: 'AddTaskDueDate', a: a};
+};
+var author$project$Msg$AddTaskDueTime = function (a) {
+	return {$: 'AddTaskDueTime', a: a};
+};
+var author$project$Msg$AddTaskIsRepetitiveTask = function (a) {
+	return {$: 'AddTaskIsRepetitiveTask', a: a};
+};
 var author$project$Msg$AddTaskName = function (a) {
 	return {$: 'AddTaskName', a: a};
 };
-var author$project$Msg$MyDrop1Msg = function (a) {
-	return {$: 'MyDrop1Msg', a: a};
+var author$project$Msg$AddTaskPersonDropdown = function (a) {
+	return {$: 'AddTaskPersonDropdown', a: a};
 };
 var author$project$Msg$SubmitTask = {$: 'SubmitTask'};
+var elm$html$Html$Attributes$for = elm$html$Html$Attributes$stringProperty('htmlFor');
 var rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
 	return {$: 'Attrs', a: a};
 };
@@ -7458,399 +7653,598 @@ var rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled = function (a) {
 };
 var rundis$elm_bootstrap$Bootstrap$Button$primary = rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled(rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary));
-var rundis$elm_bootstrap$Bootstrap$Dropdown$dropDir = function (maybeDir) {
-	var toAttrs = function (dir) {
-		return _List_fromArray(
-			[
-				elm$html$Html$Attributes$class(
-				'drop' + function () {
-					if (dir.$ === 'Dropleft') {
-						return 'left';
-					} else {
-						return 'right';
-					}
-				}())
-			]);
-	};
-	return A2(
-		elm$core$Maybe$withDefault,
-		_List_Nil,
-		A2(elm$core$Maybe$map, toAttrs, maybeDir));
-};
-var rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownAttributes = F2(
-	function (status, config) {
-		return _Utils_ap(
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$classList(
-					_List_fromArray(
-						[
-							_Utils_Tuple2('btn-group', true),
-							_Utils_Tuple2(
-							'show',
-							!_Utils_eq(status, rundis$elm_bootstrap$Bootstrap$Dropdown$Closed)),
-							_Utils_Tuple2('dropup', config.isDropUp)
-						]))
-				]),
-			_Utils_ap(
-				rundis$elm_bootstrap$Bootstrap$Dropdown$dropDir(config.dropDirection),
-				config.attributes));
+var elm$html$Html$form = _VirtualDom_node('form');
+var rundis$elm_bootstrap$Bootstrap$Form$form = F2(
+	function (attributes, children) {
+		return A2(elm$html$Html$form, attributes, children);
 	});
-var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
-var elm$core$String$fromFloat = _String_fromNumber;
-var rundis$elm_bootstrap$Bootstrap$Dropdown$menuStyles = F2(
-	function (_n0, config) {
-		var status = _n0.a.status;
-		var toggleSize = _n0.a.toggleSize;
-		var menuSize = _n0.a.menuSize;
-		var px = function (n) {
-			return elm$core$String$fromFloat(n) + 'px';
-		};
-		var translate = F3(
-			function (x, y, z) {
-				return 'translate3d(' + (px(x) + (',' + (px(y) + (',' + (px(z) + ')')))));
+var rundis$elm_bootstrap$Bootstrap$Form$applyModifier = F2(
+	function (modifier, options) {
+		var value = modifier.a;
+		return _Utils_update(
+			options,
+			{
+				attributes: _Utils_ap(options.attributes, value)
 			});
-		var _default = _List_fromArray(
-			[
-				A2(elm$html$Html$Attributes$style, 'top', '0'),
-				A2(elm$html$Html$Attributes$style, 'left', '0')
-			]);
-		var _n1 = _Utils_Tuple2(config.isDropUp, config.dropDirection);
-		_n1$0:
-		while (true) {
-			if (_n1.b.$ === 'Just') {
-				if (_n1.b.a.$ === 'Dropright') {
-					if (_n1.a) {
-						break _n1$0;
-					} else {
-						var _n2 = _n1.b.a;
-						return _default;
-					}
-				} else {
-					if (_n1.a) {
-						break _n1$0;
-					} else {
-						var _n3 = _n1.b.a;
-						return _Utils_ap(
-							_default,
-							_List_fromArray(
-								[
-									A2(
-									elm$html$Html$Attributes$style,
-									'transform',
-									A3(translate, (-toggleSize.width) - menuSize.width, 0, 0))
-								]));
-					}
-				}
-			} else {
-				if (_n1.a) {
-					break _n1$0;
-				} else {
-					return _Utils_ap(
-						_default,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$Attributes$style,
-								'transform',
-								A3(translate, -toggleSize.width, toggleSize.height, 0))
-							]));
-				}
-			}
-		}
-		return _Utils_ap(
-			_default,
-			_List_fromArray(
-				[
-					A2(
-					elm$html$Html$Attributes$style,
-					'transform',
-					A3(translate, -toggleSize.width, -menuSize.height, 0))
-				]));
 	});
-var rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownMenu = F3(
-	function (state, config, items) {
-		var status = state.a.status;
-		var menuSize = state.a.menuSize;
-		var wrapperStyles = _Utils_eq(status, rundis$elm_bootstrap$Bootstrap$Dropdown$Closed) ? _List_fromArray(
+var rundis$elm_bootstrap$Bootstrap$Form$defaultOptions = {attributes: _List_Nil};
+var rundis$elm_bootstrap$Bootstrap$Form$toAttributes = function (modifiers) {
+	var options = A3(elm$core$List$foldl, rundis$elm_bootstrap$Bootstrap$Form$applyModifier, rundis$elm_bootstrap$Bootstrap$Form$defaultOptions, modifiers);
+	return _Utils_ap(
+		_List_fromArray(
 			[
-				A2(elm$html$Html$Attributes$style, 'height', '0'),
-				A2(elm$html$Html$Attributes$style, 'overflow', 'hidden'),
-				A2(elm$html$Html$Attributes$style, 'position', 'relative')
-			]) : _List_fromArray(
-			[
-				A2(elm$html$Html$Attributes$style, 'position', 'relative')
-			]);
+				elm$html$Html$Attributes$class('form-group')
+			]),
+		options.attributes);
+};
+var rundis$elm_bootstrap$Bootstrap$Form$group = F2(
+	function (options, children) {
 		return A2(
 			elm$html$Html$div,
-			wrapperStyles,
-			_List_fromArray(
-				[
-					A2(
-					elm$html$Html$div,
-					_Utils_ap(
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$classList(
-								_List_fromArray(
-									[
-										_Utils_Tuple2('dropdown-menu', true),
-										_Utils_Tuple2('dropdown-menu-right', config.hasMenuRight),
-										_Utils_Tuple2('show', true)
-									]))
-							]),
-						_Utils_ap(
-							A2(rundis$elm_bootstrap$Bootstrap$Dropdown$menuStyles, state, config),
-							config.menuAttrs)),
-					A2(
-						elm$core$List$map,
-						function (_n0) {
-							var x = _n0.a;
-							return x;
-						},
-						items))
-				]));
+			rundis$elm_bootstrap$Bootstrap$Form$toAttributes(options),
+			children);
 	});
-var rundis$elm_bootstrap$Bootstrap$Dropdown$applyModifier = F2(
-	function (option, options) {
-		switch (option.$) {
-			case 'AlignMenuRight':
-				return _Utils_update(
-					options,
-					{hasMenuRight: true});
-			case 'Dropup':
-				return _Utils_update(
-					options,
-					{isDropUp: true});
-			case 'Attrs':
-				var attrs_ = option.a;
-				return _Utils_update(
-					options,
-					{attributes: attrs_});
-			case 'DropToDir':
-				var dir = option.a;
+var elm$html$Html$label = _VirtualDom_node('label');
+var rundis$elm_bootstrap$Bootstrap$Form$label = F2(
+	function (attributes, children) {
+		return A2(
+			elm$html$Html$label,
+			A2(
+				elm$core$List$cons,
+				elm$html$Html$Attributes$class('form-control-label'),
+				attributes),
+			children);
+	});
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$Checkbox = function (a) {
+	return {$: 'Checkbox', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$create = F2(
+	function (options, label) {
+		return rundis$elm_bootstrap$Bootstrap$Form$Checkbox$Checkbox(
+			{label: label, options: options});
+	});
+var elm$core$Basics$not = _Basics_not;
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$applyModifier = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'Id':
+				var val = modifier.a;
 				return _Utils_update(
 					options,
 					{
-						dropDirection: elm$core$Maybe$Just(dir)
+						id: elm$core$Maybe$Just(val)
 					});
-			default:
-				var attrs_ = option.a;
+			case 'Value':
+				var val = modifier.a;
 				return _Utils_update(
 					options,
-					{menuAttrs: attrs_});
+					{state: val});
+			case 'Inline':
+				return _Utils_update(
+					options,
+					{inline: true});
+			case 'OnChecked':
+				var toMsg = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						onChecked: elm$core$Maybe$Just(toMsg)
+					});
+			case 'Custom':
+				return _Utils_update(
+					options,
+					{custom: true});
+			case 'Disabled':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{disabled: val});
+			case 'Validation':
+				var validation = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						validation: elm$core$Maybe$Just(validation)
+					});
+			default:
+				var attrs_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs_)
+					});
 		}
 	});
-var rundis$elm_bootstrap$Bootstrap$Dropdown$defaultOptions = {attributes: _List_Nil, dropDirection: elm$core$Maybe$Nothing, hasMenuRight: false, isDropUp: false, menuAttrs: _List_Nil};
-var rundis$elm_bootstrap$Bootstrap$Dropdown$toConfig = function (options) {
-	return A3(elm$core$List$foldl, rundis$elm_bootstrap$Bootstrap$Dropdown$applyModifier, rundis$elm_bootstrap$Bootstrap$Dropdown$defaultOptions, options);
-};
-var rundis$elm_bootstrap$Bootstrap$Dropdown$dropdown = F2(
-	function (state, _n0) {
-		var status = state.a.status;
-		var toggleMsg = _n0.toggleMsg;
-		var toggleButton = _n0.toggleButton;
-		var items = _n0.items;
-		var options = _n0.options;
-		var config = rundis$elm_bootstrap$Bootstrap$Dropdown$toConfig(options);
-		var _n1 = toggleButton;
-		var buttonFn = _n1.a;
-		return A2(
-			elm$html$Html$div,
-			A2(rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownAttributes, status, config),
-			_List_fromArray(
-				[
-					A2(buttonFn, toggleMsg, state),
-					A3(rundis$elm_bootstrap$Bootstrap$Dropdown$dropdownMenu, state, config, items)
-				]));
-	});
-var rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownToggle = function (a) {
-	return {$: 'DropdownToggle', a: a};
-};
-var elm$json$Json$Decode$andThen = _Json_andThen;
-var rundis$elm_bootstrap$Bootstrap$Dropdown$Open = {$: 'Open'};
-var rundis$elm_bootstrap$Bootstrap$Dropdown$nextStatus = function (status) {
-	switch (status.$) {
-		case 'Open':
-			return rundis$elm_bootstrap$Bootstrap$Dropdown$Closed;
-		case 'ListenClicks':
-			return rundis$elm_bootstrap$Bootstrap$Dropdown$Closed;
-		default:
-			return rundis$elm_bootstrap$Bootstrap$Dropdown$Open;
-	}
-};
-var elm$core$Tuple$pair = F2(
-	function (a, b) {
-		return _Utils_Tuple2(a, b);
-	});
-var elm$json$Json$Decode$fail = _Json_fail;
-var elm$json$Json$Decode$oneOf = _Json_oneOf;
-var elm$core$String$contains = _String_contains;
-var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$className = A2(
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$Off = {$: 'Off'};
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$defaultOptions = {attributes: _List_Nil, custom: false, disabled: false, id: elm$core$Maybe$Nothing, inline: false, onChecked: elm$core$Maybe$Nothing, state: rundis$elm_bootstrap$Bootstrap$Form$Checkbox$Off, validation: elm$core$Maybe$Nothing};
+var elm$html$Html$Attributes$id = elm$html$Html$Attributes$stringProperty('id');
+var elm$json$Json$Decode$bool = _Json_decodeBool;
+var elm$html$Html$Events$targetChecked = A2(
 	elm$json$Json$Decode$at,
 	_List_fromArray(
-		['className']),
-	elm$json$Json$Decode$string);
-var rundis$elm_bootstrap$Bootstrap$Dropdown$isToggle = A2(
-	elm$json$Json$Decode$andThen,
-	function (_class) {
-		return A2(elm$core$String$contains, 'dropdown-toggle', _class) ? elm$json$Json$Decode$succeed(true) : elm$json$Json$Decode$succeed(false);
-	},
-	rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$className);
-var rundis$elm_bootstrap$Bootstrap$Dropdown$toggler = F2(
-	function (path, decoder) {
-		return elm$json$Json$Decode$oneOf(
-			_List_fromArray(
-				[
-					A2(
-					elm$json$Json$Decode$andThen,
-					function (res) {
-						return res ? A2(elm$json$Json$Decode$at, path, decoder) : elm$json$Json$Decode$fail('');
-					},
-					A2(elm$json$Json$Decode$at, path, rundis$elm_bootstrap$Bootstrap$Dropdown$isToggle)),
-					A2(
-					elm$json$Json$Decode$andThen,
-					function (_n0) {
-						return A2(
-							rundis$elm_bootstrap$Bootstrap$Dropdown$toggler,
-							_Utils_ap(
-								path,
-								_List_fromArray(
-									['parentElement'])),
-							decoder);
-					},
-					A2(
-						elm$json$Json$Decode$at,
-						_Utils_ap(
-							path,
-							_List_fromArray(
-								['parentElement'])),
-						rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$className)),
-					elm$json$Json$Decode$fail('No toggler found')
-				]));
-	});
-var elm$json$Json$Decode$map3 = _Json_map3;
-var elm$json$Json$Decode$float = _Json_decodeFloat;
-var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetHeight = A2(elm$json$Json$Decode$field, 'offsetHeight', elm$json$Json$Decode$float);
-var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetWidth = A2(elm$json$Json$Decode$field, 'offsetWidth', elm$json$Json$Decode$float);
-var elm$json$Json$Decode$map4 = _Json_map4;
-var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetLeft = A2(elm$json$Json$Decode$field, 'offsetLeft', elm$json$Json$Decode$float);
-var elm$json$Json$Decode$null = _Json_decodeNull;
-var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetParent = F2(
-	function (x, decoder) {
-		return elm$json$Json$Decode$oneOf(
-			_List_fromArray(
-				[
-					A2(
-					elm$json$Json$Decode$field,
-					'offsetParent',
-					elm$json$Json$Decode$null(x)),
-					A2(elm$json$Json$Decode$field, 'offsetParent', decoder)
-				]));
-	});
-var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetTop = A2(elm$json$Json$Decode$field, 'offsetTop', elm$json$Json$Decode$float);
-var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$scrollLeft = A2(elm$json$Json$Decode$field, 'scrollLeft', elm$json$Json$Decode$float);
-var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$scrollTop = A2(elm$json$Json$Decode$field, 'scrollTop', elm$json$Json$Decode$float);
-var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$position = F2(
-	function (x, y) {
+		['target', 'checked']),
+	elm$json$Json$Decode$bool);
+var elm$html$Html$Events$onCheck = function (tagger) {
+	return A2(
+		elm$html$Html$Events$on,
+		'change',
+		A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetChecked));
+};
+var elm$virtual_dom$VirtualDom$attribute = F2(
+	function (key, value) {
 		return A2(
-			elm$json$Json$Decode$andThen,
-			function (_n0) {
-				var x_ = _n0.a;
-				var y_ = _n0.b;
-				return A2(
-					rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetParent,
-					_Utils_Tuple2(x_, y_),
-					A2(rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$position, x_, y_));
-			},
-			A5(
-				elm$json$Json$Decode$map4,
-				F4(
-					function (scrollLeft_, scrollTop_, offsetLeft_, offsetTop_) {
-						return _Utils_Tuple2((x + offsetLeft_) - scrollLeft_, (y + offsetTop_) - scrollTop_);
-					}),
-				rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$scrollLeft,
-				rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$scrollTop,
-				rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetLeft,
-				rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetTop));
+			_VirtualDom_attribute,
+			_VirtualDom_noOnOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
 	});
-var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$boundingArea = A4(
-	elm$json$Json$Decode$map3,
-	F3(
-		function (_n0, width, height) {
-			var x = _n0.a;
-			var y = _n0.b;
-			return {height: height, left: x, top: y, width: width};
-		}),
-	A2(rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$position, 0, 0),
-	rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetWidth,
-	rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$offsetHeight);
-var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$childNode = function (idx) {
-	return elm$json$Json$Decode$at(
+var elm$html$Html$Attributes$attribute = elm$virtual_dom$VirtualDom$attribute;
+var elm$html$Html$Attributes$checked = elm$html$Html$Attributes$boolProperty('checked');
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$stateAttribute = function (state) {
+	switch (state.$) {
+		case 'On':
+			return elm$html$Html$Attributes$checked(true);
+		case 'Off':
+			return elm$html$Html$Attributes$checked(false);
+		default:
+			return A2(elm$html$Html$Attributes$attribute, 'indeterminate', 'true');
+	}
+};
+var rundis$elm_bootstrap$Bootstrap$Form$FormInternal$validationToString = function (validation) {
+	if (validation.$ === 'Success') {
+		return 'is-valid';
+	} else {
+		return 'is-invalid';
+	}
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$toAttributes = function (options) {
+	return _Utils_ap(
 		_List_fromArray(
 			[
-				'childNodes',
-				elm$core$String$fromInt(idx)
-			]));
-};
-var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$nextSibling = function (decoder) {
-	return A2(elm$json$Json$Decode$field, 'nextSibling', decoder);
-};
-var rundis$elm_bootstrap$Bootstrap$Dropdown$sizeDecoder = A3(
-	elm$json$Json$Decode$map2,
-	elm$core$Tuple$pair,
-	A2(
-		rundis$elm_bootstrap$Bootstrap$Dropdown$toggler,
-		_List_fromArray(
-			['target']),
-		rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$boundingArea),
-	A2(
-		rundis$elm_bootstrap$Bootstrap$Dropdown$toggler,
-		_List_fromArray(
-			['target']),
-		rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$nextSibling(
-			A2(rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$childNode, 0, rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$boundingArea))));
-var rundis$elm_bootstrap$Bootstrap$Dropdown$clickHandler = F2(
-	function (toMsg, state) {
-		var status = state.a.status;
-		return A2(
-			elm$json$Json$Decode$andThen,
-			function (_n0) {
-				var b = _n0.a;
-				var m = _n0.b;
-				return elm$json$Json$Decode$succeed(
-					toMsg(
-						rundis$elm_bootstrap$Bootstrap$Dropdown$State(
-							{
-								menuSize: m,
-								status: rundis$elm_bootstrap$Bootstrap$Dropdown$nextStatus(status),
-								toggleSize: b
-							})));
-			},
-			rundis$elm_bootstrap$Bootstrap$Dropdown$sizeDecoder);
-	});
-var rundis$elm_bootstrap$Bootstrap$Dropdown$togglePrivate = F4(
-	function (buttonOptions, children, toggleMsg, state) {
-		return A2(
-			elm$html$Html$button,
-			_Utils_ap(
-				rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(buttonOptions),
+				elm$html$Html$Attributes$classList(
 				_List_fromArray(
 					[
-						elm$html$Html$Attributes$class('dropdown-toggle'),
-						elm$html$Html$Attributes$type_('button'),
-						A2(
-						elm$html$Html$Events$on,
-						'click',
-						A2(rundis$elm_bootstrap$Bootstrap$Dropdown$clickHandler, toggleMsg, state))
+						_Utils_Tuple2('form-check-input', !options.custom),
+						_Utils_Tuple2('custom-control-input', options.custom)
 					])),
-			children);
+				elm$html$Html$Attributes$type_('checkbox'),
+				elm$html$Html$Attributes$disabled(options.disabled),
+				rundis$elm_bootstrap$Bootstrap$Form$Checkbox$stateAttribute(options.state)
+			]),
+		_Utils_ap(
+			A2(
+				elm$core$List$filterMap,
+				elm$core$Basics$identity,
+				_List_fromArray(
+					[
+						A2(elm$core$Maybe$map, elm$html$Html$Events$onCheck, options.onChecked),
+						A2(elm$core$Maybe$map, elm$html$Html$Attributes$id, options.id)
+					])),
+			_Utils_ap(
+				function () {
+					var _n0 = options.validation;
+					if (_n0.$ === 'Just') {
+						var v = _n0.a;
+						return _List_fromArray(
+							[
+								elm$html$Html$Attributes$class(
+								rundis$elm_bootstrap$Bootstrap$Form$FormInternal$validationToString(v))
+							]);
+					} else {
+						return _List_Nil;
+					}
+				}(),
+				options.attributes)));
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$view = function (_n0) {
+	var chk = _n0.a;
+	var opts = A3(elm$core$List$foldl, rundis$elm_bootstrap$Bootstrap$Form$Checkbox$applyModifier, rundis$elm_bootstrap$Bootstrap$Form$Checkbox$defaultOptions, chk.options);
+	return A2(
+		elm$html$Html$div,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$classList(
+				_List_fromArray(
+					[
+						_Utils_Tuple2('form-check', !opts.custom),
+						_Utils_Tuple2('form-check-inline', (!opts.custom) && opts.inline),
+						_Utils_Tuple2('custom-control', opts.custom),
+						_Utils_Tuple2('custom-checkbox', opts.custom),
+						_Utils_Tuple2('custom-control-inline', opts.inline && opts.custom)
+					]))
+			]),
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$input,
+				rundis$elm_bootstrap$Bootstrap$Form$Checkbox$toAttributes(opts),
+				_List_Nil),
+				A2(
+				elm$html$Html$label,
+				_Utils_ap(
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$classList(
+							_List_fromArray(
+								[
+									_Utils_Tuple2('form-check-label', !opts.custom),
+									_Utils_Tuple2('custom-control-label', opts.custom)
+								]))
+						]),
+					function () {
+						var _n1 = opts.id;
+						if (_n1.$ === 'Just') {
+							var v = _n1.a;
+							return _List_fromArray(
+								[
+									elm$html$Html$Attributes$for(v)
+								]);
+						} else {
+							return _List_Nil;
+						}
+					}()),
+				_List_fromArray(
+					[
+						elm$html$Html$text(chk.label)
+					]))
+			]));
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$checkbox = F2(
+	function (options, label) {
+		return rundis$elm_bootstrap$Bootstrap$Form$Checkbox$view(
+			A2(rundis$elm_bootstrap$Bootstrap$Form$Checkbox$create, options, label));
 	});
-var rundis$elm_bootstrap$Bootstrap$Dropdown$toggle = F2(
-	function (buttonOptions, children) {
-		return rundis$elm_bootstrap$Bootstrap$Dropdown$DropdownToggle(
-			A2(rundis$elm_bootstrap$Bootstrap$Dropdown$togglePrivate, buttonOptions, children));
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$On = {$: 'On'};
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$Value = function (a) {
+	return {$: 'Value', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$checked = function (isCheck) {
+	return rundis$elm_bootstrap$Bootstrap$Form$Checkbox$Value(
+		isCheck ? rundis$elm_bootstrap$Bootstrap$Form$Checkbox$On : rundis$elm_bootstrap$Bootstrap$Form$Checkbox$Off);
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$Id = function (a) {
+	return {$: 'Id', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$id = function (theId) {
+	return rundis$elm_bootstrap$Bootstrap$Form$Checkbox$Id(theId);
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$OnChecked = function (a) {
+	return {$: 'OnChecked', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Checkbox$onCheck = function (toMsg) {
+	return rundis$elm_bootstrap$Bootstrap$Form$Checkbox$OnChecked(toMsg);
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$Date = {$: 'Date'};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$Input = function (a) {
+	return {$: 'Input', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$Type = function (a) {
+	return {$: 'Type', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$create = F2(
+	function (tipe, options) {
+		return rundis$elm_bootstrap$Bootstrap$Form$Input$Input(
+			{
+				options: A2(
+					elm$core$List$cons,
+					rundis$elm_bootstrap$Bootstrap$Form$Input$Type(tipe),
+					options)
+			});
+	});
+var elm$html$Html$Attributes$readonly = elm$html$Html$Attributes$boolProperty('readOnly');
+var rundis$elm_bootstrap$Bootstrap$Form$Input$applyModifier = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'Size':
+				var size_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						size: elm$core$Maybe$Just(size_)
+					});
+			case 'Id':
+				var id_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						id: elm$core$Maybe$Just(id_)
+					});
+			case 'Type':
+				var tipe = modifier.a;
+				return _Utils_update(
+					options,
+					{tipe: tipe});
+			case 'Disabled':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{disabled: val});
+			case 'Value':
+				var value_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						value: elm$core$Maybe$Just(value_)
+					});
+			case 'Placeholder':
+				var value_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						placeholder: elm$core$Maybe$Just(value_)
+					});
+			case 'OnInput':
+				var onInput_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						onInput: elm$core$Maybe$Just(onInput_)
+					});
+			case 'Validation':
+				var validation_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						validation: elm$core$Maybe$Just(validation_)
+					});
+			case 'Readonly':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{readonly: val});
+			default:
+				var attrs_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs_)
+					});
+		}
+	});
+var rundis$elm_bootstrap$Bootstrap$Form$Input$Text = {$: 'Text'};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$defaultOptions = {attributes: _List_Nil, disabled: false, id: elm$core$Maybe$Nothing, onInput: elm$core$Maybe$Nothing, placeholder: elm$core$Maybe$Nothing, readonly: false, size: elm$core$Maybe$Nothing, tipe: rundis$elm_bootstrap$Bootstrap$Form$Input$Text, validation: elm$core$Maybe$Nothing, value: elm$core$Maybe$Nothing};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$sizeAttribute = function (size) {
+	return A2(
+		elm$core$Maybe$map,
+		function (s) {
+			return elm$html$Html$Attributes$class('form-control-' + s);
+		},
+		rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(size));
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$typeAttribute = function (inputType) {
+	return elm$html$Html$Attributes$type_(
+		function () {
+			switch (inputType.$) {
+				case 'Text':
+					return 'text';
+				case 'Password':
+					return 'password';
+				case 'DatetimeLocal':
+					return 'datetime-local';
+				case 'Date':
+					return 'date';
+				case 'Month':
+					return 'month';
+				case 'Time':
+					return 'time';
+				case 'Week':
+					return 'week';
+				case 'Number':
+					return 'number';
+				case 'Email':
+					return 'email';
+				case 'Url':
+					return 'url';
+				case 'Search':
+					return 'search';
+				case 'Tel':
+					return 'tel';
+				default:
+					return 'color';
+			}
+		}());
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$validationAttribute = function (validation) {
+	return elm$html$Html$Attributes$class(
+		rundis$elm_bootstrap$Bootstrap$Form$FormInternal$validationToString(validation));
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$toAttributes = function (modifiers) {
+	var options = A3(elm$core$List$foldl, rundis$elm_bootstrap$Bootstrap$Form$Input$applyModifier, rundis$elm_bootstrap$Bootstrap$Form$Input$defaultOptions, modifiers);
+	return _Utils_ap(
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('form-control'),
+				elm$html$Html$Attributes$disabled(options.disabled),
+				elm$html$Html$Attributes$readonly(options.readonly),
+				rundis$elm_bootstrap$Bootstrap$Form$Input$typeAttribute(options.tipe)
+			]),
+		_Utils_ap(
+			A2(
+				elm$core$List$filterMap,
+				elm$core$Basics$identity,
+				_List_fromArray(
+					[
+						A2(elm$core$Maybe$map, elm$html$Html$Attributes$id, options.id),
+						A2(elm$core$Maybe$andThen, rundis$elm_bootstrap$Bootstrap$Form$Input$sizeAttribute, options.size),
+						A2(elm$core$Maybe$map, elm$html$Html$Attributes$value, options.value),
+						A2(elm$core$Maybe$map, elm$html$Html$Attributes$placeholder, options.placeholder),
+						A2(elm$core$Maybe$map, elm$html$Html$Events$onInput, options.onInput),
+						A2(elm$core$Maybe$map, rundis$elm_bootstrap$Bootstrap$Form$Input$validationAttribute, options.validation)
+					])),
+			options.attributes));
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$view = function (_n0) {
+	var options = _n0.a.options;
+	return A2(
+		elm$html$Html$input,
+		rundis$elm_bootstrap$Bootstrap$Form$Input$toAttributes(options),
+		_List_Nil);
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$input = F2(
+	function (tipe, options) {
+		return rundis$elm_bootstrap$Bootstrap$Form$Input$view(
+			A2(rundis$elm_bootstrap$Bootstrap$Form$Input$create, tipe, options));
+	});
+var rundis$elm_bootstrap$Bootstrap$Form$Input$date = rundis$elm_bootstrap$Bootstrap$Form$Input$input(rundis$elm_bootstrap$Bootstrap$Form$Input$Date);
+var rundis$elm_bootstrap$Bootstrap$Form$Input$Id = function (a) {
+	return {$: 'Id', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$id = function (id_) {
+	return rundis$elm_bootstrap$Bootstrap$Form$Input$Id(id_);
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$OnInput = function (a) {
+	return {$: 'OnInput', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$onInput = function (toMsg) {
+	return rundis$elm_bootstrap$Bootstrap$Form$Input$OnInput(toMsg);
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$text = rundis$elm_bootstrap$Bootstrap$Form$Input$input(rundis$elm_bootstrap$Bootstrap$Form$Input$Text);
+var rundis$elm_bootstrap$Bootstrap$Form$Input$Time = {$: 'Time'};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$time = rundis$elm_bootstrap$Bootstrap$Form$Input$input(rundis$elm_bootstrap$Bootstrap$Form$Input$Time);
+var rundis$elm_bootstrap$Bootstrap$Form$Input$Value = function (a) {
+	return {$: 'Value', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Input$value = function (value_) {
+	return rundis$elm_bootstrap$Bootstrap$Form$Input$Value(value_);
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Select$Id = function (a) {
+	return {$: 'Id', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Select$id = function (id_) {
+	return rundis$elm_bootstrap$Bootstrap$Form$Select$Id(id_);
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Select$OnChange = function (a) {
+	return {$: 'OnChange', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Select$onChange = function (toMsg) {
+	return rundis$elm_bootstrap$Bootstrap$Form$Select$OnChange(toMsg);
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Select$Select = function (a) {
+	return {$: 'Select', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Select$create = F2(
+	function (options, items) {
+		return rundis$elm_bootstrap$Bootstrap$Form$Select$Select(
+			{items: items, options: options});
+	});
+var elm$html$Html$select = _VirtualDom_node('select');
+var rundis$elm_bootstrap$Bootstrap$Form$Select$applyModifier = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'Size':
+				var size_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						size: elm$core$Maybe$Just(size_)
+					});
+			case 'Id':
+				var id_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						id: elm$core$Maybe$Just(id_)
+					});
+			case 'Custom':
+				return _Utils_update(
+					options,
+					{custom: true});
+			case 'Disabled':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{disabled: val});
+			case 'OnChange':
+				var onChange_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						onChange: elm$core$Maybe$Just(onChange_)
+					});
+			case 'Validation':
+				var validation_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						validation: elm$core$Maybe$Just(validation_)
+					});
+			default:
+				var attrs_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs_)
+					});
+		}
+	});
+var rundis$elm_bootstrap$Bootstrap$Form$Select$customEventOnChange = function (tagger) {
+	return A2(
+		elm$html$Html$Events$on,
+		'change',
+		A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue));
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Select$defaultOptions = {attributes: _List_Nil, custom: false, disabled: false, id: elm$core$Maybe$Nothing, onChange: elm$core$Maybe$Nothing, size: elm$core$Maybe$Nothing, validation: elm$core$Maybe$Nothing};
+var rundis$elm_bootstrap$Bootstrap$Form$Select$sizeAttribute = F2(
+	function (isCustom, size_) {
+		var prefix = isCustom ? 'custom-select-' : 'form-control-';
+		return A2(
+			elm$core$Maybe$map,
+			function (s) {
+				return elm$html$Html$Attributes$class(
+					_Utils_ap(prefix, s));
+			},
+			rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(size_));
+	});
+var rundis$elm_bootstrap$Bootstrap$Form$Select$validationAttribute = function (validation_) {
+	return elm$html$Html$Attributes$class(
+		rundis$elm_bootstrap$Bootstrap$Form$FormInternal$validationToString(validation_));
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Select$toAttributes = function (modifiers) {
+	var options = A3(elm$core$List$foldl, rundis$elm_bootstrap$Bootstrap$Form$Select$applyModifier, rundis$elm_bootstrap$Bootstrap$Form$Select$defaultOptions, modifiers);
+	return _Utils_ap(
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$classList(
+				_List_fromArray(
+					[
+						_Utils_Tuple2('form-control', !options.custom),
+						_Utils_Tuple2('custom-select', options.custom)
+					])),
+				elm$html$Html$Attributes$disabled(options.disabled)
+			]),
+		_Utils_ap(
+			A2(
+				elm$core$List$filterMap,
+				elm$core$Basics$identity,
+				_List_fromArray(
+					[
+						A2(elm$core$Maybe$map, elm$html$Html$Attributes$id, options.id),
+						A2(
+						elm$core$Maybe$andThen,
+						rundis$elm_bootstrap$Bootstrap$Form$Select$sizeAttribute(options.custom),
+						options.size),
+						A2(elm$core$Maybe$map, rundis$elm_bootstrap$Bootstrap$Form$Select$customEventOnChange, options.onChange),
+						A2(elm$core$Maybe$map, rundis$elm_bootstrap$Bootstrap$Form$Select$validationAttribute, options.validation)
+					])),
+			options.attributes));
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Select$view = function (_n0) {
+	var options = _n0.a.options;
+	var items = _n0.a.items;
+	return A2(
+		elm$html$Html$select,
+		rundis$elm_bootstrap$Bootstrap$Form$Select$toAttributes(options),
+		A2(
+			elm$core$List$map,
+			function (_n1) {
+				var e = _n1.a;
+				return e;
+			},
+			items));
+};
+var rundis$elm_bootstrap$Bootstrap$Form$Select$select = F2(
+	function (options, items) {
+		return rundis$elm_bootstrap$Bootstrap$Form$Select$view(
+			A2(rundis$elm_bootstrap$Bootstrap$Form$Select$create, options, items));
 	});
 var author$project$AddTaskComponent$addTask = function (model) {
 	return A2(
@@ -7863,28 +8257,134 @@ var author$project$AddTaskComponent$addTask = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						A4(author$project$AddTaskComponent$viewInput, 'text', 'Task-Description', model.tmpTask.displayName, author$project$Msg$AddTaskName),
 						A2(
-						elm$html$Html$div,
+						rundis$elm_bootstrap$Bootstrap$Form$form,
 						_List_Nil,
 						_List_fromArray(
 							[
 								A2(
-								rundis$elm_bootstrap$Bootstrap$Dropdown$dropdown,
-								model.myDrop1State,
-								{
-									items: A2(elm$core$List$map, author$project$AddTaskComponent$peopleToItems, model.people),
-									options: _List_Nil,
-									toggleButton: A2(
-										rundis$elm_bootstrap$Bootstrap$Dropdown$toggle,
-										_List_fromArray(
-											[rundis$elm_bootstrap$Bootstrap$Button$primary]),
+								rundis$elm_bootstrap$Bootstrap$Form$group,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Form$label,
 										_List_fromArray(
 											[
-												elm$html$Html$text('person responsible')
+												elm$html$Html$Attributes$for('displayName')
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('displayName')
 											])),
-									toggleMsg: author$project$Msg$MyDrop1Msg
-								})
+										rundis$elm_bootstrap$Bootstrap$Form$Input$text(
+										_List_fromArray(
+											[
+												rundis$elm_bootstrap$Bootstrap$Form$Input$id('displayName'),
+												rundis$elm_bootstrap$Bootstrap$Form$Input$value(model.tmpTask.displayName),
+												rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(author$project$Msg$AddTaskName)
+											])),
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Form$label,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$for('description')
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('description')
+											])),
+										rundis$elm_bootstrap$Bootstrap$Form$Input$text(
+										_List_fromArray(
+											[
+												rundis$elm_bootstrap$Bootstrap$Form$Input$id('description'),
+												rundis$elm_bootstrap$Bootstrap$Form$Input$value(model.tmpTask.description),
+												rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(author$project$Msg$AddTaskDescription)
+											]))
+									])),
+								A2(
+								rundis$elm_bootstrap$Bootstrap$Form$group,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Form$label,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$for('responsible')
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('Person resposible')
+											])),
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Form$Select$select,
+										_List_fromArray(
+											[
+												rundis$elm_bootstrap$Bootstrap$Form$Select$id('responsible'),
+												rundis$elm_bootstrap$Bootstrap$Form$Select$onChange(author$project$Msg$AddTaskPersonDropdown)
+											]),
+										A2(elm$core$List$map, author$project$AddTaskComponent$peopleToItems, model.people))
+									])),
+								A2(
+								rundis$elm_bootstrap$Bootstrap$Form$group,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Form$label,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$for('dueDate')
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('dueDate')
+											])),
+										rundis$elm_bootstrap$Bootstrap$Form$Input$date(
+										_List_fromArray(
+											[
+												rundis$elm_bootstrap$Bootstrap$Form$Input$id('dueDate'),
+												rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(author$project$Msg$AddTaskDueDate)
+											]))
+									])),
+								A2(
+								rundis$elm_bootstrap$Bootstrap$Form$group,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Form$label,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$for('dueTime')
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('dueTime')
+											])),
+										rundis$elm_bootstrap$Bootstrap$Form$Input$time(
+										_List_fromArray(
+											[
+												rundis$elm_bootstrap$Bootstrap$Form$Input$id('dueTime'),
+												rundis$elm_bootstrap$Bootstrap$Form$Input$onInput(author$project$Msg$AddTaskDueTime)
+											]))
+									])),
+								A2(
+								rundis$elm_bootstrap$Bootstrap$Form$group,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Form$Checkbox$checkbox,
+										_List_fromArray(
+											[
+												rundis$elm_bootstrap$Bootstrap$Form$Checkbox$id('isRepetitiveTask'),
+												rundis$elm_bootstrap$Bootstrap$Form$Checkbox$checked(model.tmpTask.isRepetitiveTask),
+												rundis$elm_bootstrap$Bootstrap$Form$Checkbox$onCheck(author$project$Msg$AddTaskIsRepetitiveTask)
+											]),
+										'isRepetitiveTask')
+									]))
 							])),
 						A2(
 						rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -7935,7 +8435,7 @@ var author$project$AddTaskView$addTaskView = function (model) {
 									]))
 							])),
 						author$project$ListPeopleComponent$listPeople(model.people),
-						author$project$ListTasksComponent$listTasks(model.tasks),
+						author$project$ListTasksComponent$listTasks(model),
 						A2(
 						rundis$elm_bootstrap$Bootstrap$Grid$col,
 						_List_Nil,
@@ -7950,18 +8450,6 @@ var author$project$AddTaskView$addTaskView = function (model) {
 				author$project$AddTaskComponent$addTask(model)
 			]));
 };
-var justinmimbs$time_extra$Time$Extra$posixToParts = F2(
-	function (zone, posix) {
-		return {
-			day: A2(elm$time$Time$toDay, zone, posix),
-			hour: A2(elm$time$Time$toHour, zone, posix),
-			millisecond: A2(elm$time$Time$toMillis, zone, posix),
-			minute: A2(elm$time$Time$toMinute, zone, posix),
-			month: A2(elm$time$Time$toMonth, zone, posix),
-			second: A2(elm$time$Time$toSecond, zone, posix),
-			year: A2(elm$time$Time$toYear, zone, posix)
-		};
-	});
 var author$project$DayTasksComponent$getBeginningOfDay = F2(
 	function (timeZone, date) {
 		var asParts = A2(justinmimbs$time_extra$Time$Extra$posixToParts, timeZone, date);
@@ -8551,51 +9039,6 @@ var author$project$DayTasksComponent$getEndOfWeek = F2(
 				A4(justinmimbs$time_extra$Time$Extra$add, justinmimbs$time_extra$Time$Extra$Week, 1, timeZone, date)));
 		return newDate;
 	});
-var author$project$Formatters$monthToInt = function (month) {
-	switch (month.$) {
-		case 'Jan':
-			return 1;
-		case 'Feb':
-			return 2;
-		case 'Mar':
-			return 3;
-		case 'Apr':
-			return 4;
-		case 'May':
-			return 5;
-		case 'Jun':
-			return 6;
-		case 'Jul':
-			return 7;
-		case 'Aug':
-			return 8;
-		case 'Sep':
-			return 9;
-		case 'Oct':
-			return 10;
-		case 'Nov':
-			return 11;
-		default:
-			return 12;
-	}
-};
-var author$project$Formatters$getFormatedStringFromDate = F2(
-	function (timeZone, date) {
-		var year = elm$core$String$fromInt(
-			A2(elm$time$Time$toYear, timeZone, date));
-		var second = elm$core$String$fromInt(
-			A2(elm$time$Time$toSecond, timeZone, date));
-		var month = elm$core$String$fromInt(
-			author$project$Formatters$monthToInt(
-				A2(elm$time$Time$toMonth, timeZone, date)));
-		var minute = elm$core$String$fromInt(
-			A2(elm$time$Time$toMinute, timeZone, date));
-		var hour = elm$core$String$fromInt(
-			A2(elm$time$Time$toHour, timeZone, date));
-		var day = elm$core$String$fromInt(
-			A2(elm$time$Time$toDay, timeZone, date));
-		return day + ('.' + (month + ('.' + (year + ('; ' + (hour + (':' + (minute + (':' + second)))))))));
-	});
 var author$project$DayTasksComponent$getTaskCardFromTasks = F4(
 	function (timeZone, time, weekOffset, task) {
 		return A2(
@@ -9034,7 +9477,7 @@ var author$project$MainView$mainView = function (model) {
 									]))
 							])),
 						author$project$ListPeopleComponent$listPeople(model.people),
-						author$project$ListTasksComponent$listTasks(model.tasks),
+						author$project$ListTasksComponent$listTasks(model),
 						A2(
 						rundis$elm_bootstrap$Bootstrap$Grid$col,
 						_List_Nil,
@@ -9065,8 +9508,7 @@ var author$project$MainView$mainView = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										elm$html$Html$text(
-										elm$core$String$fromInt(model.count))
+										elm$html$Html$text(model.count)
 									])),
 								A2(
 								elm$html$Html$button,
@@ -9114,7 +9556,7 @@ var author$project$NextWeekView$nextWeekView = function (model) {
 									]))
 							])),
 						author$project$ListPeopleComponent$listPeople(model.people),
-						author$project$ListTasksComponent$listTasks(model.tasks),
+						author$project$ListTasksComponent$listTasks(model),
 						A2(
 						rundis$elm_bootstrap$Bootstrap$Grid$col,
 						_List_Nil,
@@ -9145,8 +9587,7 @@ var author$project$NextWeekView$nextWeekView = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										elm$html$Html$text(
-										elm$core$String$fromInt(model.count))
+										elm$html$Html$text(model.count)
 									])),
 								A2(
 								elm$html$Html$button,
@@ -9194,7 +9635,7 @@ var author$project$PreviousWeekView$previousWeekView = function (model) {
 									]))
 							])),
 						author$project$ListPeopleComponent$listPeople(model.people),
-						author$project$ListTasksComponent$listTasks(model.tasks),
+						author$project$ListTasksComponent$listTasks(model),
 						A2(
 						rundis$elm_bootstrap$Bootstrap$Grid$col,
 						_List_Nil,
@@ -9225,8 +9666,7 @@ var author$project$PreviousWeekView$previousWeekView = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										elm$html$Html$text(
-										elm$core$String$fromInt(model.count))
+										elm$html$Html$text(model.count)
 									])),
 								A2(
 								elm$html$Html$button,
@@ -9297,7 +9737,7 @@ var elm$core$String$left = F2(
 	function (n, string) {
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
 	});
-var elm$core$String$toInt = _String_toInt;
+var elm$core$String$contains = _String_contains;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
 		return {fragment: fragment, host: host, path: path, port_: port_, protocol: protocol, query: query};

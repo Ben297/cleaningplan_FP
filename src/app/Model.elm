@@ -14,7 +14,7 @@ import Msg exposing (DisplayType(..))
 
 type alias Model =
     {
-        count : Int
+        count : String
         , people : List Person
         , tasks : List Task
         , time : Posix
@@ -27,10 +27,10 @@ type alias Model =
     }
 
 init : Int -> (Model, Cmd Msg)
-init flags = (Model 0 [] [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) True False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState, Cmd.none)
+init flags = (Model "0" [] [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState, Cmd.none)
 
 initMockup : Int -> (Model, Cmd Msg)
-initMockup flags = (Model 0 mockupPeople mockupTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) True False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState, SystemTask.perform Msg.AdjustTimeZone Time.here)
+initMockup flags = (Model "0" mockupPeople mockupTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState, SystemTask.perform Msg.AdjustTimeZone Time.here)
 
 mockupPeople : List Person
 mockupPeople =

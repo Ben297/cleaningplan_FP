@@ -26,7 +26,7 @@ addTaskView model =
                 , button [ onClick (ChangeViewTo MainView) ] [ text "return to Main" ]
             ]
             , listPeople model.people
-            , listTasks model.tasks
+            , listTasks model
             , Grid.col []
             [
                 text ( "Number of people: " ++ (String.fromInt (List.length model.people)) ++ "\nNumber of Tasks: " ++ (String.fromInt (List.length model.tasks)) )

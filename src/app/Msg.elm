@@ -11,10 +11,14 @@ type Msg
     | ChangeViewTo DisplayType
     | AddPersonName String
     | SubmitPerson
-    | AddTaskPersonDropdown Int
+    | AddTaskPersonDropdown String
     | MyDrop1Msg Dropdown.State
     | AddTaskName String
     | SubmitTask
+    | AddTaskDescription String
+    | AddTaskDueDate String
+    | AddTaskDueTime String
+    | AddTaskIsRepetitiveTask Bool
 
 
 

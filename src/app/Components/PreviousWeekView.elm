@@ -25,7 +25,7 @@ previousWeekView model =
                 , button [ onClick (ChangeViewTo MainView) ] [ text "return to Main" ]
             ]
             , listPeople model.people
-            , listTasks model.tasks
+            , listTasks model
             , Grid.col []
             [
                 text ( "Number of people: " ++ (String.fromInt (List.length model.people)) ++ "\nNumber of Tasks: " ++ (String.fromInt (List.length model.tasks)) )
@@ -33,7 +33,7 @@ previousWeekView model =
             , Grid.col[]
             [
                 button [ onClick Increment ] [ text "+1" ]
-                , div [] [ text <| String.fromInt model.count ]
+                , div [] [ text <|  model.count ]
                 , button [ onClick Decrement ] [ text "-1" ]
             ]
         ]

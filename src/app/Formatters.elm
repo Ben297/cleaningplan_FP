@@ -1,4 +1,4 @@
-module Formatters exposing (getFormatedStringFromDate, monthToInt, toJapaneseWeekday)
+module Formatters exposing (getFormatedStringFromDate, monthToInt, toJapaneseWeekday,intToMonth,boolToString)
 
 import Time exposing (Month(..), Weekday(..), Posix)
 
@@ -40,3 +40,23 @@ toJapaneseWeekday weekday =
     Fri -> "金"
     Sat -> "土"
     Sun -> "日"
+
+intToMonth: Int -> Time.Month
+intToMonth int = case int of
+    1 -> Jan
+    2 -> Feb
+    3 -> Mar
+    4 -> Apr
+    5 -> May
+    6 -> Jun
+    7 -> Jul
+    8 -> Aug
+    9 -> Sep
+    10 -> Oct
+    11 -> Nov
+    12 -> Dec
+    _ -> Jan
+boolToString: Bool -> String
+boolToString bool = case bool of
+    True -> "True"
+    False -> "False"
