@@ -1,5 +1,6 @@
 module Msg exposing (Msg(..), DisplayType(..))
 import Time
+import Bootstrap.Dropdown as Dropdown
 
 type Msg
     = Increment
@@ -10,6 +11,8 @@ type Msg
     | ChangeViewTo DisplayType
     | AddPersonName String
     | SubmitPerson
+    | AddTaskPersonDropdown Int
+    | MyDrop1Msg Dropdown.State
 
 type DisplayType =
     MainView

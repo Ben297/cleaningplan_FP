@@ -59,6 +59,15 @@ update msg model =
                 , Cmd.none
             )
 
+        MyDrop1Msg state ->
+            ( { model | myDrop1State = state }
+            , Cmd.none
+            )
+
+        AddTaskPersonDropdown id ->
+            ( model
+                , Cmd.none
+            )
 
 getNextIdPerson: List Person -> Int
 getNextIdPerson people =
@@ -66,6 +75,17 @@ getNextIdPerson people =
         tmpPerson = List.head (List.reverse people)
     in
         case  tmpPerson of
+            Just val ->
+                val.id + 1
+            Nothing -> 0
+            
+
+getNextIdTask: List Task -> Int
+getNextIdTask tasks =
+    let
+        tmpTask = List.head (List.reverse tasks)
+    in
+        case  tmpTask of
             Just val ->
                 val.id + 1
             Nothing -> 0
