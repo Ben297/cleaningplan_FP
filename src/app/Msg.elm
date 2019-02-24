@@ -1,6 +1,7 @@
 module Msg exposing (Msg(..), DisplayType(..))
 import Time
 import Bootstrap.Dropdown as Dropdown
+import Bootstrap.Navbar as Navbar
 
 type Msg
     = Increment
@@ -19,6 +20,7 @@ type Msg
     | AddTaskDueDate String
     | AddTaskDueTime String
     | AddTaskIsRepetitiveTask Bool
+    | NavbarMsg Navbar.State
 
 
 

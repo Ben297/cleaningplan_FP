@@ -5,12 +5,13 @@ import Person exposing (Person)
 import HouseTask as MyTask exposing (Task)
 import List.Extra as LiEx exposing (getAt)
 import Bootstrap.Dropdown as Dropdown
+import Bootstrap.Navbar as Navbar
 import Maybe
 --import Time exposing (Posix)
 import Time exposing (Month(..), utc, Posix)
 import Time.Extra exposing (Parts, partsToPosix)
 import Task as SystemTask
-import Msg exposing (DisplayType(..))
+import Msg exposing (..)
 
 type alias Model =
     {
@@ -24,13 +25,28 @@ type alias Model =
         , tmpTask : Task
         , tmpDueDate : Parts
         , myDrop1State : Dropdown.State
+        , navbarState : Navbar.State
+
+
     }
 
 init : Int -> (Model, Cmd Msg)
-init flags = (Model "0" [] [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState, Cmd.none)
+init flags =
+    let
+        initNavTup = Navbar.initialState NavbarMsg
+        initNav = Tuple.first initNavTup
+        initCmd = Cmd.batch [(Tuple.second initNavTup), SystemTask.perform Msg.AdjustTimeZone Time.here]
+    in
+        (Model "0" [] [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav, initCmd)
 
 initMockup : Int -> (Model, Cmd Msg)
-initMockup flags = (Model "0" mockupPeople mockupTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState, SystemTask.perform Msg.AdjustTimeZone Time.here)
+initMockup flags =
+    let
+        initNavTup = Navbar.initialState NavbarMsg
+        initNav = Tuple.first initNavTup
+        initCmd = Cmd.batch [(Tuple.second initNavTup), SystemTask.perform Msg.AdjustTimeZone Time.here]
+    in
+        (Model "0" mockupPeople mockupTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav, initCmd)
 
 mockupPeople : List Person
 mockupPeople =

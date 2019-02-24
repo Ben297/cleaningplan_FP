@@ -7,6 +7,7 @@ import Html.Events exposing (onClick)
 import Html.Attributes as Attr exposing (id, class, classList, disabled)
 import Bootstrap.CDN as CDN
 import Bootstrap.Grid as Grid
+import Bootstrap.Table as Table
 import List
 
 import HouseTask as Task exposing (Task)
@@ -32,79 +33,31 @@ dayTasks model weekOffset=
         saturdayTime    =   Time.Extra.add Day 5 timeZone (Time.Extra.partsToPosix timeZone beginningOfWeekAtNowBeginning)
         sundayTime      =   Time.Extra.add Day 6 timeZone (Time.Extra.partsToPosix timeZone beginningOfWeekAtNowBeginning)
     in
-    Grid.row []
-    [
-        Grid.col []
-        ( [
-           div []
-           [
-                h1 []
-                [
-                    text ("Monday: " ++ (getFormatedStringFromDate timeZone mondayTime))
-                ]
-           ]
-        ] ++ (List.map (getTaskCardFromTasks timeZone time weekOffset) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone mondayTime)) tasks)) )
-        , Grid.col []
-        ( [
-            div []
-            [
-                h1 []
-                [
-                    text ("Tuesday: " ++ (getFormatedStringFromDate timeZone tuesdayTime))
-                ]
+
+    Table.table
+    { options = [  Table.hover, Table.bordered ]
+    , thead =  Table.simpleThead
+        [ Table.th [] [ text ("Monday: " ++ (getFormatedStringFromDate timeZone mondayTime)) ]
+        , Table.th [] [ text ("Tuesday: " ++ (getFormatedStringFromDate timeZone tuesdayTime))]
+        , Table.th [] [ text ("Wednesday: " ++ (getFormatedStringFromDate timeZone wednesdayTime))]
+        , Table.th [] [ text ("Thursday: " ++ (getFormatedStringFromDate timeZone thursdayTime))]
+        , Table.th [] [ text ("Friday: " ++ (getFormatedStringFromDate timeZone fridayTime))]
+        , Table.th [] [ text ("Saturday: " ++ (getFormatedStringFromDate timeZone saturdayTime))]
+        , Table.th [] [ text ("Sunday: " ++ (getFormatedStringFromDate timeZone sundayTime))]
+        ]
+    , tbody =
+        Table.tbody []
+            [ Table.tr []
+                [ Table.td [] (List.map (getTaskCardFromTasks timeZone time weekOffset) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone mondayTime)) tasks))
+                ,Table.td [] (List.map (getTaskCardFromTasks timeZone time weekOffset) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone tuesdayTime)) tasks))
+                ,Table.td [] (List.map (getTaskCardFromTasks timeZone time weekOffset) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone wednesdayTime)) tasks))
+                ,Table.td [] (List.map (getTaskCardFromTasks timeZone time weekOffset) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone thursdayTime)) tasks))
+                ,Table.td [] (List.map (getTaskCardFromTasks timeZone time weekOffset) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone fridayTime)) tasks))
+                ,Table.td [] (List.map (getTaskCardFromTasks timeZone time weekOffset) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone saturdayTime)) tasks))
+                ,Table.td [] (List.map (getTaskCardFromTasks timeZone time weekOffset) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone sundayTime)) tasks))]
+
             ]
-        ] ++ (List.map (getTaskCardFromTasks timeZone time weekOffset) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone tuesdayTime)) tasks)) )
-        , Grid.col []
-        ( [
-            div []
-            [
-                h1 []
-                [
-                    text ("Wednesday: " ++ (getFormatedStringFromDate timeZone wednesdayTime))
-                ]
-            ]
-        ] ++ (List.map (getTaskCardFromTasks timeZone time weekOffset) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone wednesdayTime)) tasks)) )
-        , Grid.col []
-        ( [
-            div []
-            [
-                h1 []
-                [
-                    text ("Thursday: " ++ (getFormatedStringFromDate timeZone thursdayTime))
-                ]
-            ]
-        ] ++ (List.map (getTaskCardFromTasks timeZone time weekOffset) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone thursdayTime)) tasks)) )
-        , Grid.col []
-        ( [
-            div []
-            [
-                h1 []
-                [
-                    text ("Friday: " ++ (getFormatedStringFromDate timeZone fridayTime))
-                ]
-            ]
-        ] ++ (List.map (getTaskCardFromTasks timeZone time weekOffset) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone fridayTime)) tasks)) )
-        , Grid.col []
-        ( [
-            div []
-            [
-                h1 []
-                [
-                    text ("Saturday: " ++ (getFormatedStringFromDate timeZone saturdayTime))
-                ]
-            ]
-        ] ++ (List.map (getTaskCardFromTasks timeZone time weekOffset) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone saturdayTime)) tasks)) )
-        , Grid.col []
-        ( [
-            div []
-            [
-                h1 []
-                [
-                    text ("Sunday: " ++ (getFormatedStringFromDate timeZone sundayTime))
-                ]
-            ]
-        ] ++ (List.map (getTaskCardFromTasks timeZone time weekOffset) (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone sundayTime)) tasks)) )
-    ]
+    }
 
 
 offsetWeeksForTask: Time.Zone -> Int -> Posix -> Task -> Task

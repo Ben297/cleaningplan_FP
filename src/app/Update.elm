@@ -197,7 +197,8 @@ update msg model =
                 ({model | tmpTask = newTask}
                     ,Cmd.none
                 )
-
+        NavbarMsg state ->
+                    ( { model | navbarState = state }, Cmd.none )
 
 
 getNextIdPerson: List Person -> Int
