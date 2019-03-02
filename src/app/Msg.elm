@@ -21,6 +21,12 @@ type Msg
     | AddTaskDueTime String
     | AddTaskIsRepetitiveTask Bool
     | NavbarMsg Navbar.State
+    | ShowModalAddTask
+    | CloseModalAddTask
+    | ShowModalBlamelist
+    | CloseModalBlamelist
+
+
 
 
 

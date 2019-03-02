@@ -6,6 +6,7 @@ import HouseTask as MyTask exposing (Task)
 import List.Extra as LiEx exposing (getAt)
 import Bootstrap.Dropdown as Dropdown
 import Bootstrap.Navbar as Navbar
+import Bootstrap.Modal as Modal
 import Maybe
 --import Time exposing (Posix)
 import Time exposing (Month(..), utc, Posix)
@@ -26,6 +27,8 @@ type alias Model =
         , tmpDueDate : Parts
         , myDrop1State : Dropdown.State
         , navbarState : Navbar.State
+        , modalAddTask : Modal.Visibility
+        , modalShowBlamelist : Modal.Visibility
 
 
     }
@@ -37,7 +40,7 @@ init flags =
         initNav = Tuple.first initNavTup
         initCmd = Cmd.batch [(Tuple.second initNavTup), SystemTask.perform Msg.AdjustTimeZone Time.here]
     in
-        (Model "0" [] [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav, initCmd)
+        (Model "0" [] [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden, initCmd)
 
 initMockup : Int -> (Model, Cmd Msg)
 initMockup flags =
@@ -46,7 +49,7 @@ initMockup flags =
         initNav = Tuple.first initNavTup
         initCmd = Cmd.batch [(Tuple.second initNavTup), SystemTask.perform Msg.AdjustTimeZone Time.here]
     in
-        (Model "0" mockupPeople mockupTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav, initCmd)
+        (Model "0" mockupPeople mockupTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden, initCmd)
 
 mockupPeople : List Person
 mockupPeople =

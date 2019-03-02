@@ -11,6 +11,7 @@ import List.Extra exposing (find)
 import Time exposing (Posix, utc, Month(..))
 import Time.Extra exposing (Parts, partsToPosix)
 import Formatters exposing (intToMonth)
+import Bootstrap.Modal as Modal
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -198,7 +199,27 @@ update msg model =
                     ,Cmd.none
                 )
         NavbarMsg state ->
-                    ( { model | navbarState = state }, Cmd.none )
+            ( { model | navbarState = state }, Cmd.none )
+
+        ShowModalAddTask ->
+            ( { model | modalAddTask = Modal.shown }
+            , Cmd.none
+            )
+
+        CloseModalAddTask ->
+            ( { model | modalAddTask = Modal.hidden }
+            , Cmd.none
+            )
+
+        ShowModalBlamelist ->
+            ( { model | modalShowBlamelist = Modal.shown }
+            , Cmd.none
+            )
+
+        CloseModalBlamelist ->
+            ( { model | modalShowBlamelist = Modal.hidden }
+            , Cmd.none
+            )
 
 
 getNextIdPerson: List Person -> Int
