@@ -102,7 +102,7 @@ mainView model =
             , listTasks model
             , Grid.col []
             [
-                text ( "Number of people: " ++ (String.fromInt (List.length model.people)) ++ "\nNumber of Tasks: " ++ (String.fromInt (List.length model.tasks)) )
+                text ( "Number of people: " ++ (String.fromInt (List.length model.people)) ++ "\nNumber of Tasks: " ++ (String.fromInt (List.length model.tasks)) ++ model.debug )
             ]
         ]
 

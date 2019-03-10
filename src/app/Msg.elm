@@ -3,6 +3,11 @@ import Time
 import Bootstrap.Dropdown as Dropdown
 import Bootstrap.Navbar as Navbar
 
+import Person exposing (Person)
+import HouseTask as MyTask exposing (Task)
+
+import Json.Encode as E
+
 type Msg
     = Increment
     | Decrement
@@ -25,6 +30,10 @@ type Msg
     | CloseModalAddTask
     | ShowModalBlamelist
     | CloseModalBlamelist
+    | UpdatePeople (List Person)
+    | UpdateTask (List Task)
+    | TaskErr String
+
 
 
 

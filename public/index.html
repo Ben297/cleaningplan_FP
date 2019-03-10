@@ -18,8 +18,83 @@
     //const flags = localStorage.getItem(storageKey);
     const app = Elm.Main.init({
         node: document.getElementById("elm-node"),
-        flags: Date.now()
+        flags: Date.now() //anfrage für init daten, resultat übergeben
     });
+
+    app.ports.saveperson.subscribe(function(data){
+      console.log('person: ' + data.name);
+      //TBD send data to server and get result
+
+      fetch("TBD", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        person: data
+                    })
+                })
+                    .then(r => r.json())
+                    .then(result => {
+                        //console.log('events returned:', dataEvents);
+                        if(result === undefined){
+                            console.log("Something went wrong, while fetching the events.");
+                        } else {
+                            app.ports.loadpeople.send(result);
+                        }
+                    });
+
+
+
+      persons = [{id:1,name:"person1",blameCounter: 0},{id:2,name:"person2",blameCounter: 1}];
+      app.ports.loadpeople.send(persons);
+      console.log('loaded persons');
+    })
+
+    app.ports.savetask.subscribe(function(data){
+      console.log('task: ' + data.displayName);
+      let testdate = "2019-03-16T06:00:00Z"
+      let testdate2 = "2019-03-10T06:00:00Z"
+
+      // fetch to get from server
+
+      //TBDsend data to server and get result
+      // convert int times back to posix format before sending to db
+
+      tasks = [
+        {
+        id:1,
+       displayName: "clean the floor",
+       currentlyResponsible:  {id:1,name:"person1",blameCounter: 0},
+        description:"just clean the damn floor!",
+       dueDate: testdate,
+       creationDate: testdate2,
+       lastDone: testdate,
+       lastDoneBy: {id:1,name:"person1",blameCounter: 0},
+       isRepetitiveTask: true ,
+       isDeleted: false
+     },
+     {
+     id:2,
+    displayName: "clean the floor2",
+    currentlyResponsible:  {id:2,name:"person2",blameCounter: 0},
+     description:"just clean the damn floor!",
+    dueDate: testdate,
+    creationDate: testdate,
+    lastDone: testdate,
+    lastDoneBy: {id:1,name:"person1",blameCounter: 0},
+    isRepetitiveTask: true ,
+    isDeleted: false
+  }
+   ];
+      app.ports.loadtasks.send(tasks);
+      console.log('load tasks');
+    })
+
+
+
+
 
     app.ports.storeCache.subscribe(function(val) {
 

@@ -1,4 +1,4 @@
-module Update exposing (update)
+module Update exposing (update, decodeTaskValue)
 
 import Time exposing (Posix)
 
@@ -12,6 +12,11 @@ import Time exposing (Posix, utc, Month(..))
 import Time.Extra exposing (Parts, partsToPosix)
 import Formatters exposing (intToMonth)
 import Bootstrap.Modal as Modal
+
+import Ports exposing (..)
+import Json.Encode as E
+import Json.Decode as D exposing (field, Decoder, int, string, bool)
+import Json.Decode.Extra exposing (datetime, andMap)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -61,7 +66,7 @@ update msg model =
                 persons = List.append model.people [tmpNewPerson]
             in
             ( {model | people = persons, tmpPerson = (Person 0 "" 0)}
-                , Cmd.none
+                , saveperson model.tmpPerson
             )
 
         MyDrop1Msg state ->
@@ -103,7 +108,7 @@ update msg model =
                 tasks = List.append model.tasks [tmpNewTask]
             in
             ( {model | tasks = tasks, tmpTask = (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False)}
-                , Cmd.none
+                , savetask (tasktoJson model.tmpTask)
             )
 
         AddTaskName displayName ->
@@ -220,6 +225,18 @@ update msg model =
             ( { model | modalShowBlamelist = Modal.hidden }
             , Cmd.none
             )
+        UpdatePeople p ->
+          ( {model | people = p }
+          , Cmd.none
+          )
+        UpdateTask t ->
+            ( {model | tasks = t } --, debug = (Debug.toString t) }
+            , Cmd.none
+            )
+        TaskErr s ->
+          ( {model | debug = s }
+          , Cmd.none
+          )
 
 
 getNextIdPerson: List Person -> Int
@@ -231,7 +248,7 @@ getNextIdPerson people =
             Just val ->
                 val.id + 1
             Nothing -> 0
-            
+
 
 getNextIdTask: List Task -> Int
 getNextIdTask tasks =
@@ -273,3 +290,70 @@ stringElmToInt elm =
             Nothing ->
                 0
 
+
+tasktoJson: Task -> E.Value
+tasktoJson task =
+                E.object[
+                  ("id", E.int task.id),
+                  ("displayName", E.string task.displayName),
+                  ("currentlyResponsible", E.object[
+                    ("id", E.int task.currentlyResponsible.id),
+                    ("name", E.string task.currentlyResponsible.name),
+                    ("blameCounter", E.int task.currentlyResponsible.blameCounter)
+                    ]
+                  ),
+                  ("description", E.string task.description),
+                  ("dueDate", E.int (Time.posixToMillis task.dueDate)),
+                  ("creationDate", E.int (Time.posixToMillis task.creationDate)),
+                  ("lastDone", E.int (Time.posixToMillis task.creationDate)),
+                  ("lastDoneBy", E.object[
+                    ("id", E.int task.currentlyResponsible.id),
+                    ("name", E.string task.currentlyResponsible.name),
+                    ("blameCounter", E.int task.currentlyResponsible.blameCounter)
+                    ]
+                  ),
+                  ("isRepetitiveTask", E.bool task.isRepetitiveTask),
+                  ("isDeleted", E.bool task.isDeleted)
+                ]
+
+
+decodeTaskValue: E.Value -> Msg
+decodeTaskValue val =
+    let
+        result = D.decodeValue tasklistdecoder val
+    in
+        case result of
+            Ok tasks ->
+                UpdateTask tasks
+            Err _ ->
+                TaskErr ((Debug.toString result) ++ " " ++  (Debug.toString val) )
+
+
+
+
+tasklistdecoder: Decoder (List Task)
+tasklistdecoder =
+    D.list taskdecoder
+
+
+taskdecoder: Decoder Task
+taskdecoder =
+  D.succeed Task
+    |> andMap (field "id" int)
+    |> andMap (field "displayName" string)
+    |> andMap (field "currentlyResponsible" persondecoder)
+    |> andMap (field "description" string)
+    |> andMap (field "dueDate" datetime)
+    |> andMap (field "creationDate" datetime)
+    |> andMap (field "lastDone" datetime)
+    |> andMap (field "lastDoneBy" persondecoder)
+    |> andMap (field "isRepetitiveTask" bool)
+    |> andMap (field "isDeleted" bool)
+
+
+persondecoder: Decoder Person
+persondecoder =
+    D.map3 Person
+      (D.field "id" D.int)
+      (D.field "name" D.string)
+      (D.field "blameCounter" D.int)
