@@ -7034,7 +7034,73 @@ var author$project$Ports$saveperson = _Platform_outgoingPort(
 					elm$json$Json$Encode$string($.name))
 				]));
 	});
-var author$project$Ports$savetask = _Platform_outgoingPort('savetask', elm$core$Basics$identity);
+var elm$json$Json$Encode$bool = _Json_wrap;
+var author$project$Ports$savetask = _Platform_outgoingPort(
+	'savetask',
+	function ($) {
+		return elm$json$Json$Encode$object(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					'creationDate',
+					elm$json$Json$Encode$int($.creationDate)),
+					_Utils_Tuple2(
+					'currentlyResponsible',
+					function ($) {
+						return elm$json$Json$Encode$object(
+							_List_fromArray(
+								[
+									_Utils_Tuple2(
+									'blameCounter',
+									elm$json$Json$Encode$int($.blameCounter)),
+									_Utils_Tuple2(
+									'id',
+									elm$json$Json$Encode$int($.id)),
+									_Utils_Tuple2(
+									'name',
+									elm$json$Json$Encode$string($.name))
+								]));
+					}($.currentlyResponsible)),
+					_Utils_Tuple2(
+					'description',
+					elm$json$Json$Encode$string($.description)),
+					_Utils_Tuple2(
+					'displayName',
+					elm$json$Json$Encode$string($.displayName)),
+					_Utils_Tuple2(
+					'dueDate',
+					elm$json$Json$Encode$int($.dueDate)),
+					_Utils_Tuple2(
+					'id',
+					elm$json$Json$Encode$int($.id)),
+					_Utils_Tuple2(
+					'isDeleted',
+					elm$json$Json$Encode$bool($.isDeleted)),
+					_Utils_Tuple2(
+					'isRepetitiveTask',
+					elm$json$Json$Encode$bool($.isRepetitiveTask)),
+					_Utils_Tuple2(
+					'lastDone',
+					elm$json$Json$Encode$int($.lastDone)),
+					_Utils_Tuple2(
+					'lastDoneBy',
+					function ($) {
+						return elm$json$Json$Encode$object(
+							_List_fromArray(
+								[
+									_Utils_Tuple2(
+									'blameCounter',
+									elm$json$Json$Encode$int($.blameCounter)),
+									_Utils_Tuple2(
+									'id',
+									elm$json$Json$Encode$int($.id)),
+									_Utils_Tuple2(
+									'name',
+									elm$json$Json$Encode$string($.name))
+								]));
+					}($.lastDoneBy))
+				]));
+	});
 var author$project$Update$findAndUpdateLastDone = F3(
 	function (id, time, task) {
 		return _Utils_eq(task.id, id) ? _Utils_update(
@@ -7073,6 +7139,33 @@ var author$project$Update$mockupExampleLastDoneDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
 	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 10, 17, 0, 0));
+var author$project$HouseTaskTransfer$TransferTask = function (id) {
+	return function (displayName) {
+		return function (currentlyResponsible) {
+			return function (description) {
+				return function (dueDate) {
+					return function (creationDate) {
+						return function (lastDone) {
+							return function (lastDoneBy) {
+								return function (isRepetitiveTask) {
+									return function (isDeleted) {
+										return {creationDate: creationDate, currentlyResponsible: currentlyResponsible, description: description, displayName: displayName, dueDate: dueDate, id: id, isDeleted: isDeleted, isRepetitiveTask: isRepetitiveTask, lastDone: lastDone, lastDoneBy: lastDoneBy};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var author$project$Update$preparetask = function (task) {
+	return author$project$HouseTaskTransfer$TransferTask(task.id)(task.displayName)(task.currentlyResponsible)(task.description)(
+		elm$time$Time$posixToMillis(task.dueDate))(
+		elm$time$Time$posixToMillis(task.creationDate))(
+		elm$time$Time$posixToMillis(task.lastDone))(task.lastDoneBy)(task.isRepetitiveTask)(task.isDeleted);
+};
 var author$project$Update$stringElmToInt = function (elm) {
 	var maybeInt = elm$core$String$toInt(elm);
 	if (maybeInt.$ === 'Just') {
@@ -7081,70 +7174,6 @@ var author$project$Update$stringElmToInt = function (elm) {
 	} else {
 		return 0;
 	}
-};
-var elm$json$Json$Encode$bool = _Json_wrap;
-var author$project$Update$tasktoJson = function (task) {
-	return elm$json$Json$Encode$object(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				'id',
-				elm$json$Json$Encode$int(task.id)),
-				_Utils_Tuple2(
-				'displayName',
-				elm$json$Json$Encode$string(task.displayName)),
-				_Utils_Tuple2(
-				'currentlyResponsible',
-				elm$json$Json$Encode$object(
-					_List_fromArray(
-						[
-							_Utils_Tuple2(
-							'id',
-							elm$json$Json$Encode$int(task.currentlyResponsible.id)),
-							_Utils_Tuple2(
-							'name',
-							elm$json$Json$Encode$string(task.currentlyResponsible.name)),
-							_Utils_Tuple2(
-							'blameCounter',
-							elm$json$Json$Encode$int(task.currentlyResponsible.blameCounter))
-						]))),
-				_Utils_Tuple2(
-				'description',
-				elm$json$Json$Encode$string(task.description)),
-				_Utils_Tuple2(
-				'dueDate',
-				elm$json$Json$Encode$int(
-					elm$time$Time$posixToMillis(task.dueDate))),
-				_Utils_Tuple2(
-				'creationDate',
-				elm$json$Json$Encode$int(
-					elm$time$Time$posixToMillis(task.creationDate))),
-				_Utils_Tuple2(
-				'lastDone',
-				elm$json$Json$Encode$int(
-					elm$time$Time$posixToMillis(task.creationDate))),
-				_Utils_Tuple2(
-				'lastDoneBy',
-				elm$json$Json$Encode$object(
-					_List_fromArray(
-						[
-							_Utils_Tuple2(
-							'id',
-							elm$json$Json$Encode$int(task.currentlyResponsible.id)),
-							_Utils_Tuple2(
-							'name',
-							elm$json$Json$Encode$string(task.currentlyResponsible.name)),
-							_Utils_Tuple2(
-							'blameCounter',
-							elm$json$Json$Encode$int(task.currentlyResponsible.blameCounter))
-						]))),
-				_Utils_Tuple2(
-				'isRepetitiveTask',
-				elm$json$Json$Encode$bool(task.isRepetitiveTask)),
-				_Utils_Tuple2(
-				'isDeleted',
-				elm$json$Json$Encode$bool(task.isDeleted))
-			]));
 };
 var elm$core$List$append = F2(
 	function (xs, ys) {
@@ -7325,7 +7354,7 @@ var author$project$Update$update = F2(
 								A3(author$project$Person$Person, 0, '', 0))(false)(false)
 						}),
 					author$project$Ports$savetask(
-						author$project$Update$tasktoJson(model.tmpTask)));
+						author$project$Update$preparetask(model.tmpTask)));
 			case 'AddTaskName':
 				var displayName = msg.a;
 				var tmp = model.tmpTask;
@@ -8455,32 +8484,35 @@ var author$project$Formatters$boolToString = function (bool) {
 		return 'False';
 	}
 };
-var author$project$Formatters$monthToInt = function (month) {
+var author$project$Formatters$atLeastTwoPlaces = function (day) {
+	return (day >= 10) ? elm$core$String$fromInt(day) : ('0' + elm$core$String$fromInt(day));
+};
+var author$project$Formatters$monthToString = function (month) {
 	switch (month.$) {
 		case 'Jan':
-			return 1;
+			return '01';
 		case 'Feb':
-			return 2;
+			return '02';
 		case 'Mar':
-			return 3;
+			return '03';
 		case 'Apr':
-			return 4;
+			return '04';
 		case 'May':
-			return 5;
+			return '05';
 		case 'Jun':
-			return 6;
+			return '06';
 		case 'Jul':
-			return 7;
+			return '07';
 		case 'Aug':
-			return 8;
+			return '08';
 		case 'Sep':
-			return 9;
+			return '09';
 		case 'Oct':
-			return 10;
+			return '10';
 		case 'Nov':
-			return 11;
+			return '11';
 		default:
-			return 12;
+			return '12';
 	}
 };
 var author$project$Formatters$getFormatedStringFromDate = F2(
@@ -8489,16 +8521,15 @@ var author$project$Formatters$getFormatedStringFromDate = F2(
 			A2(elm$time$Time$toYear, timeZone, date));
 		var second = elm$core$String$fromInt(
 			A2(elm$time$Time$toSecond, timeZone, date));
-		var month = elm$core$String$fromInt(
-			author$project$Formatters$monthToInt(
-				A2(elm$time$Time$toMonth, timeZone, date)));
+		var month = author$project$Formatters$monthToString(
+			A2(elm$time$Time$toMonth, timeZone, date));
 		var minute = elm$core$String$fromInt(
 			A2(elm$time$Time$toMinute, timeZone, date));
 		var hour = elm$core$String$fromInt(
 			A2(elm$time$Time$toHour, timeZone, date));
-		var day = elm$core$String$fromInt(
+		var day = author$project$Formatters$atLeastTwoPlaces(
 			A2(elm$time$Time$toDay, timeZone, date));
-		return day + ('.' + (month + ('.' + (year + ('; ' + (hour + (':' + (minute + (':' + second)))))))));
+		return day + ('.' + (month + ('.' + year)));
 	});
 var author$project$ListTasksComponent$getTextFromTasks = F2(
 	function (timeZone, task) {
@@ -13024,4 +13055,36 @@ var author$project$View$view = function (model) {
 var elm$browser$Browser$element = _Browser_element;
 var author$project$Main$main = elm$browser$Browser$element(
 	{init: author$project$Model$initMockup, subscriptions: author$project$Main$subscriptions, update: author$project$Update$update, view: author$project$View$view});
-_Platform_export({'Main':{'init':author$project$Main$main(elm$json$Json$Decode$int)(0)}});}(this));
+_Platform_export({'Main':{'init':author$project$Main$main(
+	A2(
+		elm$json$Json$Decode$andThen,
+		function (tasks) {
+			return A2(
+				elm$json$Json$Decode$andThen,
+				function (people) {
+					return elm$json$Json$Decode$succeed(
+						{people: people, tasks: tasks});
+				},
+				A2(
+					elm$json$Json$Decode$field,
+					'people',
+					elm$json$Json$Decode$list(
+						A2(
+							elm$json$Json$Decode$andThen,
+							function (name) {
+								return A2(
+									elm$json$Json$Decode$andThen,
+									function (id) {
+										return A2(
+											elm$json$Json$Decode$andThen,
+											function (blameCounter) {
+												return elm$json$Json$Decode$succeed(
+													{blameCounter: blameCounter, id: id, name: name});
+											},
+											A2(elm$json$Json$Decode$field, 'blameCounter', elm$json$Json$Decode$int));
+									},
+									A2(elm$json$Json$Decode$field, 'id', elm$json$Json$Decode$int));
+							},
+							A2(elm$json$Json$Decode$field, 'name', elm$json$Json$Decode$string)))));
+		},
+		A2(elm$json$Json$Decode$field, 'tasks', elm$json$Json$Decode$value)))(0)}});}(this));

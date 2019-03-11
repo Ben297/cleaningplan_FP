@@ -7,6 +7,7 @@ import Msg exposing (Msg(..))
 import Person exposing (Person)
 import HouseTask as MyTask exposing (Task)
 import Json.Encode as E
+import HouseTaskTransfer as Transfertask exposing (TransferTask)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -15,7 +16,7 @@ subscriptions model =
 
 --outgoing ports
 port saveperson : Person -> Cmd msg
-port savetask: E.Value -> Cmd msg 
+port savetask: TransferTask -> Cmd msg 
 
 --incoming ports
 port loadpeople : (List Person -> msg) -> Sub msg

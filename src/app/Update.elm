@@ -1,4 +1,4 @@
-module Update exposing (update, decodeTaskValue)
+module Update exposing (update, decodeTaskValue, tasklistdecoder)
 
 import Time exposing (Posix)
 
@@ -17,6 +17,7 @@ import Ports exposing (..)
 import Json.Encode as E
 import Json.Decode as D exposing (field, Decoder, int, string, bool)
 import Json.Decode.Extra exposing (datetime, andMap)
+import HouseTaskTransfer as Transfertask exposing (TransferTask)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -108,7 +109,7 @@ update msg model =
                 tasks = List.append model.tasks [tmpNewTask]
             in
             ( {model | tasks = tasks, tmpTask = (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False)}
-                , savetask (tasktoJson model.tmpTask)
+                , savetask (preparetask model.tmpTask)
             )
 
         AddTaskName displayName ->
@@ -291,31 +292,19 @@ stringElmToInt elm =
                 0
 
 
-tasktoJson: Task -> E.Value
-tasktoJson task =
-                E.object[
-                  ("id", E.int task.id),
-                  ("displayName", E.string task.displayName),
-                  ("currentlyResponsible", E.object[
-                    ("id", E.int task.currentlyResponsible.id),
-                    ("name", E.string task.currentlyResponsible.name),
-                    ("blameCounter", E.int task.currentlyResponsible.blameCounter)
-                    ]
-                  ),
-                  ("description", E.string task.description),
-                  ("dueDate", E.int (Time.posixToMillis task.dueDate)),
-                  ("creationDate", E.int (Time.posixToMillis task.creationDate)),
-                  ("lastDone", E.int (Time.posixToMillis task.creationDate)),
-                  ("lastDoneBy", E.object[
-                    ("id", E.int task.currentlyResponsible.id),
-                    ("name", E.string task.currentlyResponsible.name),
-                    ("blameCounter", E.int task.currentlyResponsible.blameCounter)
-                    ]
-                  ),
-                  ("isRepetitiveTask", E.bool task.isRepetitiveTask),
-                  ("isDeleted", E.bool task.isDeleted)
-                ]
-
+preparetask: Task -> TransferTask
+preparetask task =
+  TransferTask
+    task.id
+    task.displayName
+    task.currentlyResponsible
+    task.description
+    (Time.posixToMillis task.dueDate)
+    (Time.posixToMillis task.creationDate)
+    (Time.posixToMillis task.lastDone)
+    task.lastDoneBy
+    task.isRepetitiveTask
+    task.isDeleted
 
 decodeTaskValue: E.Value -> Msg
 decodeTaskValue val =

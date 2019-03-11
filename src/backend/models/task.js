@@ -1,15 +1,18 @@
 const mongoose = require('mongoose');
 
+
 let Schema = mongoose.Schema;
 
 let task = new Schema({
+    id: Number,
     displayName       : String,
-    description : String,
     currentlyResponsible  : String,
+    description : String,
     dueDate: Date, //manual
+    creationDate:{ type: Date, default: Date.now },
     lastDone: Date,//manual
     lastDoneBy: String,
-    creationDate:{ type: Date, default: Date.now },
+    isRepetitiveTask: Boolean,
     isDeleted: Boolean,
 });
 
