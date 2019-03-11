@@ -1,7 +1,7 @@
 module Update exposing (update, decodeTaskValue)
 
-import Time exposing (Posix)
-
+import Time exposing (Month(..), Posix)
+import Time.Extra exposing (Interval(..))
 import Msg exposing (..)
 import Model exposing (Model)
 import Maybe exposing (..)
@@ -28,7 +28,7 @@ update msg model =
             ({ model | count = model.count ++ "1" }, Cmd.none)
 
         Tick newTime ->
-            ( { model | time = newTime }
+            ( { model | time = newTime}
                 , Cmd.none
             )
 
@@ -100,6 +100,8 @@ update msg model =
                         ( model
                           ,Cmd.none
                         )
+
+
 
         SubmitTask ->
             let
@@ -239,6 +241,19 @@ update msg model =
           )
 
 
+
+
+--  checks if time is before time2
+isBefore: Time.Zone -> Posix -> Posix -> Bool
+isBefore timeZone time time2 =
+    let
+        timeDiff = Time.Extra.diff Minute timeZone time time2
+    in
+        timeDiff > 0
+
+filterOnlyRelevantTasks: Person -> Task -> Bool
+filterOnlyRelevantTasks person task = task.currentlyResponsible.id == person.id
+
 getNextIdPerson: List Person -> Int
 getNextIdPerson people =
     let
@@ -248,7 +263,6 @@ getNextIdPerson people =
             Just val ->
                 val.id + 1
             Nothing -> 0
-
 
 getNextIdTask: List Task -> Int
 getNextIdTask tasks =
@@ -260,7 +274,6 @@ getNextIdTask tasks =
                 val.id + 1
             Nothing -> 0
 
-
 findAndUpdateLastDone: Int -> Posix -> Task -> Task
 findAndUpdateLastDone id time task =
     if task.id == id
@@ -269,15 +282,17 @@ findAndUpdateLastDone id time task =
     else
         task
 
+--dueDate: "2019-03-08T06:00:00Z",
 mockupExampleDueDate1 : Posix
-mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Feb 12 14 30 0 0)
+mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Mar 8 6 0 0 0)
 
+--creationDate: "2019-03-05T06:00:00Z",
 mockupExampleCreationDate1 : Posix
-mockupExampleCreationDate1 = partsToPosix utc (Parts 2018 Feb 11 10 17 0 0)
+mockupExampleCreationDate1 = partsToPosix utc (Parts 2019 Mar 5 6 0 0 0)
 
+--lastDone: "2019-03-06T06:00:00Z",
 mockupExampleLastDoneDate1 : Posix
-mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Feb 12 10 17 0 0)
-
+mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Mar 12 6 0 0 0)
 
 stringElmToInt : String -> Int
 stringElmToInt elm =
@@ -289,7 +304,6 @@ stringElmToInt elm =
                 int
             Nothing ->
                 0
-
 
 tasktoJson: Task -> E.Value
 tasktoJson task =
@@ -328,13 +342,9 @@ decodeTaskValue val =
             Err _ ->
                 TaskErr ((Debug.toString result) ++ " " ++  (Debug.toString val) )
 
-
-
-
 tasklistdecoder: Decoder (List Task)
 tasklistdecoder =
     D.list taskdecoder
-
 
 taskdecoder: Decoder Task
 taskdecoder =

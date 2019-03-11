@@ -6260,7 +6260,7 @@ var author$project$Model$Model = function (count) {
 		};
 	};
 };
-var elm$time$Time$Feb = {$: 'Feb'};
+var elm$time$Time$Mar = {$: 'Mar'};
 var elm$time$Time$utc = A2(elm$time$Time$Zone, 0, _List_Nil);
 var justinmimbs$time_extra$Time$Extra$Parts = F7(
 	function (year, month, day, hour, minute, second, millisecond) {
@@ -6429,10 +6429,10 @@ var elm$time$Time$toDay = F2(
 var elm$time$Time$Apr = {$: 'Apr'};
 var elm$time$Time$Aug = {$: 'Aug'};
 var elm$time$Time$Dec = {$: 'Dec'};
+var elm$time$Time$Feb = {$: 'Feb'};
 var elm$time$Time$Jan = {$: 'Jan'};
 var elm$time$Time$Jul = {$: 'Jul'};
 var elm$time$Time$Jun = {$: 'Jun'};
-var elm$time$Time$Mar = {$: 'Mar'};
 var elm$time$Time$May = {$: 'May'};
 var elm$time$Time$Nov = {$: 'Nov'};
 var elm$time$Time$Oct = {$: 'Oct'};
@@ -6575,15 +6575,15 @@ var justinmimbs$time_extra$Time$Extra$partsToPosix = F2(
 var author$project$Model$mockupExampleCreationDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2018, elm$time$Time$Feb, 11, 10, 17, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 5, 6, 0, 0, 0));
 var author$project$Model$mockupExampleDueDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 14, 30, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 8, 6, 0, 0, 0));
 var author$project$Model$mockupExampleLastDoneDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 10, 17, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 12, 6, 0, 0, 0));
 var author$project$Model$mockupPeople = _List_fromArray(
 	[
 		A3(author$project$Person$Person, 1, 'Peter2', 0),
@@ -7064,15 +7064,15 @@ var author$project$Update$getNextIdTask = function (tasks) {
 var author$project$Update$mockupExampleCreationDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2018, elm$time$Time$Feb, 11, 10, 17, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 5, 6, 0, 0, 0));
 var author$project$Update$mockupExampleDueDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 14, 30, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 8, 6, 0, 0, 0));
 var author$project$Update$mockupExampleLastDoneDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 10, 17, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 12, 6, 0, 0, 0));
 var author$project$Update$stringElmToInt = function (elm) {
 	var maybeInt = elm$core$String$toInt(elm);
 	if (maybeInt.$ === 'Just') {
@@ -8455,32 +8455,35 @@ var author$project$Formatters$boolToString = function (bool) {
 		return 'False';
 	}
 };
-var author$project$Formatters$monthToInt = function (month) {
+var author$project$Formatters$atLeastTwoPlaces = function (day) {
+	return (day >= 10) ? elm$core$String$fromInt(day) : ('0' + elm$core$String$fromInt(day));
+};
+var author$project$Formatters$monthToString = function (month) {
 	switch (month.$) {
 		case 'Jan':
-			return 1;
+			return '01';
 		case 'Feb':
-			return 2;
+			return '02';
 		case 'Mar':
-			return 3;
+			return '03';
 		case 'Apr':
-			return 4;
+			return '04';
 		case 'May':
-			return 5;
+			return '05';
 		case 'Jun':
-			return 6;
+			return '06';
 		case 'Jul':
-			return 7;
+			return '07';
 		case 'Aug':
-			return 8;
+			return '08';
 		case 'Sep':
-			return 9;
+			return '09';
 		case 'Oct':
-			return 10;
+			return '10';
 		case 'Nov':
-			return 11;
+			return '11';
 		default:
-			return 12;
+			return '12';
 	}
 };
 var author$project$Formatters$getFormatedStringFromDate = F2(
@@ -8489,16 +8492,15 @@ var author$project$Formatters$getFormatedStringFromDate = F2(
 			A2(elm$time$Time$toYear, timeZone, date));
 		var second = elm$core$String$fromInt(
 			A2(elm$time$Time$toSecond, timeZone, date));
-		var month = elm$core$String$fromInt(
-			author$project$Formatters$monthToInt(
-				A2(elm$time$Time$toMonth, timeZone, date)));
+		var month = author$project$Formatters$monthToString(
+			A2(elm$time$Time$toMonth, timeZone, date));
 		var minute = elm$core$String$fromInt(
 			A2(elm$time$Time$toMinute, timeZone, date));
 		var hour = elm$core$String$fromInt(
 			A2(elm$time$Time$toHour, timeZone, date));
-		var day = elm$core$String$fromInt(
+		var day = author$project$Formatters$atLeastTwoPlaces(
 			A2(elm$time$Time$toDay, timeZone, date));
-		return day + ('.' + (month + ('.' + (year + ('; ' + (hour + (':' + (minute + (':' + second)))))))));
+		return day + ('.' + (month + ('.' + year)));
 	});
 var author$project$ListTasksComponent$getTextFromTasks = F2(
 	function (timeZone, task) {
@@ -11053,9 +11055,19 @@ var author$project$DayTasksComponent$getTaskCardFromTasks = F4(
 						]))
 				]));
 	});
-var author$project$DayTasksComponent$offsetWeeksForTask = F4(
-	function (timeZone, offset, beginningOfWeek, task) {
-		var newDueDate = A4(justinmimbs$time_extra$Time$Extra$add, justinmimbs$time_extra$Time$Extra$Week, offset, timeZone, task.dueDate);
+var author$project$DayTasksComponent$getNumberOfWeeksSinceCreation = F3(
+	function (timeZone, creationTime, currentTime) {
+		var num = A4(justinmimbs$time_extra$Time$Extra$diff, justinmimbs$time_extra$Time$Extra$Day, timeZone, currentTime, creationTime);
+		return (num < 0) ? 0 : elm$core$Basics$ceiling(num / 7.0);
+	});
+var author$project$DayTasksComponent$offsetWeeksForTask = F5(
+	function (timeZone, currentTime, offset, beginningOfWeek, task) {
+		var newDueDate = A4(
+			justinmimbs$time_extra$Time$Extra$add,
+			justinmimbs$time_extra$Time$Extra$Week,
+			offset + A3(author$project$DayTasksComponent$getNumberOfWeeksSinceCreation, timeZone, currentTime, task.creationDate),
+			timeZone,
+			task.dueDate);
 		var endOfWeek = A2(author$project$DayTasksComponent$getEndOfWeek, timeZone, beginningOfWeek);
 		return task.isRepetitiveTask ? (A3(author$project$DayTasksComponent$isBefore, timeZone, endOfWeek, task.dueDate) ? task : _Utils_update(
 			task,
@@ -11102,7 +11114,7 @@ var author$project$DayTasksComponent$dayTasks = F2(
 			A2(justinmimbs$time_extra$Time$Extra$partsToPosix, timeZone, beginningOfWeekAtNowBeginning));
 		var tasks = A2(
 			elm$core$List$map,
-			A3(author$project$DayTasksComponent$offsetWeeksForTask, timeZone, weekOffset, mondayTime),
+			A4(author$project$DayTasksComponent$offsetWeeksForTask, timeZone, time, weekOffset, mondayTime),
 			model.tasks);
 		var saturdayTime = A4(
 			justinmimbs$time_extra$Time$Extra$add,

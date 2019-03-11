@@ -43,14 +43,23 @@ app.use(serve('./public'));
 app.use(render);
 app.use(koaBody());
 
-//defining the endpoints
-router.get('/people', async function (ctx) {
-     // await ctx.body= 'Hello';
-});
-
 router.get('/index', async function (ctx) {
        // await ctx.render('index');
 
+});
+
+router.get('/deletedata', async function (ctx) {
+    console.log("delete data");
+    await Person.deleteMany({});
+    await Task.deleteMany({});
+    ctx.body = "data has been deleted";
+});
+
+router.get('/people', async function (ctx) {
+    console.log("people get");
+    const people = await Person.find({});
+    ctx.body = people; //used to show in browser, how to return as response data?
+    //TBD how to send this back to client javscript? response
 });
 
 //example for retriving all tasks via api

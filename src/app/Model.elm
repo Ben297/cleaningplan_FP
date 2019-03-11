@@ -86,14 +86,17 @@ mockupTasks =
     -- , isRepetitiveTask : Bool
     -- , isDeleted : Bool
 --Mockup dates for use in mockup tasks
+--dueDate: "2019-03-08T06:00:00Z",
 mockupExampleDueDate1 : Posix
-mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Feb 12 14 30 0 0)
+mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Mar 8 6 0 0 0)
 
+--creationDate: "2019-03-05T06:00:00Z",
 mockupExampleCreationDate1 : Posix
-mockupExampleCreationDate1 = partsToPosix utc (Parts 2018 Feb 11 10 17 0 0)
+mockupExampleCreationDate1 = partsToPosix utc (Parts 2019 Mar 5 6 0 0 0)
 
+--lastDone: "2019-03-06T06:00:00Z",
 mockupExampleLastDoneDate1 : Posix
-mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Feb 12 10 17 0 0)
+mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Mar 12 6 0 0 0)
 
 mockupExampleDueDate2 : Posix
 mockupExampleDueDate2 = partsToPosix utc (Parts 2019 Sep 26 14 30 0 0)

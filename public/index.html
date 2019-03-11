@@ -25,30 +25,29 @@
       console.log('person: ' + data.name);
       //TBD send data to server and get result
 
-      fetch("TBD", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        person: data
-                    })
-                })
-                    .then(r => r.json())
-                    .then(result => {
-                        //console.log('events returned:', dataEvents);
-                        if(result === undefined){
-                            console.log("Something went wrong, while fetching the events.");
-                        } else {
-                            app.ports.loadpeople.send(result);
-                        }
-                    });
+      fetch("http://localhost:4000/people", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            }
+        })
+            .then(r => {console.log("R ist: ", r); return r.json()})
+            .then(result => {
 
+                if(result === undefined){
+                    console.log("Something went wrong, while fetching the events.");
+                } else {
+                    let tempStuff = result.map(elem => ({id:51, name: elem.name, blameCounter: elem.blameCounter}) );
 
+                    console.log("Hier!!!! tempStuff: ", tempStuff);
 
-      persons = [{id:1,name:"person1",blameCounter: 0},{id:2,name:"person2",blameCounter: 1}];
-      app.ports.loadpeople.send(persons);
+                    app.ports.loadpeople.send(tempStuff);
+                }
+            });
+
+      //persons = [{id:1,name:"person1",blameCounter: 0},{id:2,name:"person2",blameCounter: 1}];
+      //app.ports.loadpeople.send(persons);
       console.log('loaded persons');
     })
 
@@ -60,7 +59,7 @@
       // fetch to get from server
 
       //TBDsend data to server and get result
-      // convert int times back to posix format before sending to db
+      // convert int times back to posix format before sending to d
 
       tasks = [
         {

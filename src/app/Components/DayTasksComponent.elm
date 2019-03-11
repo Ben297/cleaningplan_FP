@@ -9,6 +9,7 @@ import Bootstrap.CDN as CDN
 import Bootstrap.Grid as Grid
 import Bootstrap.Table as Table
 import List
+import Debug exposing (log)
 
 import HouseTask as Task exposing (Task)
 import Person exposing (Person)
@@ -22,7 +23,7 @@ dayTasks model weekOffset=
     let
         timeZone = model.timeZone
         time = model.time
-        tasks = List.map (offsetWeeksForTask timeZone weekOffset mondayTime) model.tasks
+        tasks = List.map (offsetWeeksForTask timeZone time weekOffset mondayTime) model.tasks
         beginningOfWeekAtNow = Time.Extra.posixToParts timeZone (Time.Extra.add Week weekOffset timeZone (Time.Extra.floor Week timeZone time))
         beginningOfWeekAtNowBeginning = {beginningOfWeekAtNow | hour = 23, minute = 59}
         mondayTime      =   Time.Extra.add Day 0 timeZone (Time.Extra.partsToPosix timeZone beginningOfWeekAtNowBeginning)
@@ -32,6 +33,9 @@ dayTasks model weekOffset=
         fridayTime      =   Time.Extra.add Day 4 timeZone (Time.Extra.partsToPosix timeZone beginningOfWeekAtNowBeginning)
         saturdayTime    =   Time.Extra.add Day 5 timeZone (Time.Extra.partsToPosix timeZone beginningOfWeekAtNowBeginning)
         sundayTime      =   Time.Extra.add Day 6 timeZone (Time.Extra.partsToPosix timeZone beginningOfWeekAtNowBeginning)
+        --debugTasks = log "\nTasks:" (Debug.toString (List.map mapDisp tasks))
+        --debugTasksIsStillValidWed = log "\nstill Valid wednesday" ( Debug.toString ( List.map mapDisp (List.filter (taskIsStillValid timeZone (getBeginningOfDay timeZone wednesdayTime)) tasks) ) )
+        --deb = log "\n-----------------------------------------------------------------------------\n" ""
     in
 
     Table.table
@@ -59,11 +63,15 @@ dayTasks model weekOffset=
             ]
     }
 
+mapDisp: Task -> String
+mapDisp task = task.displayName
 
-offsetWeeksForTask: Time.Zone -> Int -> Posix -> Task -> Task
-offsetWeeksForTask timeZone offset beginningOfWeek task =
+offsetWeeksForTask: Time.Zone -> Posix -> Int -> Posix -> Task -> Task
+offsetWeeksForTask timeZone currentTime offset beginningOfWeek task =
     let
-        newDueDate = Time.Extra.add Week offset timeZone task.dueDate
+        --debugTime = log "debugTime: " (Formatters.getFormatedStringFromDate timeZone currentTime)
+        --debugTaskCreationDate = log "debugTaskCreationDate: " (Formatters.getFormatedStringFromDate timeZone task.creationDate)
+        newDueDate = Time.Extra.add Week (offset + (getNumberOfWeeksSinceCreation timeZone currentTime task.creationDate)) timeZone task.dueDate
         endOfWeek = getEndOfWeek timeZone beginningOfWeek
     in
         if task.isRepetitiveTask
@@ -76,6 +84,17 @@ offsetWeeksForTask timeZone offset beginningOfWeek task =
         else
             task
 
+getNumberOfWeeksSinceCreation: Time.Zone -> Posix -> Posix -> Int
+getNumberOfWeeksSinceCreation timeZone creationTime currentTime =
+    let
+        num = Time.Extra.diff Day timeZone currentTime creationTime
+        --debugNum = log "num: " num
+    in
+        if (num < 0)
+        then
+            0
+        else
+            ceiling ((toFloat num) / 7.0)
 
 --  checks if time is before time2
 isBefore: Time.Zone -> Posix -> Posix -> Bool
