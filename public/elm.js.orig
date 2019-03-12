@@ -7130,14 +7130,17 @@ var author$project$Update$getNextIdTask = function (tasks) {
 var author$project$Update$mockupExampleCreationDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2018, elm$time$Time$Feb, 11, 10, 17, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 5, 6, 0, 0, 0));
 var author$project$Update$mockupExampleDueDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 14, 30, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 8, 6, 0, 0, 0));
 var author$project$Update$mockupExampleLastDoneDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
+<<<<<<< HEAD
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 12, 6, 0, 0, 0));
+=======
 	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 10, 17, 0, 0));
 var author$project$HouseTaskTransfer$TransferTask = function (id) {
 	return function (displayName) {
@@ -7166,6 +7169,7 @@ var author$project$Update$preparetask = function (task) {
 		elm$time$Time$posixToMillis(task.creationDate))(
 		elm$time$Time$posixToMillis(task.lastDone))(task.lastDoneBy)(task.isRepetitiveTask)(task.isDeleted);
 };
+>>>>>>> origin/master
 var author$project$Update$stringElmToInt = function (elm) {
 	var maybeInt = elm$core$String$toInt(elm);
 	if (maybeInt.$ === 'Just') {
@@ -13065,4 +13069,36 @@ var author$project$View$view = function (model) {
 var elm$browser$Browser$element = _Browser_element;
 var author$project$Main$main = elm$browser$Browser$element(
 	{init: author$project$Model$initMockup, subscriptions: author$project$Main$subscriptions, update: author$project$Update$update, view: author$project$View$view});
-_Platform_export({'Main':{'init':author$project$Main$main(elm$json$Json$Decode$int)(0)}});}(this));
+_Platform_export({'Main':{'init':author$project$Main$main(
+	A2(
+		elm$json$Json$Decode$andThen,
+		function (tasks) {
+			return A2(
+				elm$json$Json$Decode$andThen,
+				function (people) {
+					return elm$json$Json$Decode$succeed(
+						{people: people, tasks: tasks});
+				},
+				A2(
+					elm$json$Json$Decode$field,
+					'people',
+					elm$json$Json$Decode$list(
+						A2(
+							elm$json$Json$Decode$andThen,
+							function (name) {
+								return A2(
+									elm$json$Json$Decode$andThen,
+									function (id) {
+										return A2(
+											elm$json$Json$Decode$andThen,
+											function (blameCounter) {
+												return elm$json$Json$Decode$succeed(
+													{blameCounter: blameCounter, id: id, name: name});
+											},
+											A2(elm$json$Json$Decode$field, 'blameCounter', elm$json$Json$Decode$int));
+									},
+									A2(elm$json$Json$Decode$field, 'id', elm$json$Json$Decode$int));
+							},
+							A2(elm$json$Json$Decode$field, 'name', elm$json$Json$Decode$string)))));
+		},
+		A2(elm$json$Json$Decode$field, 'tasks', elm$json$Json$Decode$value)))(0)}});}(this));

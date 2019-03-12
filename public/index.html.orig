@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cleaningplaner</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="custom.css">
+    <script src="elm.js"></script>
+</head>
+<body>
+<div id = "elm-node"></div>
+<script>
+
+    async function init2(){
+
+
+    }
+
+    const storageKey = "store";
+    //const flags = localStorage.getItem(storageKey);
+
+<<<<<<< HEAD
+    app.ports.saveperson.subscribe(function(data){
+      console.log('person: ' + data.name);
+      //TBD send data to server and get result
+
+=======
+      async app = await init();
+
+      async function init(){
+
+        fetch("http://localhost:4000/people", {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+              }
+          })
+              .then(r => {console.log("R ist: ", r); return r.json()})
+              .then(result => {
+
+                  if(result === undefined){
+                      console.log("Something went wrong, while fetching the events.");
+                  } else {
+                      let people = result.map(elem => ({id:elem.id, name: elem.name, blameCounter: elem.blameCounter}) );
+
+                      console.log("Hier!!!! tempStuff: ", tempStuff);
+                      //////
+                      fetch("http://localhost:4000/tasks", {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                            }
+                        })
+                            .then(r => {console.log("R ist: ", r); return r.json()})
+                            .then(result => {
+
+                                if(result === undefined){
+                                    console.log("Something went wrong, while fetching the events.");
+                                } else {
+                                    let tasks = result.map(elem => ({id:elem.id, displayName: elem.displayName, currentlyResponsible: JSON.parse(elem.currentlyResponsible), description: elem.description, dueDate: elem.dueDate, creationDate: elem.creationDate, lastDone: elem.lastDone, lastDoneBy: JSON.parse(elem.lastDoneBy), isRepetitiveTask: elem.isRepetitiveTask, isDeleted: elem.isDeleted }) );
+                                    console.log("Hier!!!! tempStuff: ", tempStuff);
+                                    Elm.Main.init({
+                                              node: document.getElementById("elm-node"),
+                                              flags: people, tasks
+                                    });
+                                }
+                            });
+
+                  }
+              });
+
+      }
+
+
+    const getpeople = () => {
+>>>>>>> origin/master
+      fetch("http://localhost:4000/people", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            }
+        })
+            .then(r => {console.log("R ist: ", r); return r.json()})
+            .then(result => {
+
+                if(result === undefined){
+                    console.log("Something went wrong, while fetching the events.");
+                } else {
+<<<<<<< HEAD
+                    let tempStuff = result.map(elem => ({id:51, name: elem.name, blameCounter: elem.blameCounter}) );
+=======
+                    let tempStuff = result.map(elem => ({id:elem.id, name: elem.name, blameCounter: elem.blameCounter}) );
+>>>>>>> origin/master
+
+                    console.log("Hier!!!! tempStuff: ", tempStuff);
+
+                    app.ports.loadpeople.send(tempStuff);
+                }
+            });
+<<<<<<< HEAD
+
+      //persons = [{id:1,name:"person1",blameCounter: 0},{id:2,name:"person2",blameCounter: 1}];
+      //app.ports.loadpeople.send(persons);
+      console.log('loaded persons');
+    })
+
+    app.ports.savetask.subscribe(function(data){
+      console.log('task: ' + data.displayName);
+      let testdate = "2019-03-16T06:00:00Z"
+      let testdate2 = "2019-03-09T06:00:00Z"
+
+      // fetch to get from server
+
+      //TBDsend data to server and get result
+      // convert int times back to posix format before sending to d
+
+      tasks = [
+        {
+        id:1,
+       displayName: "clean the floor",
+       currentlyResponsible:  {id:1,name:"person1",blameCounter: 0},
+        description:"just clean the damn floor!",
+       dueDate: testdate,
+       creationDate: testdate2,
+       lastDone: testdate,
+       lastDoneBy: {id:1,name:"person1",blameCounter: 0},
+       isRepetitiveTask: true ,
+       isDeleted: false
+     },
+     {
+     id:2,
+    displayName: "clean the floor2",
+    currentlyResponsible:  {id:2,name:"person2",blameCounter: 0},
+     description:"just clean the damn floor!",
+    dueDate: testdate,
+    creationDate: testdate,
+    lastDone: testdate,
+    lastDoneBy: {id:1,name:"person1",blameCounter: 0},
+    isRepetitiveTask: true ,
+    isDeleted: false
+  }
+   ];
+      app.ports.loadtasks.send(tasks);
+      console.log('load tasks');
+    })
+=======
+    }
+
+    const gettasks = () => {
+      fetch("http://localhost:4000/tasks", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            }
+        })
+            .then(r => {console.log("R ist: ", r); return r.json()})
+            .then(result => {
+
+                if(result === undefined){
+                    console.log("Something went wrong, while fetching the events.");
+                } else {
+                    let tempStuff = result.map(elem => ({id:elem.id, displayName: elem.displayName, currentlyResponsible: JSON.parse(elem.currentlyResponsible), description: elem.description, dueDate: elem.dueDate, creationDate: elem.creationDate, lastDone: elem.lastDone, lastDoneBy: JSON.parse(elem.lastDoneBy), isRepetitiveTask: elem.isRepetitiveTask, isDeleted: elem.isDeleted }) );
+
+                    console.log("Hier!!!! tempStuff: ", tempStuff);
+                    app.ports.loadtasks.send(tempStuff);
+                }
+            });
+    }
+
+    const postperson = (person) =>{
+
+      fetch("http://localhost:4000/postperson", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body : JSON.stringify(person)
+        })
+            .then(r => {console.log("R ist: ", r); return r.json()})
+            .then(result => {
+                if(result === undefined){
+                    console.log("Something went wrong, while fetching the events.");
+                } else {
+                    getpeople();
+                    console.log("result defined as: " + result);
+                }
+            });
+    }
+
+    const posttask = (task) => {
+
+
+      fetch("http://localhost:4000/posttask", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body : JSON.stringify(task)
+        })
+            .then(r => {console.log("R ist: ", r); return r.json()})
+            .then(result => {
+                if(result === undefined){
+                    console.log("Something went wrong, while fetching the events.");
+                } else {
+                    gettasks();
+                    console.log("result defined as: " + result);
+                }
+            });
+    }
+>>>>>>> origin/master
+
+
+
+    app.ports.saveperson.subscribe(function(data){
+      console.log('person: ' + data.name);
+
+      postperson(data);
+
+      //testmockup
+      //persons = [{id:1,name:"person1",blameCounter: 0},{id:2,name:"person2",blameCounter: 1}];
+      //app.ports.loadpeople.send(persons);
+      //console.log('loaded persons');
+    })
+
+    app.ports.savetask.subscribe(function(data){
+      console.log('task: ' + data.displayName);
+
+      posttask(data);
+
+      //let testdate = "2019-03-16T06:00:00Z"
+      //let testdate2 = "2019-03-09T06:00:00Z"
+      //tasks = [
+      //  {
+      //  id:1,
+       //displayName: "clean the floor",
+       //currentlyResponsible:  {id:1,name:"person1",blameCounter: 0},
+        //description:"just clean the damn floor!",
+       //dueDate: testdate,
+       //creationDate: testdate2,
+  //     lastDone: testdate,
+  //     lastDoneBy: {id:1,name:"person1",blameCounter: 0},
+  //     isRepetitiveTask: true ,
+  //     isDeleted: false
+  //   },
+  //   {
+  //   id:2,
+  //  displayName: "clean the floor2",
+  //  currentlyResponsible:  {id:2,name:"person2",blameCounter: 0},
+  //   description:"just clean the damn floor!",
+  //  dueDate: testdate,
+  //  creationDate: testdate,
+  //  lastDone: testdate,
+  //  lastDoneBy: {id:1,name:"person1",blameCounter: 0},
+  //  isRepetitiveTask: true ,
+  //  isDeleted: false
+  //}
+  // ];
+  //    app.ports.loadtasks.send(tasks);
+  //    console.log('load tasks');
+    })
+
+    // Whenever localStorage changes in another tab, report it if necessary.
+    window.addEventListener("storage", function(event) {
+        //Überbleibsel von originalem Beispiel
+        if (event.storageArea === localStorage && event.key === storageKey) {
+            app.ports.onStoreChange.send(event.newValue);
+        }
+    }, false);
+</script>
+</body>
+</html>

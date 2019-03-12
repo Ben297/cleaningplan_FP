@@ -2,13 +2,13 @@ module Main exposing (main)
 
 import Browser
 import Msg exposing (..)
-import Model exposing (init, Model, initMockup, Flags)
+import Model exposing (init, Model, initMockup)
 import View exposing (view)
 import Update exposing (update, decodeTaskValue)
 import Time
 import Ports exposing (..)
 
-main : Program Flags Model Msg
+main : Program Int Model Msg
 main =
     Browser.element
         { init = initMockup

@@ -1,4 +1,4 @@
-module Model exposing (Model, init, initMockup, Flags)
+module Model exposing (Model, init, initMockup)
 import Json.Encode as E
 import Msg exposing (Msg)
 import Person exposing (Person)
@@ -34,30 +34,16 @@ type alias Model =
         , debug: String
     }
 
-type alias Flags =
-  {
-  tasks: E.Value,
-  people: List Person
-  }
-
-init : Flags -> (Model, Cmd Msg)
+init : Int -> (Model, Cmd Msg)
 init flags =
     let
         initNavTup = Navbar.initialState NavbarMsg
         initNav = Tuple.first initNavTup
         initCmd = Cmd.batch [(Tuple.second initNavTup), SystemTask.perform Msg.AdjustTimeZone Time.here]
-        result = (D.decodeValue tasklistdecoder flags.tasks)
-        initpeople = flags.people
     in
-        case result of
-         Ok tasks ->
-          (Model "0" initpeople tasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
-         Err err ->
-          (Model "0" initpeople [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
+          (Model "0" [] [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
 
-
-
-initMockup : Flags -> (Model, Cmd Msg)
+initMockup : Int -> (Model, Cmd Msg)
 initMockup flags =
     let
         initNavTup = Navbar.initialState NavbarMsg
@@ -73,7 +59,7 @@ mockupPeople =
         , Person 2 "Paul" 0
         , Person 3 "Marry" 0
     ]
-
+--
 mockupTasks : List Task
 mockupTasks =
     let
