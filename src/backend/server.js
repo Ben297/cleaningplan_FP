@@ -47,7 +47,7 @@ router.get('/createdata', async function (ctx) {
      let TestTask1 = new Task({id: 0,displayName : 'Clean the floor',currentlyResponsible: '{"id": 0,"name":"Bennet","blameCounter": 2}',description: 'Flur putzen',dueDate: "2019-03-08T06:00:00Z",creationDate: "2019-03-05T06:00:00Z",lastDone: "2019-03-06T06:00:00Z",lastDoneBy: '{"id": 0,"name": "Bennet","blameCounter": 2}',isRepetitiveTask: true,isDeleted: false
       });
      TestTask1.save();
-     let TestTask2 = new Task({id: 1,displayName : 'Clean the kitchen',currentlyResponsible: '{"id": 1,"name":"Sascha","blameCounter": 0}',description: 'Küche putzen',dueDate: "2019-03-16T06:00:00Z",creationDate: "2019-03-10T06:00:00Z",lastDone: "3900-01-01T00:00:00Z",lastDoneBy: '{"id":0,"name":"","blameCounter":0}',isRepetitiveTask: true,isDeleted: false
+     let TestTask2 = new Task({id: 1,displayName : 'Clean the kitchen',currentlyResponsible: '{"id": 1,"name":"Sascha","blameCounter": 0}',description: 'Küche putzen',dueDate: "2019-03-16T06:00:00Z",creationDate: "2019-03-10T06:00:00Z",lastDone: "3900-01-01T00:00:00Z",lastDoneBy: '{"id":-1,"name":"","blameCounter":0}',isRepetitiveTask: true,isDeleted: false
           });
      TestTask2.save();
      let TestPerson1 = new Person({id: 0,name: "Bennet",blameCounter: 2});
@@ -76,9 +76,9 @@ router.get('/tasks', async function (ctx) {
 
 router.post('/postperson', async function (ctx) {
      ctx.body = ctx.request.body;
-     let NewPerson = new Person({id: ctx.body.id,name: ctx.body.name,blameCounter: ctx.body.blameCounter});
-     NewPerson.save();
-     console.log("person post server");
+     let newPerson = new Person({id: ctx.body.id,name: ctx.body.name,blameCounter: ctx.body.blameCounter});
+     newPerson.save();
+     console.log("person post server: ", newPerson);
 });
 
 router.post('/posttask', async function (ctx) {

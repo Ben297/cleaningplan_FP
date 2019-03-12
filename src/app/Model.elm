@@ -1,4 +1,5 @@
 module Model exposing (Model, init, initMockup, Flags)
+import Basics exposing (Order(..))
 import Json.Encode as E
 import Msg exposing (Msg)
 import Person exposing (Person)
@@ -11,7 +12,7 @@ import Maybe
 import Json.Decode as D exposing (field, Decoder, int, string, bool)
 import Json.Decode.Extra exposing (datetime, andMap)
 --import Time exposing (Posix)
-import Time exposing (Month(..), utc, Posix)
+import Time exposing (Month(..), utc, Posix, millisToPosix)
 import Time.Extra exposing (Parts, partsToPosix)
 import Task as SystemTask
 import Msg exposing (..)
@@ -48,18 +49,55 @@ init flags =
         initNav = Tuple.first initNavTup
         initCmd = Cmd.batch [(Tuple.second initNavTup), SystemTask.perform Msg.AdjustTimeZone Time.here]
         result = (D.decodeValue tasklistdecoder flags.tasks)
-        initPeople = flags.people
+        initPeople = List.sortWith sortPeople flags.people
         --debugPeople = log "people: " initPeople
     in
         case result of
-         Ok tasks ->
-            (Model "0" initPeople tasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
-         Err err ->
+        Ok tasks ->
+            let
+                sortedTasks = List.sortWith sortTasks tasks
+                computedTasks = sortedTasks
+                computedPeople = initPeople
+                -- Debug:
+                debugComputedTasks = log "" tasks
+                debugComputedPeople = log "" initPeople
+            in
+                (Model "0" computedPeople computedTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
+        Err err ->
             (Model "0" initPeople [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
 
+setBlamecounterOnPeople: List Person -> List Task -> List Person
+setBlamecounterOnPeople people tasks = List.map (mapPerson tasks) people
 
+mapPerson: List Task -> Person -> Person
+mapPerson tasks person =
+    let
+        relevantTasks = List.filter (filterRelevantTasks person) tasks
+        blameCount = person.blameCounter + (blameCountAddForPerson tasks person)
+    in
+        {person | blameCounter = blameCount}
 
-initMockup : Flags -> (Model, Cmd Msg)
+blameCountAddForPerson: List Task -> Person -> Int
+blameCountAddForPerson tasks person = 0
+
+filterRelevantTasks: Person -> Task -> Bool
+filterRelevantTasks person task = task.currentlyResponsible.id == person.id
+
+sortTasks: Task -> Task -> Order
+sortTasks task1 task2 = if task1.id >= task2.id
+    then
+         GT
+    else
+         LT
+
+sortPeople: Person -> Person -> Order
+sortPeople person1 person2 = if person1.id >= person2.id
+    then
+        GT
+    else
+        LT
+
+initMockup: Flags -> (Model, Cmd Msg)
 initMockup flags =
     let
         initNavTup = Navbar.initialState NavbarMsg
@@ -68,7 +106,7 @@ initMockup flags =
     in
         (Model "0" mockupPeople mockupTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "" , initCmd)
 
-mockupPeople : List Person
+mockupPeople: List Person
 mockupPeople =
     [
         Person 1 "Peter2" 0
@@ -76,7 +114,7 @@ mockupPeople =
         , Person 3 "Marry" 0
     ]
 
-mockupTasks : List Task
+mockupTasks: List Task
 mockupTasks =
     let
         defaultPerson = Person 0 "Default" 0
@@ -103,34 +141,35 @@ mockupTasks =
     -- , isRepetitiveTask : Bool
     -- , isDeleted : Bool
 --Mockup dates for use in mockup tasks
+
 --dueDate: "2019-03-08T06:00:00Z",
-mockupExampleDueDate1 : Posix
+mockupExampleDueDate1: Posix
 mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Mar 8 6 0 0 0)
 
 --creationDate: "2019-03-05T06:00:00Z",
-mockupExampleCreationDate1 : Posix
+mockupExampleCreationDate1: Posix
 mockupExampleCreationDate1 = partsToPosix utc (Parts 2019 Mar 5 6 0 0 0)
 
 --lastDone: "2019-03-06T06:00:00Z",
-mockupExampleLastDoneDate1 : Posix
+mockupExampleLastDoneDate1: Posix
 mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Mar 12 6 0 0 0)
 
-mockupExampleDueDate2 : Posix
+mockupExampleDueDate2: Posix
 mockupExampleDueDate2 = partsToPosix utc (Parts 2019 Sep 26 14 30 0 0)
 
-mockupExampleCreationDate2 : Posix
+mockupExampleCreationDate2: Posix
 mockupExampleCreationDate2 = partsToPosix utc (Parts 2019 Feb 10 16 17 0 0)
 
-mockupExampleLastDoneDate2 : Posix
+mockupExampleLastDoneDate2: Posix
 mockupExampleLastDoneDate2 = partsToPosix utc (Parts 2019 Sep 26 14 30 0 0)
 
-mockupExampleDueDate3 : Posix
+mockupExampleDueDate3: Posix
 mockupExampleDueDate3 = partsToPosix utc (Parts 2019 Sep 26 14 30 0 0)
 
-mockupExampleCreationDate3 : Posix
+mockupExampleCreationDate3: Posix
 mockupExampleCreationDate3 = partsToPosix utc (Parts 2019 Feb 12 16 17 0 0)
 
-mockupExampleLastDoneDate3 : Posix
+mockupExampleLastDoneDate3: Posix
 mockupExampleLastDoneDate3 = partsToPosix utc (Parts 2019 Sep 26 14 30 0 0)
 
 tasklistdecoder: Decoder (List Task)

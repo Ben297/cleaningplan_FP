@@ -18,6 +18,8 @@ import Json.Encode as E
 import Json.Decode as D exposing (field, Decoder, int, string, bool)
 import Json.Decode.Extra exposing (datetime, andMap)
 import HouseTaskTransfer as Transfertask exposing (TransferTask)
+import BlameLogic exposing (getNewTasksAndPeople)
+import Debug exposing (log)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -29,9 +31,16 @@ update msg model =
             ({ model | count = model.count ++ "1" }, Cmd.none)
 
         Tick newTime ->
-            ( { model | time = newTime }
-                , Cmd.none
-            )
+            let
+                debug = log "in Tick" "!"
+                peopleAndTasks = getNewTasksAndPeople model.timeZone newTime model.people model.tasks
+                newPeople = peopleAndTasks.people
+                newTasks = peopleAndTasks.tasks
+                debug2 = log "in Tick" "!"
+            in
+                ( { model | time = newTime, tasks = newTasks }
+                    , Cmd.none
+                )
 
         AdjustTimeZone newTimezone ->
             ( { model | timeZone = newTimezone }
