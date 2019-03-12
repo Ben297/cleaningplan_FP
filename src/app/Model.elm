@@ -1,4 +1,4 @@
-module Model exposing (Model, init, initMockup)
+module Model exposing (Model, init, initMockup, Flags)
 import Json.Encode as E
 import Msg exposing (Msg)
 import Person exposing (Person)
@@ -15,6 +15,7 @@ import Time exposing (Month(..), utc, Posix)
 import Time.Extra exposing (Parts, partsToPosix)
 import Task as SystemTask
 import Msg exposing (..)
+import Debug exposing (log)
 
 type alias Model =
     {
@@ -34,16 +35,34 @@ type alias Model =
         , debug: String
     }
 
-init : Int -> (Model, Cmd Msg)
+type alias Flags =
+  {
+  tasks: E.Value,
+  people: List Person
+  }
+
+init : Flags -> (Model, Cmd Msg)
 init flags =
     let
         initNavTup = Navbar.initialState NavbarMsg
         initNav = Tuple.first initNavTup
         initCmd = Cmd.batch [(Tuple.second initNavTup), SystemTask.perform Msg.AdjustTimeZone Time.here]
+        result = (D.decodeValue tasklistdecoder flags.tasks)
+        initPeople = flags.people
+        debugPeople = log "people: " initPeople
     in
-          (Model "0" [] [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
+        case result of
+         Ok tasks ->
+             let
+                debugTasks = log "Tasks: " tasks
+             in
+                (Model "0" initPeople tasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
+         Err err ->
+            (Model "0" initPeople [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
 
-initMockup : Int -> (Model, Cmd Msg)
+
+
+initMockup : Flags -> (Model, Cmd Msg)
 initMockup flags =
     let
         initNavTup = Navbar.initialState NavbarMsg
@@ -59,7 +78,7 @@ mockupPeople =
         , Person 2 "Paul" 0
         , Person 3 "Marry" 0
     ]
---
+
 mockupTasks : List Task
 mockupTasks =
     let

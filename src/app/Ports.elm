@@ -15,9 +15,10 @@ subscriptions model =
         [ Dropdown.subscriptions model.myDrop1State MyDrop1Msg ]
 
 --outgoing ports
-port saveperson : Person -> Cmd msg
-port savetask: TransferTask -> Cmd msg 
+port saveperson: Person -> Cmd msg
+port savetask: TransferTask -> Cmd msg
+port initialFetch: () -> Cmd msg
 
 --incoming ports
-port loadpeople : (List Person -> msg) -> Sub msg
-port loadtasks : (E.Value -> msg) -> Sub msg
+port loadpeople: (List Person -> msg) -> Sub msg
+port loadtasks: (E.Value -> msg) -> Sub msg

@@ -196,6 +196,7 @@ update msg model =
                         ( model
                           ,Cmd.none
                         )
+
         AddTaskIsRepetitiveTask isRepetitiveTask ->
             let
                 tmp = model.tmpTask
@@ -204,6 +205,7 @@ update msg model =
                 ({model | tmpTask = newTask}
                     ,Cmd.none
                 )
+
         NavbarMsg state ->
             ( { model | navbarState = state }, Cmd.none )
 
@@ -226,18 +228,26 @@ update msg model =
             ( { model | modalShowBlamelist = Modal.hidden }
             , Cmd.none
             )
+
         UpdatePeople p ->
           ( {model | people = p }
           , Cmd.none
           )
+
         UpdateTask t ->
             ( {model | tasks = t } --, debug = (Debug.toString t) }
             , Cmd.none
             )
+
         TaskErr s ->
           ( {model | debug = s }
           , Cmd.none
           )
+
+        PerformInitialFetch ->
+            (
+                model, initialFetch ()
+            )
 
 
 getNextIdPerson: List Person -> Int
