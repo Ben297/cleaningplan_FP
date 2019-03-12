@@ -1,7 +1,7 @@
-module Update exposing (update, decodeTaskValue)
+module Update exposing (update, decodeTaskValue, tasklistdecoder)
 
-import Time exposing (Month(..), Posix)
-import Time.Extra exposing (Interval(..))
+import Time exposing (Posix)
+
 import Msg exposing (..)
 import Model exposing (Model)
 import Maybe exposing (..)
@@ -17,6 +17,7 @@ import Ports exposing (..)
 import Json.Encode as E
 import Json.Decode as D exposing (field, Decoder, int, string, bool)
 import Json.Decode.Extra exposing (datetime, andMap)
+import HouseTaskTransfer as Transfertask exposing (TransferTask)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -28,7 +29,7 @@ update msg model =
             ({ model | count = model.count ++ "1" }, Cmd.none)
 
         Tick newTime ->
-            ( { model | time = newTime}
+            ( { model | time = newTime }
                 , Cmd.none
             )
 
@@ -101,8 +102,6 @@ update msg model =
                           ,Cmd.none
                         )
 
-
-
         SubmitTask ->
             let
                 newTask = model.tmpTask
@@ -110,7 +109,7 @@ update msg model =
                 tasks = List.append model.tasks [tmpNewTask]
             in
             ( {model | tasks = tasks, tmpTask = (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False)}
-                , savetask (tasktoJson model.tmpTask)
+                , savetask (preparetask model.tmpTask)
             )
 
         AddTaskName displayName ->
@@ -241,19 +240,6 @@ update msg model =
           )
 
 
-
-
---  checks if time is before time2
-isBefore: Time.Zone -> Posix -> Posix -> Bool
-isBefore timeZone time time2 =
-    let
-        timeDiff = Time.Extra.diff Minute timeZone time time2
-    in
-        timeDiff > 0
-
-filterOnlyRelevantTasks: Person -> Task -> Bool
-filterOnlyRelevantTasks person task = task.currentlyResponsible.id == person.id
-
 getNextIdPerson: List Person -> Int
 getNextIdPerson people =
     let
@@ -263,6 +249,7 @@ getNextIdPerson people =
             Just val ->
                 val.id + 1
             Nothing -> 0
+
 
 getNextIdTask: List Task -> Int
 getNextIdTask tasks =
@@ -274,6 +261,7 @@ getNextIdTask tasks =
                 val.id + 1
             Nothing -> 0
 
+
 findAndUpdateLastDone: Int -> Posix -> Task -> Task
 findAndUpdateLastDone id time task =
     if task.id == id
@@ -282,17 +270,15 @@ findAndUpdateLastDone id time task =
     else
         task
 
---dueDate: "2019-03-08T06:00:00Z",
 mockupExampleDueDate1 : Posix
-mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Mar 8 6 0 0 0)
+mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Feb 12 14 30 0 0)
 
---creationDate: "2019-03-05T06:00:00Z",
 mockupExampleCreationDate1 : Posix
-mockupExampleCreationDate1 = partsToPosix utc (Parts 2019 Mar 5 6 0 0 0)
+mockupExampleCreationDate1 = partsToPosix utc (Parts 2018 Feb 11 10 17 0 0)
 
---lastDone: "2019-03-06T06:00:00Z",
 mockupExampleLastDoneDate1 : Posix
-mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Mar 12 6 0 0 0)
+mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Feb 12 10 17 0 0)
+
 
 stringElmToInt : String -> Int
 stringElmToInt elm =
@@ -305,31 +291,20 @@ stringElmToInt elm =
             Nothing ->
                 0
 
-tasktoJson: Task -> E.Value
-tasktoJson task =
-                E.object[
-                  ("id", E.int task.id),
-                  ("displayName", E.string task.displayName),
-                  ("currentlyResponsible", E.object[
-                    ("id", E.int task.currentlyResponsible.id),
-                    ("name", E.string task.currentlyResponsible.name),
-                    ("blameCounter", E.int task.currentlyResponsible.blameCounter)
-                    ]
-                  ),
-                  ("description", E.string task.description),
-                  ("dueDate", E.int (Time.posixToMillis task.dueDate)),
-                  ("creationDate", E.int (Time.posixToMillis task.creationDate)),
-                  ("lastDone", E.int (Time.posixToMillis task.creationDate)),
-                  ("lastDoneBy", E.object[
-                    ("id", E.int task.currentlyResponsible.id),
-                    ("name", E.string task.currentlyResponsible.name),
-                    ("blameCounter", E.int task.currentlyResponsible.blameCounter)
-                    ]
-                  ),
-                  ("isRepetitiveTask", E.bool task.isRepetitiveTask),
-                  ("isDeleted", E.bool task.isDeleted)
-                ]
 
+preparetask: Task -> TransferTask
+preparetask task =
+  TransferTask
+    task.id
+    task.displayName
+    task.currentlyResponsible
+    task.description
+    (Time.posixToMillis task.dueDate)
+    (Time.posixToMillis task.creationDate)
+    (Time.posixToMillis task.lastDone)
+    task.lastDoneBy
+    task.isRepetitiveTask
+    task.isDeleted
 
 decodeTaskValue: E.Value -> Msg
 decodeTaskValue val =
@@ -342,9 +317,13 @@ decodeTaskValue val =
             Err _ ->
                 TaskErr ((Debug.toString result) ++ " " ++  (Debug.toString val) )
 
+
+
+
 tasklistdecoder: Decoder (List Task)
 tasklistdecoder =
     D.list taskdecoder
+
 
 taskdecoder: Decoder Task
 taskdecoder =

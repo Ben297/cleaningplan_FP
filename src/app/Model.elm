@@ -1,5 +1,5 @@
-module Model exposing (Model, init, initMockup)
-
+module Model exposing (Model, init, initMockup, Flags)
+import Json.Encode as E
 import Msg exposing (Msg)
 import Person exposing (Person)
 import HouseTask as MyTask exposing (Task)
@@ -8,6 +8,8 @@ import Bootstrap.Dropdown as Dropdown
 import Bootstrap.Navbar as Navbar
 import Bootstrap.Modal as Modal
 import Maybe
+import Json.Decode as D exposing (field, Decoder, int, string, bool)
+import Json.Decode.Extra exposing (datetime, andMap)
 --import Time exposing (Posix)
 import Time exposing (Month(..), utc, Posix)
 import Time.Extra exposing (Parts, partsToPosix)
@@ -30,19 +32,32 @@ type alias Model =
         , modalAddTask : Modal.Visibility
         , modalShowBlamelist : Modal.Visibility
         , debug: String
-
     }
 
-init : Int -> (Model, Cmd Msg)
+type alias Flags =
+  {
+  tasks: E.Value,
+  people: List Person
+  }
+
+init : Flags -> (Model, Cmd Msg)
 init flags =
     let
         initNavTup = Navbar.initialState NavbarMsg
         initNav = Tuple.first initNavTup
         initCmd = Cmd.batch [(Tuple.second initNavTup), SystemTask.perform Msg.AdjustTimeZone Time.here]
+        result = (D.decodeValue tasklistdecoder flags.tasks)
+        initpeople = flags.people
     in
-        (Model "0" [] [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
+        case result of
+         Ok tasks ->
+          (Model "0" initpeople tasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
+         Err err ->
+          (Model "0" initpeople [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
 
-initMockup : Int -> (Model, Cmd Msg)
+
+
+initMockup : Flags -> (Model, Cmd Msg)
 initMockup flags =
     let
         initNavTup = Navbar.initialState NavbarMsg
@@ -115,3 +130,30 @@ mockupExampleCreationDate3 = partsToPosix utc (Parts 2019 Feb 12 16 17 0 0)
 
 mockupExampleLastDoneDate3 : Posix
 mockupExampleLastDoneDate3 = partsToPosix utc (Parts 2019 Sep 26 14 30 0 0)
+
+tasklistdecoder: Decoder (List Task)
+tasklistdecoder =
+    D.list taskdecoder
+
+
+taskdecoder: Decoder Task
+taskdecoder =
+  D.succeed Task
+    |> andMap (field "id" int)
+    |> andMap (field "displayName" string)
+    |> andMap (field "currentlyResponsible" persondecoder)
+    |> andMap (field "description" string)
+    |> andMap (field "dueDate" datetime)
+    |> andMap (field "creationDate" datetime)
+    |> andMap (field "lastDone" datetime)
+    |> andMap (field "lastDoneBy" persondecoder)
+    |> andMap (field "isRepetitiveTask" bool)
+    |> andMap (field "isDeleted" bool)
+
+
+persondecoder: Decoder Person
+persondecoder =
+    D.map3 Person
+      (D.field "id" D.int)
+      (D.field "name" D.string)
+      (D.field "blameCounter" D.int)

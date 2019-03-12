@@ -6260,7 +6260,7 @@ var author$project$Model$Model = function (count) {
 		};
 	};
 };
-var elm$time$Time$Mar = {$: 'Mar'};
+var elm$time$Time$Feb = {$: 'Feb'};
 var elm$time$Time$utc = A2(elm$time$Time$Zone, 0, _List_Nil);
 var justinmimbs$time_extra$Time$Extra$Parts = F7(
 	function (year, month, day, hour, minute, second, millisecond) {
@@ -6429,10 +6429,10 @@ var elm$time$Time$toDay = F2(
 var elm$time$Time$Apr = {$: 'Apr'};
 var elm$time$Time$Aug = {$: 'Aug'};
 var elm$time$Time$Dec = {$: 'Dec'};
-var elm$time$Time$Feb = {$: 'Feb'};
 var elm$time$Time$Jan = {$: 'Jan'};
 var elm$time$Time$Jul = {$: 'Jul'};
 var elm$time$Time$Jun = {$: 'Jun'};
+var elm$time$Time$Mar = {$: 'Mar'};
 var elm$time$Time$May = {$: 'May'};
 var elm$time$Time$Nov = {$: 'Nov'};
 var elm$time$Time$Oct = {$: 'Oct'};
@@ -6575,15 +6575,15 @@ var justinmimbs$time_extra$Time$Extra$partsToPosix = F2(
 var author$project$Model$mockupExampleCreationDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 5, 6, 0, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2018, elm$time$Time$Feb, 11, 10, 17, 0, 0));
 var author$project$Model$mockupExampleDueDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 8, 6, 0, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 14, 30, 0, 0));
 var author$project$Model$mockupExampleLastDoneDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 12, 6, 0, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 10, 17, 0, 0));
 var author$project$Model$mockupPeople = _List_fromArray(
 	[
 		A3(author$project$Person$Person, 1, 'Peter2', 0),
@@ -7034,7 +7034,73 @@ var author$project$Ports$saveperson = _Platform_outgoingPort(
 					elm$json$Json$Encode$string($.name))
 				]));
 	});
-var author$project$Ports$savetask = _Platform_outgoingPort('savetask', elm$core$Basics$identity);
+var elm$json$Json$Encode$bool = _Json_wrap;
+var author$project$Ports$savetask = _Platform_outgoingPort(
+	'savetask',
+	function ($) {
+		return elm$json$Json$Encode$object(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					'creationDate',
+					elm$json$Json$Encode$int($.creationDate)),
+					_Utils_Tuple2(
+					'currentlyResponsible',
+					function ($) {
+						return elm$json$Json$Encode$object(
+							_List_fromArray(
+								[
+									_Utils_Tuple2(
+									'blameCounter',
+									elm$json$Json$Encode$int($.blameCounter)),
+									_Utils_Tuple2(
+									'id',
+									elm$json$Json$Encode$int($.id)),
+									_Utils_Tuple2(
+									'name',
+									elm$json$Json$Encode$string($.name))
+								]));
+					}($.currentlyResponsible)),
+					_Utils_Tuple2(
+					'description',
+					elm$json$Json$Encode$string($.description)),
+					_Utils_Tuple2(
+					'displayName',
+					elm$json$Json$Encode$string($.displayName)),
+					_Utils_Tuple2(
+					'dueDate',
+					elm$json$Json$Encode$int($.dueDate)),
+					_Utils_Tuple2(
+					'id',
+					elm$json$Json$Encode$int($.id)),
+					_Utils_Tuple2(
+					'isDeleted',
+					elm$json$Json$Encode$bool($.isDeleted)),
+					_Utils_Tuple2(
+					'isRepetitiveTask',
+					elm$json$Json$Encode$bool($.isRepetitiveTask)),
+					_Utils_Tuple2(
+					'lastDone',
+					elm$json$Json$Encode$int($.lastDone)),
+					_Utils_Tuple2(
+					'lastDoneBy',
+					function ($) {
+						return elm$json$Json$Encode$object(
+							_List_fromArray(
+								[
+									_Utils_Tuple2(
+									'blameCounter',
+									elm$json$Json$Encode$int($.blameCounter)),
+									_Utils_Tuple2(
+									'id',
+									elm$json$Json$Encode$int($.id)),
+									_Utils_Tuple2(
+									'name',
+									elm$json$Json$Encode$string($.name))
+								]));
+					}($.lastDoneBy))
+				]));
+	});
 var author$project$Update$findAndUpdateLastDone = F3(
 	function (id, time, task) {
 		return _Utils_eq(task.id, id) ? _Utils_update(
@@ -7064,15 +7130,42 @@ var author$project$Update$getNextIdTask = function (tasks) {
 var author$project$Update$mockupExampleCreationDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 5, 6, 0, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2018, elm$time$Time$Feb, 11, 10, 17, 0, 0));
 var author$project$Update$mockupExampleDueDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 8, 6, 0, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 14, 30, 0, 0));
 var author$project$Update$mockupExampleLastDoneDate1 = A2(
 	justinmimbs$time_extra$Time$Extra$partsToPosix,
 	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 12, 6, 0, 0, 0));
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 10, 17, 0, 0));
+var author$project$HouseTaskTransfer$TransferTask = function (id) {
+	return function (displayName) {
+		return function (currentlyResponsible) {
+			return function (description) {
+				return function (dueDate) {
+					return function (creationDate) {
+						return function (lastDone) {
+							return function (lastDoneBy) {
+								return function (isRepetitiveTask) {
+									return function (isDeleted) {
+										return {creationDate: creationDate, currentlyResponsible: currentlyResponsible, description: description, displayName: displayName, dueDate: dueDate, id: id, isDeleted: isDeleted, isRepetitiveTask: isRepetitiveTask, lastDone: lastDone, lastDoneBy: lastDoneBy};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var author$project$Update$preparetask = function (task) {
+	return author$project$HouseTaskTransfer$TransferTask(task.id)(task.displayName)(task.currentlyResponsible)(task.description)(
+		elm$time$Time$posixToMillis(task.dueDate))(
+		elm$time$Time$posixToMillis(task.creationDate))(
+		elm$time$Time$posixToMillis(task.lastDone))(task.lastDoneBy)(task.isRepetitiveTask)(task.isDeleted);
+};
 var author$project$Update$stringElmToInt = function (elm) {
 	var maybeInt = elm$core$String$toInt(elm);
 	if (maybeInt.$ === 'Just') {
@@ -7081,70 +7174,6 @@ var author$project$Update$stringElmToInt = function (elm) {
 	} else {
 		return 0;
 	}
-};
-var elm$json$Json$Encode$bool = _Json_wrap;
-var author$project$Update$tasktoJson = function (task) {
-	return elm$json$Json$Encode$object(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				'id',
-				elm$json$Json$Encode$int(task.id)),
-				_Utils_Tuple2(
-				'displayName',
-				elm$json$Json$Encode$string(task.displayName)),
-				_Utils_Tuple2(
-				'currentlyResponsible',
-				elm$json$Json$Encode$object(
-					_List_fromArray(
-						[
-							_Utils_Tuple2(
-							'id',
-							elm$json$Json$Encode$int(task.currentlyResponsible.id)),
-							_Utils_Tuple2(
-							'name',
-							elm$json$Json$Encode$string(task.currentlyResponsible.name)),
-							_Utils_Tuple2(
-							'blameCounter',
-							elm$json$Json$Encode$int(task.currentlyResponsible.blameCounter))
-						]))),
-				_Utils_Tuple2(
-				'description',
-				elm$json$Json$Encode$string(task.description)),
-				_Utils_Tuple2(
-				'dueDate',
-				elm$json$Json$Encode$int(
-					elm$time$Time$posixToMillis(task.dueDate))),
-				_Utils_Tuple2(
-				'creationDate',
-				elm$json$Json$Encode$int(
-					elm$time$Time$posixToMillis(task.creationDate))),
-				_Utils_Tuple2(
-				'lastDone',
-				elm$json$Json$Encode$int(
-					elm$time$Time$posixToMillis(task.creationDate))),
-				_Utils_Tuple2(
-				'lastDoneBy',
-				elm$json$Json$Encode$object(
-					_List_fromArray(
-						[
-							_Utils_Tuple2(
-							'id',
-							elm$json$Json$Encode$int(task.currentlyResponsible.id)),
-							_Utils_Tuple2(
-							'name',
-							elm$json$Json$Encode$string(task.currentlyResponsible.name)),
-							_Utils_Tuple2(
-							'blameCounter',
-							elm$json$Json$Encode$int(task.currentlyResponsible.blameCounter))
-						]))),
-				_Utils_Tuple2(
-				'isRepetitiveTask',
-				elm$json$Json$Encode$bool(task.isRepetitiveTask)),
-				_Utils_Tuple2(
-				'isDeleted',
-				elm$json$Json$Encode$bool(task.isDeleted))
-			]));
 };
 var elm$core$List$append = F2(
 	function (xs, ys) {
@@ -7325,7 +7354,7 @@ var author$project$Update$update = F2(
 								A3(author$project$Person$Person, 0, '', 0))(false)(false)
 						}),
 					author$project$Ports$savetask(
-						author$project$Update$tasktoJson(model.tmpTask)));
+						author$project$Update$preparetask(model.tmpTask)));
 			case 'AddTaskName':
 				var displayName = msg.a;
 				var tmp = model.tmpTask;
@@ -11055,19 +11084,9 @@ var author$project$DayTasksComponent$getTaskCardFromTasks = F4(
 						]))
 				]));
 	});
-var author$project$DayTasksComponent$getNumberOfWeeksSinceCreation = F3(
-	function (timeZone, creationTime, currentTime) {
-		var num = A4(justinmimbs$time_extra$Time$Extra$diff, justinmimbs$time_extra$Time$Extra$Day, timeZone, currentTime, creationTime);
-		return (num < 0) ? 0 : elm$core$Basics$ceiling(num / 7.0);
-	});
-var author$project$DayTasksComponent$offsetWeeksForTask = F5(
-	function (timeZone, currentTime, offset, beginningOfWeek, task) {
-		var newDueDate = A4(
-			justinmimbs$time_extra$Time$Extra$add,
-			justinmimbs$time_extra$Time$Extra$Week,
-			offset + A3(author$project$DayTasksComponent$getNumberOfWeeksSinceCreation, timeZone, currentTime, task.creationDate),
-			timeZone,
-			task.dueDate);
+var author$project$DayTasksComponent$offsetWeeksForTask = F4(
+	function (timeZone, offset, beginningOfWeek, task) {
+		var newDueDate = A4(justinmimbs$time_extra$Time$Extra$add, justinmimbs$time_extra$Time$Extra$Week, offset, timeZone, task.dueDate);
 		var endOfWeek = A2(author$project$DayTasksComponent$getEndOfWeek, timeZone, beginningOfWeek);
 		return task.isRepetitiveTask ? (A3(author$project$DayTasksComponent$isBefore, timeZone, endOfWeek, task.dueDate) ? task : _Utils_update(
 			task,
@@ -11114,7 +11133,7 @@ var author$project$DayTasksComponent$dayTasks = F2(
 			A2(justinmimbs$time_extra$Time$Extra$partsToPosix, timeZone, beginningOfWeekAtNowBeginning));
 		var tasks = A2(
 			elm$core$List$map,
-			A4(author$project$DayTasksComponent$offsetWeeksForTask, timeZone, time, weekOffset, mondayTime),
+			A3(author$project$DayTasksComponent$offsetWeeksForTask, timeZone, weekOffset, mondayTime),
 			model.tasks);
 		var saturdayTime = A4(
 			justinmimbs$time_extra$Time$Extra$add,
@@ -13036,4 +13055,36 @@ var author$project$View$view = function (model) {
 var elm$browser$Browser$element = _Browser_element;
 var author$project$Main$main = elm$browser$Browser$element(
 	{init: author$project$Model$initMockup, subscriptions: author$project$Main$subscriptions, update: author$project$Update$update, view: author$project$View$view});
-_Platform_export({'Main':{'init':author$project$Main$main(elm$json$Json$Decode$int)(0)}});}(this));
+_Platform_export({'Main':{'init':author$project$Main$main(
+	A2(
+		elm$json$Json$Decode$andThen,
+		function (tasks) {
+			return A2(
+				elm$json$Json$Decode$andThen,
+				function (people) {
+					return elm$json$Json$Decode$succeed(
+						{people: people, tasks: tasks});
+				},
+				A2(
+					elm$json$Json$Decode$field,
+					'people',
+					elm$json$Json$Decode$list(
+						A2(
+							elm$json$Json$Decode$andThen,
+							function (name) {
+								return A2(
+									elm$json$Json$Decode$andThen,
+									function (id) {
+										return A2(
+											elm$json$Json$Decode$andThen,
+											function (blameCounter) {
+												return elm$json$Json$Decode$succeed(
+													{blameCounter: blameCounter, id: id, name: name});
+											},
+											A2(elm$json$Json$Decode$field, 'blameCounter', elm$json$Json$Decode$int));
+									},
+									A2(elm$json$Json$Decode$field, 'id', elm$json$Json$Decode$int));
+							},
+							A2(elm$json$Json$Decode$field, 'name', elm$json$Json$Decode$string)))));
+		},
+		A2(elm$json$Json$Decode$field, 'tasks', elm$json$Json$Decode$value)))(0)}});}(this));
