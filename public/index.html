@@ -98,7 +98,7 @@
                                             app.ports.loadpeople.send(tempStuff);
                                         }
                                     });
-                            }
+                            };
 
                             const getTasks = () => {
                                 fetch("http://localhost:4000/tasks", {
@@ -133,7 +133,7 @@
                                             app.ports.loadtasks.send(tempStuff);
                                         }
                                     });
-                            }
+                            };
 
                             const postPerson = (person) => {
                                 fetch("http://localhost:4000/postperson", {
@@ -154,7 +154,7 @@
                                             getPeople();
                                         }
                                     });
-                            }
+                            };
 
                             const postTask = (task) => {
                                 fetch("http://localhost:4000/posttask", {
@@ -175,7 +175,7 @@
                                             getTasks();
                                         }
                                     });
-                            }
+                            };
 
 
                             //--Subscriptions to elm-commands

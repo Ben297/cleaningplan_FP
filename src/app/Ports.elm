@@ -17,7 +17,6 @@ subscriptions model =
 --outgoing ports
 port saveperson: Person -> Cmd msg
 port savetask: TransferTask -> Cmd msg
-port initialFetch: () -> Cmd msg
 
 --incoming ports
 port loadpeople: (List Person -> msg) -> Sub msg

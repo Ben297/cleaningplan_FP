@@ -33,12 +33,6 @@ type Msg
     | UpdatePeople (List Person)
     | UpdateTask (List Task)
     | TaskErr String
-    | PerformInitialFetch
-
-
-
-
-
 
 type DisplayType =
     MainView

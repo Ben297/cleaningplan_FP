@@ -244,12 +244,6 @@ update msg model =
           , Cmd.none
           )
 
-        PerformInitialFetch ->
-            (
-                model, initialFetch ()
-            )
-
-
 getNextIdPerson: List Person -> Int
 getNextIdPerson people =
     let
