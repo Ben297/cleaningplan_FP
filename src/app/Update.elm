@@ -112,11 +112,11 @@ update msg model =
         SubmitTask ->
             let
                 newTask = model.tmpTask
-                tmpNewTask = {newTask | id = getNextIdTask model.tasks}
+                tmpNewTask = {newTask | id = getNextIdTask model.tasks, creationDate = model.time}
                 tasks = List.append model.tasks [tmpNewTask]
             in
             ( {model | tasks = tasks, tmpTask = (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 model.time mockupExampleLastDoneDate1 (Person 0 "" 0) False False)}
-                , savetask (preparetask model.tmpTask)
+                , savetask (preparetask tmpNewTask)
             )
 
         AddTaskName displayName ->
