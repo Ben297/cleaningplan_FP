@@ -85,32 +85,19 @@ mainView model =
                     |> Modal.view model.modalShowBlamelist
                 ]
         ]
-        , Grid.row [Row.centerXs]
-        [
-            Grid.col[]
-            [
-                h1[]
-                [
-                text ("DEBUGINFORMATION" )
-                ]
-            ]
-        ]
-
-        , Grid.row []
-        [
-              listPeople model.people
-            , listTasks model
-            , Grid.col []
-            [
-                text ( "Number of people: " ++ (String.fromInt (List.length model.people)) ++ "\nNumber of Tasks: " ++ (String.fromInt (List.length model.tasks)) ++ model.debug )
-            ]
-        ]
-
         , Grid.row []
         [
              Grid.col []
             [
-            dayTasks model 0
+                case model.view of
+                    MainView ->
+                        dayTasks model 0
+                    NextWeekView ->
+                        dayTasks model 1
+                    PreviousWeekView ->
+                        dayTasks model -1
+                    _ ->
+                        dayTasks model 0
             ]
         ]
     ]

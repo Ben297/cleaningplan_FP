@@ -26,8 +26,6 @@ showBlamelist model =
 
                     , tbody =
                         Table.tbody [] (List.map mapPeopleToRows (List.reverse (List.sortBy .blameCounter (List.filter filterFunction model.people))))
-
-
                     }
             ]
         ]

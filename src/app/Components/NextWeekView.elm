@@ -30,12 +30,6 @@ nextWeekView model =
             [
                 text ( "Number of people: " ++ (String.fromInt (List.length model.people)) ++ "\nNumber of Tasks: " ++ (String.fromInt (List.length model.tasks)) )
             ]
-            , Grid.col[]
-            [
-                button [ onClick Increment ] [ text "+1" ]
-                , div [] [ text <| model.count ]
-                , button [ onClick Decrement ] [ text "-1" ]
-            ]
         ]
         , dayTasks model 1
     ]

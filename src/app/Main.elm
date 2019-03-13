@@ -1,6 +1,7 @@
 module Main exposing (main)
 
 import Browser
+import MainView exposing (mainView)
 import Msg exposing (..)
 import Model exposing (init, Model, initMockup, Flags)
 import View exposing (view)
@@ -12,7 +13,7 @@ main : Program Flags Model Msg
 main =
     Browser.element
         { init = init
-        , view = view
+        , view = mainView
         , update = update 
         , subscriptions = subscriptions
         }
