@@ -179,20 +179,14 @@
 
 
                             //--Subscriptions to elm-commands
-
-                            app.ports.initialFetch.subscribe( () => {
-                                console.log("initial Fetch ongoing...");
-
-                            });
-
                             app.ports.saveperson.subscribe(function (data) {
-                                console.log('person: ' + data.name);
+                                console.log('person: ', data);
 
                                 postPerson(data);
                             });
 
                             app.ports.savetask.subscribe(function (data) {
-                                console.log('task: ' + data.displayName);
+                                console.log('task: ', data);
 
                                 postTask(data);
                             });

@@ -1,4 +1,4 @@
-module Model exposing (Model, init, initMockup, Flags)
+module Model exposing (Model, init, Flags)
 import Basics exposing (Order(..))
 import Json.Encode as E
 import Msg exposing (Msg)
@@ -33,6 +33,7 @@ type alias Model =
         , navbarState : Navbar.State
         , modalAddTask : Modal.Visibility
         , modalShowBlamelist : Modal.Visibility
+        , modalShowAddPerson : Modal.Visibility
         , debug: String
     }
 
@@ -50,7 +51,6 @@ init flags =
         initCmd = Cmd.batch [(Tuple.second initNavTup), SystemTask.perform Msg.AdjustTimeZone Time.here]
         result = (D.decodeValue tasklistdecoder flags.tasks)
         initPeople = List.sortWith sortPeople flags.people
-        --debugPeople = log "people: " initPeople
     in
         case result of
         Ok tasks ->
@@ -62,9 +62,9 @@ init flags =
                 debugComputedTasks = log "" tasks
                 debugComputedPeople = log "" initPeople
             in
-                (Model "0" computedPeople computedTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
+                (Model "0" computedPeople computedTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden Modal.hidden "", initCmd)
         Err err ->
-            (Model "0" initPeople [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
+            (Model "0" initPeople [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden Modal.hidden "", initCmd)
 
 setBlamecounterOnPeople: List Person -> List Task -> List Person
 setBlamecounterOnPeople people tasks = List.map (mapPerson tasks) people
@@ -97,38 +97,6 @@ sortPeople person1 person2 = if person1.id >= person2.id
     else
         LT
 
-initMockup: Flags -> (Model, Cmd Msg)
-initMockup flags =
-    let
-        initNavTup = Navbar.initialState NavbarMsg
-        initNav = Tuple.first initNavTup
-        initCmd = Cmd.batch [(Tuple.second initNavTup), SystemTask.perform Msg.AdjustTimeZone Time.here]
-    in
-        (Model "0" mockupPeople mockupTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "" , initCmd)
-
-mockupPeople: List Person
-mockupPeople =
-    [
-        Person 1 "Peter2" 0
-        , Person 2 "Paul" 0
-        , Person 3 "Marry" 0
-    ]
-
-mockupTasks: List Task
-mockupTasks =
-    let
-        defaultPerson = Person 0 "Default" 0
-        firstPerson = (Maybe.withDefault defaultPerson (getAt 0 mockupPeople))
-        secondPerson = (Maybe.withDefault defaultPerson (getAt 1 mockupPeople))
-        thirdPerson = (Maybe.withDefault defaultPerson (getAt 2 mockupPeople))
-    in
-    [
-        Task 1 "clean the floor" firstPerson "just clean the damn floor!" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 firstPerson True False
-        , Task 2 "dispose garbage" secondPerson "dispose all unnecessary garbage in the provided containers!" mockupExampleDueDate2 mockupExampleCreationDate2 mockupExampleLastDoneDate2 secondPerson True False
-        , Task 3 "kill roaches in the cellar" thirdPerson "kill all the roaches!!!" mockupExampleDueDate3 mockupExampleCreationDate3 mockupExampleLastDoneDate3 thirdPerson True False
-        -- , Task id : String , displayName : String , currentlyResponsible : Person , description : String , dueDate : Posix , creationDate : Posix , lastDone : Posix , lastDoneBy : Person , isRepetitiveTask : Bool , isDeleted :Bool
-    ]
-
     -- HouseTask:
     -- id : String
     -- , displayName : String
@@ -143,8 +111,8 @@ mockupTasks =
 --Mockup dates for use in mockup tasks
 
 --dueDate: "2019-03-08T06:00:00Z",
-mockupExampleDueDate1: Posix
-mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Mar 8 6 0 0 0)
+mockupExampleDueDate1 : Posix
+mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Feb 12 14 30 0 0)
 
 --creationDate: "2019-03-05T06:00:00Z",
 mockupExampleCreationDate1: Posix
@@ -152,7 +120,7 @@ mockupExampleCreationDate1 = partsToPosix utc (Parts 2019 Mar 5 6 0 0 0)
 
 --lastDone: "2019-03-06T06:00:00Z",
 mockupExampleLastDoneDate1: Posix
-mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Mar 12 6 0 0 0)
+mockupExampleLastDoneDate1 = partsToPosix utc (Parts 3900 Jan 0 0 0 0 0)
 
 mockupExampleDueDate2: Posix
 mockupExampleDueDate2 = partsToPosix utc (Parts 2019 Sep 26 14 30 0 0)

@@ -70,11 +70,12 @@ update msg model =
         SubmitPerson ->
             let
                 newPerson = model.tmpPerson
+
                 tmpNewPerson = {newPerson | id = getNextIdPerson model.people}
                 persons = List.append model.people [tmpNewPerson]
             in
             ( {model | people = persons, tmpPerson = (Person 0 "" 0)}
-                , saveperson model.tmpPerson
+                , saveperson tmpNewPerson
             )
 
         MyDrop1Msg state ->
@@ -112,11 +113,14 @@ update msg model =
         SubmitTask ->
             let
                 newTask = model.tmpTask
-                tmpNewTask = {newTask | id = getNextIdTask model.tasks}
+                tmpNewTask = log "tmpNewTask" {newTask | id = getNextIdTask model.tasks}
+                debug = log "\ntmpNewTask-dueDate" (Formatters.getFormatedStringFromDate model.timeZone tmpNewTask.dueDate)
+                debug2 = log "\ntmpNewTask-dueDate" (Formatters.getFormatedStringFromDate model.timeZone tmpNewTask.creationDate)
+                debug3 = log "\ntmpNewTask-dueDate" (Formatters.getFormatedStringFromDate model.timeZone tmpNewTask.lastDone)
                 tasks = List.append model.tasks [tmpNewTask]
             in
-            ( {model | tasks = tasks, tmpTask = (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False)}
-                , savetask (preparetask model.tmpTask)
+            ( {model | tasks = tasks, tmpTask = (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 model.time mockupExampleLastDoneDate1 (Person 0 "" 0) False False), tmpDueDate = model.time}
+                , savetask (preparetask tmpNewTask)
             )
 
         AddTaskName displayName ->
@@ -139,6 +143,7 @@ update msg model =
 
         AddTaskDueDate time ->
             let
+                debug = log "datestring: " time
                 stringList = String.split "-" time
                 intList = List.map stringElmToInt stringList
                 firstElm = List.Extra.getAt 0 intList
@@ -236,6 +241,16 @@ update msg model =
             , Cmd.none
             )
 
+        ShowModalAddPerson ->
+            ( { model | modalShowAddPerson = Modal.shown }
+            , Cmd.none
+            )
+
+        CloseModalAddPerson ->
+            ( { model | modalShowAddPerson = Modal.hidden }
+            , Cmd.none
+            )
+
         UpdatePeople p ->
           ( {model | people = p }
           , Cmd.none
@@ -288,7 +303,7 @@ mockupExampleCreationDate1 : Posix
 mockupExampleCreationDate1 = partsToPosix utc (Parts 2018 Feb 11 10 17 0 0)
 
 mockupExampleLastDoneDate1 : Posix
-mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Feb 12 10 17 0 0)
+mockupExampleLastDoneDate1 = partsToPosix utc (Parts 3900 Jan 0 0 0 0 0)
 
 
 stringElmToInt : String -> Int

@@ -1,5 +1,6 @@
 module MainView exposing (mainView)
 
+import AddPersonComponent exposing (addPerson)
 import Html exposing (..)
 import Html.Events exposing (onClick)
 import Bootstrap.CDN as CDN
@@ -31,13 +32,11 @@ mainView model =
             |> Navbar.brand [ href "#"] [ text "Cleaningplan - Clean your Apartment"]
             |> Navbar.dark
             |> Navbar.items
-                [ Navbar.itemLink [ onClick (ChangeViewTo PreviousWeekView) ] [ text "Previous Week" ]
-
-                , Navbar.itemLink [ onClick (ChangeViewTo AddPersonView) ] [ text "Add a Person" ]
-                , Navbar.itemLink [ onClick (ChangeViewTo AddPersonView) ] [ text "Blamelist" ]
-                , Navbar.itemLink [ onClick (ChangeViewTo NextWeekView) ] [ text "Next Week"]
+                [
+                    Navbar.itemLink [ onClick (ChangeViewTo PreviousWeekView) ] [ text "Previous Week" ]
+                    , Navbar.itemLink [ onClick (ChangeViewTo MainView) ] [ text "This Week"]
+                    , Navbar.itemLink [ onClick (ChangeViewTo NextWeekView) ] [ text "Next Week"]
                 ]
-
             |> Navbar.view model.navbarState
            ]
         ]
@@ -52,7 +51,7 @@ mainView model =
                 |> Modal.h5 [] [ text "Add a Task" ]
                 |> Modal.body []
                     [
-                    addTask model
+                        addTask model
                     ]
                 |> Modal.footer []
                     [ Button.button
@@ -84,6 +83,26 @@ mainView model =
                         ]
                     |> Modal.view model.modalShowBlamelist
                 ]
+                , Grid.col[]
+                    [ Button.button
+                        [ Button.attrs [ onClick ShowModalAddPerson ] ]
+                        [ text "add Person" ]
+                    , Modal.config CloseModalAddPerson
+                        |> Modal.small
+                        |> Modal.h5 [] [ text "Blamelist" ]
+                        |> Modal.body []
+                            [
+                                addPerson model
+                            ]
+                        |> Modal.footer []
+                            [ Button.button
+                                [ Button.outlinePrimary
+                                , Button.attrs [ onClick CloseModalAddPerson ]
+                                ]
+                                [ text "Close" ]
+                            ]
+                        |> Modal.view model.modalShowAddPerson
+                    ]
         ]
         , Grid.row []
         [

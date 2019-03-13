@@ -154,7 +154,11 @@ displayConditionalButton timeZone endOfWeek time weekOffset task =
         else
             button [ disabled True ] [ text "too late!" ]
     else
-         button [ disabled True ] [ text "Done!" ]
+         if weekOffset > 0
+         then
+            button [ disabled True ] [ text "not yet available!" ]
+         else
+            button [ disabled True ] [ text "Done!" ]
 
 getTaskCardFromTasks: Time.Zone -> Posix -> Int -> Task -> Html Msg
 getTaskCardFromTasks timeZone time weekOffset task =

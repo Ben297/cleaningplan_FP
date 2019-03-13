@@ -3,8 +3,7 @@ module Main exposing (main)
 import Browser
 import MainView exposing (mainView)
 import Msg exposing (..)
-import Model exposing (init, Model, initMockup, Flags)
-import View exposing (view)
+import Model exposing (init, Model, Flags)
 import Update exposing (update, decodeTaskValue)
 import Time
 import Ports exposing (..)
