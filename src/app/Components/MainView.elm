@@ -33,9 +33,7 @@ mainView model =
             |> Navbar.dark
             |> Navbar.items
                 [ Navbar.itemLink [ onClick (ChangeViewTo PreviousWeekView) ] [ text "Previous Week" ]
-
-                , Navbar.itemLink [ onClick (ChangeViewTo AddPersonView) ] [ text "Add a Person" ]
-                , Navbar.itemLink [ onClick (ChangeViewTo AddPersonView) ] [ text "Blamelist" ]
+                , Navbar.itemLink [ onClick (ChangeViewTo MainView) ] [ text "This Week" ]
                 , Navbar.itemLink [ onClick (ChangeViewTo NextWeekView) ] [ text "Next Week"]
                 ]
 

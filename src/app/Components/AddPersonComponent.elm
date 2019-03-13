@@ -23,7 +23,6 @@ addPerson model =
             ]
         ]
 
-
 viewInput : String -> String -> String -> (String -> msg) -> Html msg
 viewInput t p v toMsg =
   input [ type_ t, placeholder p, value v, onInput toMsg ] []
