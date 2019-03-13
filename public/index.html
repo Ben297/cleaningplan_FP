@@ -179,14 +179,15 @@
 
 
                             //--Subscriptions to elm-commands
+
                             app.ports.saveperson.subscribe(function (data) {
-                                console.log('person: ', data);
+                                console.log('person: ' + data.name);
 
                                 postPerson(data);
                             });
 
                             app.ports.savetask.subscribe(function (data) {
-                                console.log('task: ', data);
+                                console.log('task: ' + data.displayName);
 
                                 postTask(data);
                             });

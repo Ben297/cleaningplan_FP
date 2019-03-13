@@ -6231,559 +6231,6 @@ var author$project$Main$subscriptions = function (model) {
 				author$project$Ports$loadtasks(author$project$Update$decodeTaskValue)
 			]));
 };
-var author$project$Model$Model = function (count) {
-	return function (people) {
-		return function (tasks) {
-			return function (time) {
-				return function (timeZone) {
-					return function (view) {
-						return function (tmpPerson) {
-							return function (tmpTask) {
-								return function (tmpDueDate) {
-									return function (myDrop1State) {
-										return function (navbarState) {
-											return function (modalAddTask) {
-												return function (modalShowBlamelist) {
-													return function (debug) {
-														return {count: count, debug: debug, modalAddTask: modalAddTask, modalShowBlamelist: modalShowBlamelist, myDrop1State: myDrop1State, navbarState: navbarState, people: people, tasks: tasks, time: time, timeZone: timeZone, tmpDueDate: tmpDueDate, tmpPerson: tmpPerson, tmpTask: tmpTask, view: view};
-													};
-												};
-											};
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-var elm$time$Time$Mar = {$: 'Mar'};
-var elm$time$Time$utc = A2(elm$time$Time$Zone, 0, _List_Nil);
-var justinmimbs$time_extra$Time$Extra$Parts = F7(
-	function (year, month, day, hour, minute, second, millisecond) {
-		return {day: day, hour: hour, millisecond: millisecond, minute: minute, month: month, second: second, year: year};
-	});
-var elm$core$Basics$clamp = F3(
-	function (low, high, number) {
-		return (_Utils_cmp(number, low) < 0) ? low : ((_Utils_cmp(number, high) > 0) ? high : number);
-	});
-var justinmimbs$date$Date$RD = function (a) {
-	return {$: 'RD', a: a};
-};
-var justinmimbs$date$Date$isLeapYear = function (y) {
-	return ((!A2(elm$core$Basics$modBy, 4, y)) && A2(elm$core$Basics$modBy, 100, y)) || (!A2(elm$core$Basics$modBy, 400, y));
-};
-var justinmimbs$date$Date$daysBeforeMonth = F2(
-	function (y, m) {
-		var leapDays = justinmimbs$date$Date$isLeapYear(y) ? 1 : 0;
-		switch (m.$) {
-			case 'Jan':
-				return 0;
-			case 'Feb':
-				return 31;
-			case 'Mar':
-				return 59 + leapDays;
-			case 'Apr':
-				return 90 + leapDays;
-			case 'May':
-				return 120 + leapDays;
-			case 'Jun':
-				return 151 + leapDays;
-			case 'Jul':
-				return 181 + leapDays;
-			case 'Aug':
-				return 212 + leapDays;
-			case 'Sep':
-				return 243 + leapDays;
-			case 'Oct':
-				return 273 + leapDays;
-			case 'Nov':
-				return 304 + leapDays;
-			default:
-				return 334 + leapDays;
-		}
-	});
-var justinmimbs$date$Date$floorDiv = F2(
-	function (a, b) {
-		return elm$core$Basics$floor(a / b);
-	});
-var justinmimbs$date$Date$daysBeforeYear = function (y1) {
-	var y = y1 - 1;
-	var leapYears = (A2(justinmimbs$date$Date$floorDiv, y, 4) - A2(justinmimbs$date$Date$floorDiv, y, 100)) + A2(justinmimbs$date$Date$floorDiv, y, 400);
-	return (365 * y) + leapYears;
-};
-var justinmimbs$date$Date$daysInMonth = F2(
-	function (y, m) {
-		switch (m.$) {
-			case 'Jan':
-				return 31;
-			case 'Feb':
-				return justinmimbs$date$Date$isLeapYear(y) ? 29 : 28;
-			case 'Mar':
-				return 31;
-			case 'Apr':
-				return 30;
-			case 'May':
-				return 31;
-			case 'Jun':
-				return 30;
-			case 'Jul':
-				return 31;
-			case 'Aug':
-				return 31;
-			case 'Sep':
-				return 30;
-			case 'Oct':
-				return 31;
-			case 'Nov':
-				return 30;
-			default:
-				return 31;
-		}
-	});
-var justinmimbs$date$Date$fromCalendarDate = F3(
-	function (y, m, d) {
-		return justinmimbs$date$Date$RD(
-			(justinmimbs$date$Date$daysBeforeYear(y) + A2(justinmimbs$date$Date$daysBeforeMonth, y, m)) + A3(
-				elm$core$Basics$clamp,
-				1,
-				A2(justinmimbs$date$Date$daysInMonth, y, m),
-				d));
-	});
-var justinmimbs$date$Date$toRataDie = function (_n0) {
-	var rd = _n0.a;
-	return rd;
-};
-var justinmimbs$time_extra$Time$Extra$dateToMillis = function (date) {
-	var daysSinceEpoch = justinmimbs$date$Date$toRataDie(date) - 719163;
-	return daysSinceEpoch * 86400000;
-};
-var elm$time$Time$posixToMillis = function (_n0) {
-	var millis = _n0.a;
-	return millis;
-};
-var elm$time$Time$flooredDiv = F2(
-	function (numerator, denominator) {
-		return elm$core$Basics$floor(numerator / denominator);
-	});
-var elm$time$Time$toAdjustedMinutesHelp = F3(
-	function (defaultOffset, posixMinutes, eras) {
-		toAdjustedMinutesHelp:
-		while (true) {
-			if (!eras.b) {
-				return posixMinutes + defaultOffset;
-			} else {
-				var era = eras.a;
-				var olderEras = eras.b;
-				if (_Utils_cmp(era.start, posixMinutes) < 0) {
-					return posixMinutes + era.offset;
-				} else {
-					var $temp$defaultOffset = defaultOffset,
-						$temp$posixMinutes = posixMinutes,
-						$temp$eras = olderEras;
-					defaultOffset = $temp$defaultOffset;
-					posixMinutes = $temp$posixMinutes;
-					eras = $temp$eras;
-					continue toAdjustedMinutesHelp;
-				}
-			}
-		}
-	});
-var elm$time$Time$toAdjustedMinutes = F2(
-	function (_n0, time) {
-		var defaultOffset = _n0.a;
-		var eras = _n0.b;
-		return A3(
-			elm$time$Time$toAdjustedMinutesHelp,
-			defaultOffset,
-			A2(
-				elm$time$Time$flooredDiv,
-				elm$time$Time$posixToMillis(time),
-				60000),
-			eras);
-	});
-var elm$core$Basics$ge = _Utils_ge;
-var elm$time$Time$toCivil = function (minutes) {
-	var rawDay = A2(elm$time$Time$flooredDiv, minutes, 60 * 24) + 719468;
-	var era = (((rawDay >= 0) ? rawDay : (rawDay - 146096)) / 146097) | 0;
-	var dayOfEra = rawDay - (era * 146097);
-	var yearOfEra = ((((dayOfEra - ((dayOfEra / 1460) | 0)) + ((dayOfEra / 36524) | 0)) - ((dayOfEra / 146096) | 0)) / 365) | 0;
-	var dayOfYear = dayOfEra - (((365 * yearOfEra) + ((yearOfEra / 4) | 0)) - ((yearOfEra / 100) | 0));
-	var mp = (((5 * dayOfYear) + 2) / 153) | 0;
-	var month = mp + ((mp < 10) ? 3 : (-9));
-	var year = yearOfEra + (era * 400);
-	return {
-		day: (dayOfYear - ((((153 * mp) + 2) / 5) | 0)) + 1,
-		month: month,
-		year: year + ((month <= 2) ? 1 : 0)
-	};
-};
-var elm$time$Time$toDay = F2(
-	function (zone, time) {
-		return elm$time$Time$toCivil(
-			A2(elm$time$Time$toAdjustedMinutes, zone, time)).day;
-	});
-var elm$time$Time$Apr = {$: 'Apr'};
-var elm$time$Time$Aug = {$: 'Aug'};
-var elm$time$Time$Dec = {$: 'Dec'};
-var elm$time$Time$Feb = {$: 'Feb'};
-var elm$time$Time$Jan = {$: 'Jan'};
-var elm$time$Time$Jul = {$: 'Jul'};
-var elm$time$Time$Jun = {$: 'Jun'};
-var elm$time$Time$May = {$: 'May'};
-var elm$time$Time$Nov = {$: 'Nov'};
-var elm$time$Time$Oct = {$: 'Oct'};
-var elm$time$Time$Sep = {$: 'Sep'};
-var elm$time$Time$toMonth = F2(
-	function (zone, time) {
-		var _n0 = elm$time$Time$toCivil(
-			A2(elm$time$Time$toAdjustedMinutes, zone, time)).month;
-		switch (_n0) {
-			case 1:
-				return elm$time$Time$Jan;
-			case 2:
-				return elm$time$Time$Feb;
-			case 3:
-				return elm$time$Time$Mar;
-			case 4:
-				return elm$time$Time$Apr;
-			case 5:
-				return elm$time$Time$May;
-			case 6:
-				return elm$time$Time$Jun;
-			case 7:
-				return elm$time$Time$Jul;
-			case 8:
-				return elm$time$Time$Aug;
-			case 9:
-				return elm$time$Time$Sep;
-			case 10:
-				return elm$time$Time$Oct;
-			case 11:
-				return elm$time$Time$Nov;
-			default:
-				return elm$time$Time$Dec;
-		}
-	});
-var elm$time$Time$toYear = F2(
-	function (zone, time) {
-		return elm$time$Time$toCivil(
-			A2(elm$time$Time$toAdjustedMinutes, zone, time)).year;
-	});
-var justinmimbs$date$Date$fromPosix = F2(
-	function (zone, posix) {
-		return A3(
-			justinmimbs$date$Date$fromCalendarDate,
-			A2(elm$time$Time$toYear, zone, posix),
-			A2(elm$time$Time$toMonth, zone, posix),
-			A2(elm$time$Time$toDay, zone, posix));
-	});
-var elm$time$Time$toHour = F2(
-	function (zone, time) {
-		return A2(
-			elm$core$Basics$modBy,
-			24,
-			A2(
-				elm$time$Time$flooredDiv,
-				A2(elm$time$Time$toAdjustedMinutes, zone, time),
-				60));
-	});
-var elm$time$Time$toMillis = F2(
-	function (_n0, time) {
-		return A2(
-			elm$core$Basics$modBy,
-			1000,
-			elm$time$Time$posixToMillis(time));
-	});
-var elm$time$Time$toMinute = F2(
-	function (zone, time) {
-		return A2(
-			elm$core$Basics$modBy,
-			60,
-			A2(elm$time$Time$toAdjustedMinutes, zone, time));
-	});
-var elm$time$Time$toSecond = F2(
-	function (_n0, time) {
-		return A2(
-			elm$core$Basics$modBy,
-			60,
-			A2(
-				elm$time$Time$flooredDiv,
-				elm$time$Time$posixToMillis(time),
-				1000));
-	});
-var justinmimbs$time_extra$Time$Extra$timeFromClock = F4(
-	function (hour, minute, second, millisecond) {
-		return (((hour * 3600000) + (minute * 60000)) + (second * 1000)) + millisecond;
-	});
-var justinmimbs$time_extra$Time$Extra$timeFromPosix = F2(
-	function (zone, posix) {
-		return A4(
-			justinmimbs$time_extra$Time$Extra$timeFromClock,
-			A2(elm$time$Time$toHour, zone, posix),
-			A2(elm$time$Time$toMinute, zone, posix),
-			A2(elm$time$Time$toSecond, zone, posix),
-			A2(elm$time$Time$toMillis, zone, posix));
-	});
-var justinmimbs$time_extra$Time$Extra$toOffset = F2(
-	function (zone, posix) {
-		var millis = elm$time$Time$posixToMillis(posix);
-		var localMillis = justinmimbs$time_extra$Time$Extra$dateToMillis(
-			A2(justinmimbs$date$Date$fromPosix, zone, posix)) + A2(justinmimbs$time_extra$Time$Extra$timeFromPosix, zone, posix);
-		return ((localMillis - millis) / 60000) | 0;
-	});
-var justinmimbs$time_extra$Time$Extra$posixFromDateTime = F3(
-	function (zone, date, time) {
-		var millis = justinmimbs$time_extra$Time$Extra$dateToMillis(date) + time;
-		var offset0 = A2(
-			justinmimbs$time_extra$Time$Extra$toOffset,
-			zone,
-			elm$time$Time$millisToPosix(millis));
-		var posix1 = elm$time$Time$millisToPosix(millis - (offset0 * 60000));
-		var offset1 = A2(justinmimbs$time_extra$Time$Extra$toOffset, zone, posix1);
-		if (_Utils_eq(offset0, offset1)) {
-			return posix1;
-		} else {
-			var posix2 = elm$time$Time$millisToPosix(millis - (offset1 * 60000));
-			var offset2 = A2(justinmimbs$time_extra$Time$Extra$toOffset, zone, posix2);
-			return _Utils_eq(offset1, offset2) ? posix2 : posix1;
-		}
-	});
-var justinmimbs$time_extra$Time$Extra$partsToPosix = F2(
-	function (zone, _n0) {
-		var year = _n0.year;
-		var month = _n0.month;
-		var day = _n0.day;
-		var hour = _n0.hour;
-		var minute = _n0.minute;
-		var second = _n0.second;
-		var millisecond = _n0.millisecond;
-		return A3(
-			justinmimbs$time_extra$Time$Extra$posixFromDateTime,
-			zone,
-			A3(justinmimbs$date$Date$fromCalendarDate, year, month, day),
-			A4(
-				justinmimbs$time_extra$Time$Extra$timeFromClock,
-				A3(elm$core$Basics$clamp, 0, 23, hour),
-				A3(elm$core$Basics$clamp, 0, 59, minute),
-				A3(elm$core$Basics$clamp, 0, 59, second),
-				A3(elm$core$Basics$clamp, 0, 999, millisecond)));
-	});
-var author$project$Model$mockupExampleCreationDate1 = A2(
-	justinmimbs$time_extra$Time$Extra$partsToPosix,
-	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 5, 6, 0, 0, 0));
-var author$project$Model$mockupExampleDueDate1 = A2(
-	justinmimbs$time_extra$Time$Extra$partsToPosix,
-	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 8, 6, 0, 0, 0));
-var author$project$Model$mockupExampleLastDoneDate1 = A2(
-	justinmimbs$time_extra$Time$Extra$partsToPosix,
-	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 12, 6, 0, 0, 0));
-var author$project$Model$mockupPeople = _List_fromArray(
-	[
-		A3(author$project$Person$Person, 1, 'Peter2', 0),
-		A3(author$project$Person$Person, 2, 'Paul', 0),
-		A3(author$project$Person$Person, 3, 'Marry', 0)
-	]);
-var author$project$Model$mockupExampleCreationDate2 = A2(
-	justinmimbs$time_extra$Time$Extra$partsToPosix,
-	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 10, 16, 17, 0, 0));
-var author$project$Model$mockupExampleCreationDate3 = A2(
-	justinmimbs$time_extra$Time$Extra$partsToPosix,
-	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 16, 17, 0, 0));
-var author$project$Model$mockupExampleDueDate2 = A2(
-	justinmimbs$time_extra$Time$Extra$partsToPosix,
-	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Sep, 26, 14, 30, 0, 0));
-var author$project$Model$mockupExampleDueDate3 = A2(
-	justinmimbs$time_extra$Time$Extra$partsToPosix,
-	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Sep, 26, 14, 30, 0, 0));
-var author$project$Model$mockupExampleLastDoneDate2 = A2(
-	justinmimbs$time_extra$Time$Extra$partsToPosix,
-	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Sep, 26, 14, 30, 0, 0));
-var author$project$Model$mockupExampleLastDoneDate3 = A2(
-	justinmimbs$time_extra$Time$Extra$partsToPosix,
-	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Sep, 26, 14, 30, 0, 0));
-var elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var elm$core$List$drop = F2(
-	function (n, list) {
-		drop:
-		while (true) {
-			if (n <= 0) {
-				return list;
-			} else {
-				if (!list.b) {
-					return list;
-				} else {
-					var x = list.a;
-					var xs = list.b;
-					var $temp$n = n - 1,
-						$temp$list = xs;
-					n = $temp$n;
-					list = $temp$list;
-					continue drop;
-				}
-			}
-		}
-	});
-var elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return elm$core$Maybe$Just(x);
-	} else {
-		return elm$core$Maybe$Nothing;
-	}
-};
-var elm_community$list_extra$List$Extra$getAt = F2(
-	function (idx, xs) {
-		return (idx < 0) ? elm$core$Maybe$Nothing : elm$core$List$head(
-			A2(elm$core$List$drop, idx, xs));
-	});
-var author$project$Model$mockupTasks = function () {
-	var defaultPerson = A3(author$project$Person$Person, 0, 'Default', 0);
-	var firstPerson = A2(
-		elm$core$Maybe$withDefault,
-		defaultPerson,
-		A2(elm_community$list_extra$List$Extra$getAt, 0, author$project$Model$mockupPeople));
-	var secondPerson = A2(
-		elm$core$Maybe$withDefault,
-		defaultPerson,
-		A2(elm_community$list_extra$List$Extra$getAt, 1, author$project$Model$mockupPeople));
-	var thirdPerson = A2(
-		elm$core$Maybe$withDefault,
-		defaultPerson,
-		A2(elm_community$list_extra$List$Extra$getAt, 2, author$project$Model$mockupPeople));
-	return _List_fromArray(
-		[
-			author$project$HouseTask$Task(1)('clean the floor')(firstPerson)('just clean the damn floor!')(author$project$Model$mockupExampleDueDate1)(author$project$Model$mockupExampleCreationDate1)(author$project$Model$mockupExampleLastDoneDate1)(firstPerson)(true)(false),
-			author$project$HouseTask$Task(2)('dispose garbage')(secondPerson)('dispose all unnecessary garbage in the provided containers!')(author$project$Model$mockupExampleDueDate2)(author$project$Model$mockupExampleCreationDate2)(author$project$Model$mockupExampleLastDoneDate2)(secondPerson)(true)(false),
-			author$project$HouseTask$Task(3)('kill roaches in the cellar')(thirdPerson)('kill all the roaches!!!')(author$project$Model$mockupExampleDueDate3)(author$project$Model$mockupExampleCreationDate3)(author$project$Model$mockupExampleLastDoneDate3)(thirdPerson)(true)(false)
-		]);
-}();
-var author$project$Msg$AdjustTimeZone = function (a) {
-	return {$: 'AdjustTimeZone', a: a};
-};
-var author$project$Msg$MainView = {$: 'MainView'};
-var author$project$Msg$NavbarMsg = function (a) {
-	return {$: 'NavbarMsg', a: a};
-};
-var elm$core$Platform$Cmd$batch = _Platform_batch;
-var elm$core$Task$Perform = function (a) {
-	return {$: 'Perform', a: a};
-};
-var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
-var elm$core$Task$map = F2(
-	function (func, taskA) {
-		return A2(
-			elm$core$Task$andThen,
-			function (a) {
-				return elm$core$Task$succeed(
-					func(a));
-			},
-			taskA);
-	});
-var elm$core$Task$spawnCmd = F2(
-	function (router, _n0) {
-		var task = _n0.a;
-		return _Scheduler_spawn(
-			A2(
-				elm$core$Task$andThen,
-				elm$core$Platform$sendToApp(router),
-				task));
-	});
-var elm$core$Task$onEffects = F3(
-	function (router, commands, state) {
-		return A2(
-			elm$core$Task$map,
-			function (_n0) {
-				return _Utils_Tuple0;
-			},
-			elm$core$Task$sequence(
-				A2(
-					elm$core$List$map,
-					elm$core$Task$spawnCmd(router),
-					commands)));
-	});
-var elm$core$Task$onSelfMsg = F3(
-	function (_n0, _n1, _n2) {
-		return elm$core$Task$succeed(_Utils_Tuple0);
-	});
-var elm$core$Task$cmdMap = F2(
-	function (tagger, _n0) {
-		var task = _n0.a;
-		return elm$core$Task$Perform(
-			A2(elm$core$Task$map, tagger, task));
-	});
-_Platform_effectManagers['Task'] = _Platform_createManager(elm$core$Task$init, elm$core$Task$onEffects, elm$core$Task$onSelfMsg, elm$core$Task$cmdMap);
-var elm$core$Task$command = _Platform_leaf('Task');
-var elm$core$Task$perform = F2(
-	function (toMessage, task) {
-		return elm$core$Task$command(
-			elm$core$Task$Perform(
-				A2(elm$core$Task$map, toMessage, task)));
-	});
-var elm$core$Tuple$second = function (_n0) {
-	var y = _n0.b;
-	return y;
-};
-var elm$time$Time$here = _Time_here(_Utils_Tuple0);
-var rundis$elm_bootstrap$Bootstrap$Dropdown$Closed = {$: 'Closed'};
-var rundis$elm_bootstrap$Bootstrap$Dropdown$State = function (a) {
-	return {$: 'State', a: a};
-};
-var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$Area = F4(
-	function (top, left, width, height) {
-		return {height: height, left: left, top: top, width: width};
-	});
-var rundis$elm_bootstrap$Bootstrap$Dropdown$initialState = rundis$elm_bootstrap$Bootstrap$Dropdown$State(
-	{
-		menuSize: A4(rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$Area, 0, 0, 0, 0),
-		status: rundis$elm_bootstrap$Bootstrap$Dropdown$Closed,
-		toggleSize: A4(rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$Area, 0, 0, 0, 0)
-	});
-var rundis$elm_bootstrap$Bootstrap$Modal$Hide = {$: 'Hide'};
-var rundis$elm_bootstrap$Bootstrap$Modal$hidden = rundis$elm_bootstrap$Bootstrap$Modal$Hide;
-var rundis$elm_bootstrap$Bootstrap$Navbar$Hidden = {$: 'Hidden'};
-var rundis$elm_bootstrap$Bootstrap$Navbar$State = function (a) {
-	return {$: 'State', a: a};
-};
-var elm$browser$Browser$External = function (a) {
-	return {$: 'External', a: a};
-};
-var elm$browser$Browser$Internal = function (a) {
-	return {$: 'Internal', a: a};
-};
-var elm$browser$Browser$Dom$NotFound = function (a) {
-	return {$: 'NotFound', a: a};
-};
-var elm$core$Basics$never = function (_n0) {
-	never:
-	while (true) {
-		var nvr = _n0.a;
-		var $temp$_n0 = nvr;
-		_n0 = $temp$_n0;
-		continue never;
-	}
-};
 var elm$json$Json$Decode$map = _Json_map1;
 var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 	switch (handler.$) {
@@ -6797,722 +6244,8 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
-var elm$core$String$dropLeft = F2(
-	function (n, string) {
-		return (n < 1) ? string : A3(
-			elm$core$String$slice,
-			n,
-			elm$core$String$length(string),
-			string);
-	});
-var elm$core$String$startsWith = _String_startsWith;
-var elm$url$Url$Http = {$: 'Http'};
-var elm$url$Url$Https = {$: 'Https'};
-var elm$core$String$indexes = _String_indexes;
-var elm$core$String$left = F2(
-	function (n, string) {
-		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
-	});
-var elm$core$String$contains = _String_contains;
-var elm$url$Url$Url = F6(
-	function (protocol, host, port_, path, query, fragment) {
-		return {fragment: fragment, host: host, path: path, port_: port_, protocol: protocol, query: query};
-	});
-var elm$url$Url$chompBeforePath = F5(
-	function (protocol, path, params, frag, str) {
-		if (elm$core$String$isEmpty(str) || A2(elm$core$String$contains, '@', str)) {
-			return elm$core$Maybe$Nothing;
-		} else {
-			var _n0 = A2(elm$core$String$indexes, ':', str);
-			if (!_n0.b) {
-				return elm$core$Maybe$Just(
-					A6(elm$url$Url$Url, protocol, str, elm$core$Maybe$Nothing, path, params, frag));
-			} else {
-				if (!_n0.b.b) {
-					var i = _n0.a;
-					var _n1 = elm$core$String$toInt(
-						A2(elm$core$String$dropLeft, i + 1, str));
-					if (_n1.$ === 'Nothing') {
-						return elm$core$Maybe$Nothing;
-					} else {
-						var port_ = _n1;
-						return elm$core$Maybe$Just(
-							A6(
-								elm$url$Url$Url,
-								protocol,
-								A2(elm$core$String$left, i, str),
-								port_,
-								path,
-								params,
-								frag));
-					}
-				} else {
-					return elm$core$Maybe$Nothing;
-				}
-			}
-		}
-	});
-var elm$url$Url$chompBeforeQuery = F4(
-	function (protocol, params, frag, str) {
-		if (elm$core$String$isEmpty(str)) {
-			return elm$core$Maybe$Nothing;
-		} else {
-			var _n0 = A2(elm$core$String$indexes, '/', str);
-			if (!_n0.b) {
-				return A5(elm$url$Url$chompBeforePath, protocol, '/', params, frag, str);
-			} else {
-				var i = _n0.a;
-				return A5(
-					elm$url$Url$chompBeforePath,
-					protocol,
-					A2(elm$core$String$dropLeft, i, str),
-					params,
-					frag,
-					A2(elm$core$String$left, i, str));
-			}
-		}
-	});
-var elm$url$Url$chompBeforeFragment = F3(
-	function (protocol, frag, str) {
-		if (elm$core$String$isEmpty(str)) {
-			return elm$core$Maybe$Nothing;
-		} else {
-			var _n0 = A2(elm$core$String$indexes, '?', str);
-			if (!_n0.b) {
-				return A4(elm$url$Url$chompBeforeQuery, protocol, elm$core$Maybe$Nothing, frag, str);
-			} else {
-				var i = _n0.a;
-				return A4(
-					elm$url$Url$chompBeforeQuery,
-					protocol,
-					elm$core$Maybe$Just(
-						A2(elm$core$String$dropLeft, i + 1, str)),
-					frag,
-					A2(elm$core$String$left, i, str));
-			}
-		}
-	});
-var elm$url$Url$chompAfterProtocol = F2(
-	function (protocol, str) {
-		if (elm$core$String$isEmpty(str)) {
-			return elm$core$Maybe$Nothing;
-		} else {
-			var _n0 = A2(elm$core$String$indexes, '#', str);
-			if (!_n0.b) {
-				return A3(elm$url$Url$chompBeforeFragment, protocol, elm$core$Maybe$Nothing, str);
-			} else {
-				var i = _n0.a;
-				return A3(
-					elm$url$Url$chompBeforeFragment,
-					protocol,
-					elm$core$Maybe$Just(
-						A2(elm$core$String$dropLeft, i + 1, str)),
-					A2(elm$core$String$left, i, str));
-			}
-		}
-	});
-var elm$url$Url$fromString = function (str) {
-	return A2(elm$core$String$startsWith, 'http://', str) ? A2(
-		elm$url$Url$chompAfterProtocol,
-		elm$url$Url$Http,
-		A2(elm$core$String$dropLeft, 7, str)) : (A2(elm$core$String$startsWith, 'https://', str) ? A2(
-		elm$url$Url$chompAfterProtocol,
-		elm$url$Url$Https,
-		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
-};
-var elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
-var rundis$elm_bootstrap$Bootstrap$Navbar$mapState = F2(
-	function (mapper, _n0) {
-		var state = _n0.a;
-		return rundis$elm_bootstrap$Bootstrap$Navbar$State(
-			mapper(state));
-	});
-var rundis$elm_bootstrap$Bootstrap$Navbar$initWindowSize = F2(
-	function (toMsg, state) {
-		return A2(
-			elm$core$Task$perform,
-			function (vp) {
-				return toMsg(
-					A2(
-						rundis$elm_bootstrap$Bootstrap$Navbar$mapState,
-						function (s) {
-							return _Utils_update(
-								s,
-								{
-									windowWidth: elm$core$Maybe$Just(vp.viewport.width)
-								});
-						},
-						state));
-			},
-			elm$browser$Browser$Dom$getViewport);
-	});
-var rundis$elm_bootstrap$Bootstrap$Navbar$initialState = function (toMsg) {
-	var state = rundis$elm_bootstrap$Bootstrap$Navbar$State(
-		{dropdowns: elm$core$Dict$empty, height: elm$core$Maybe$Nothing, visibility: rundis$elm_bootstrap$Bootstrap$Navbar$Hidden, windowWidth: elm$core$Maybe$Nothing});
-	return _Utils_Tuple2(
-		state,
-		A2(rundis$elm_bootstrap$Bootstrap$Navbar$initWindowSize, toMsg, state));
-};
-var author$project$Model$initMockup = function (flags) {
-	var initNavTup = rundis$elm_bootstrap$Bootstrap$Navbar$initialState(author$project$Msg$NavbarMsg);
-	var initNav = initNavTup.a;
-	var initCmd = elm$core$Platform$Cmd$batch(
-		_List_fromArray(
-			[
-				initNavTup.b,
-				A2(elm$core$Task$perform, author$project$Msg$AdjustTimeZone, elm$time$Time$here)
-			]));
-	return _Utils_Tuple2(
-		author$project$Model$Model('0')(author$project$Model$mockupPeople)(author$project$Model$mockupTasks)(
-			elm$time$Time$millisToPosix(0))(elm$time$Time$utc)(author$project$Msg$MainView)(
-			A3(author$project$Person$Person, 0, '', 0))(
-			author$project$HouseTask$Task(0)('')(
-				A3(author$project$Person$Person, 0, '', 0))('')(author$project$Model$mockupExampleDueDate1)(author$project$Model$mockupExampleCreationDate1)(author$project$Model$mockupExampleLastDoneDate1)(
-				A3(author$project$Person$Person, 0, '', 0))(false)(false))(
-			A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 14, 30, 0, 0))(rundis$elm_bootstrap$Bootstrap$Dropdown$initialState)(initNav)(rundis$elm_bootstrap$Bootstrap$Modal$hidden)(rundis$elm_bootstrap$Bootstrap$Modal$hidden)(''),
-		initCmd);
-};
-var author$project$Formatters$intToMonth = function (_int) {
-	switch (_int) {
-		case 1:
-			return elm$time$Time$Jan;
-		case 2:
-			return elm$time$Time$Feb;
-		case 3:
-			return elm$time$Time$Mar;
-		case 4:
-			return elm$time$Time$Apr;
-		case 5:
-			return elm$time$Time$May;
-		case 6:
-			return elm$time$Time$Jun;
-		case 7:
-			return elm$time$Time$Jul;
-		case 8:
-			return elm$time$Time$Aug;
-		case 9:
-			return elm$time$Time$Sep;
-		case 10:
-			return elm$time$Time$Oct;
-		case 11:
-			return elm$time$Time$Nov;
-		case 12:
-			return elm$time$Time$Dec;
-		default:
-			return elm$time$Time$Jan;
-	}
-};
-var elm$json$Json$Encode$int = _Json_wrap;
-var elm$json$Json$Encode$object = function (pairs) {
-	return _Json_wrap(
-		A3(
-			elm$core$List$foldl,
-			F2(
-				function (_n0, obj) {
-					var k = _n0.a;
-					var v = _n0.b;
-					return A3(_Json_addField, k, v, obj);
-				}),
-			_Json_emptyObject(_Utils_Tuple0),
-			pairs));
-};
-var elm$json$Json$Encode$string = _Json_wrap;
-var author$project$Ports$saveperson = _Platform_outgoingPort(
-	'saveperson',
-	function ($) {
-		return elm$json$Json$Encode$object(
-			_List_fromArray(
-				[
-					_Utils_Tuple2(
-					'blameCounter',
-					elm$json$Json$Encode$int($.blameCounter)),
-					_Utils_Tuple2(
-					'id',
-					elm$json$Json$Encode$int($.id)),
-					_Utils_Tuple2(
-					'name',
-					elm$json$Json$Encode$string($.name))
-				]));
-	});
-var elm$json$Json$Encode$bool = _Json_wrap;
-var author$project$Ports$savetask = _Platform_outgoingPort(
-	'savetask',
-	function ($) {
-		return elm$json$Json$Encode$object(
-			_List_fromArray(
-				[
-					_Utils_Tuple2(
-					'creationDate',
-					elm$json$Json$Encode$int($.creationDate)),
-					_Utils_Tuple2(
-					'currentlyResponsible',
-					function ($) {
-						return elm$json$Json$Encode$object(
-							_List_fromArray(
-								[
-									_Utils_Tuple2(
-									'blameCounter',
-									elm$json$Json$Encode$int($.blameCounter)),
-									_Utils_Tuple2(
-									'id',
-									elm$json$Json$Encode$int($.id)),
-									_Utils_Tuple2(
-									'name',
-									elm$json$Json$Encode$string($.name))
-								]));
-					}($.currentlyResponsible)),
-					_Utils_Tuple2(
-					'description',
-					elm$json$Json$Encode$string($.description)),
-					_Utils_Tuple2(
-					'displayName',
-					elm$json$Json$Encode$string($.displayName)),
-					_Utils_Tuple2(
-					'dueDate',
-					elm$json$Json$Encode$int($.dueDate)),
-					_Utils_Tuple2(
-					'id',
-					elm$json$Json$Encode$int($.id)),
-					_Utils_Tuple2(
-					'isDeleted',
-					elm$json$Json$Encode$bool($.isDeleted)),
-					_Utils_Tuple2(
-					'isRepetitiveTask',
-					elm$json$Json$Encode$bool($.isRepetitiveTask)),
-					_Utils_Tuple2(
-					'lastDone',
-					elm$json$Json$Encode$int($.lastDone)),
-					_Utils_Tuple2(
-					'lastDoneBy',
-					function ($) {
-						return elm$json$Json$Encode$object(
-							_List_fromArray(
-								[
-									_Utils_Tuple2(
-									'blameCounter',
-									elm$json$Json$Encode$int($.blameCounter)),
-									_Utils_Tuple2(
-									'id',
-									elm$json$Json$Encode$int($.id)),
-									_Utils_Tuple2(
-									'name',
-									elm$json$Json$Encode$string($.name))
-								]));
-					}($.lastDoneBy))
-				]));
-	});
-var author$project$Update$findAndUpdateLastDone = F3(
-	function (id, time, task) {
-		return _Utils_eq(task.id, id) ? _Utils_update(
-			task,
-			{lastDone: time}) : task;
-	});
-var author$project$Update$getNextIdPerson = function (people) {
-	var tmpPerson = elm$core$List$head(
-		elm$core$List$reverse(people));
-	if (tmpPerson.$ === 'Just') {
-		var val = tmpPerson.a;
-		return val.id + 1;
-	} else {
-		return 0;
-	}
-};
-var author$project$Update$getNextIdTask = function (tasks) {
-	var tmpTask = elm$core$List$head(
-		elm$core$List$reverse(tasks));
-	if (tmpTask.$ === 'Just') {
-		var val = tmpTask.a;
-		return val.id + 1;
-	} else {
-		return 0;
-	}
-};
-var author$project$Update$mockupExampleCreationDate1 = A2(
-	justinmimbs$time_extra$Time$Extra$partsToPosix,
-	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2018, elm$time$Time$Feb, 11, 10, 17, 0, 0));
-var author$project$Update$mockupExampleDueDate1 = A2(
-	justinmimbs$time_extra$Time$Extra$partsToPosix,
-	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 14, 30, 0, 0));
-var author$project$Update$mockupExampleLastDoneDate1 = A2(
-	justinmimbs$time_extra$Time$Extra$partsToPosix,
-	elm$time$Time$utc,
-	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 10, 17, 0, 0));
-var author$project$HouseTaskTransfer$TransferTask = function (id) {
-	return function (displayName) {
-		return function (currentlyResponsible) {
-			return function (description) {
-				return function (dueDate) {
-					return function (creationDate) {
-						return function (lastDone) {
-							return function (lastDoneBy) {
-								return function (isRepetitiveTask) {
-									return function (isDeleted) {
-										return {creationDate: creationDate, currentlyResponsible: currentlyResponsible, description: description, displayName: displayName, dueDate: dueDate, id: id, isDeleted: isDeleted, isRepetitiveTask: isRepetitiveTask, lastDone: lastDone, lastDoneBy: lastDoneBy};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-var author$project$Update$preparetask = function (task) {
-	return author$project$HouseTaskTransfer$TransferTask(task.id)(task.displayName)(task.currentlyResponsible)(task.description)(
-		elm$time$Time$posixToMillis(task.dueDate))(
-		elm$time$Time$posixToMillis(task.creationDate))(
-		elm$time$Time$posixToMillis(task.lastDone))(task.lastDoneBy)(task.isRepetitiveTask)(task.isDeleted);
-};
-var author$project$Update$stringElmToInt = function (elm) {
-	var maybeInt = elm$core$String$toInt(elm);
-	if (maybeInt.$ === 'Just') {
-		var _int = maybeInt.a;
-		return _int;
-	} else {
-		return 0;
-	}
-};
-var elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
-		}
-	});
-var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
-var elm_community$list_extra$List$Extra$find = F2(
-	function (predicate, list) {
-		find:
-		while (true) {
-			if (!list.b) {
-				return elm$core$Maybe$Nothing;
-			} else {
-				var first = list.a;
-				var rest = list.b;
-				if (predicate(first)) {
-					return elm$core$Maybe$Just(first);
-				} else {
-					var $temp$predicate = predicate,
-						$temp$list = rest;
-					predicate = $temp$predicate;
-					list = $temp$list;
-					continue find;
-				}
-			}
-		}
-	});
-var justinmimbs$time_extra$Time$Extra$posixToParts = F2(
-	function (zone, posix) {
-		return {
-			day: A2(elm$time$Time$toDay, zone, posix),
-			hour: A2(elm$time$Time$toHour, zone, posix),
-			millisecond: A2(elm$time$Time$toMillis, zone, posix),
-			minute: A2(elm$time$Time$toMinute, zone, posix),
-			month: A2(elm$time$Time$toMonth, zone, posix),
-			second: A2(elm$time$Time$toSecond, zone, posix),
-			year: A2(elm$time$Time$toYear, zone, posix)
-		};
-	});
-var rundis$elm_bootstrap$Bootstrap$Modal$Show = {$: 'Show'};
-var rundis$elm_bootstrap$Bootstrap$Modal$shown = rundis$elm_bootstrap$Bootstrap$Modal$Show;
-var author$project$Update$update = F2(
-	function (msg, model) {
-		switch (msg.$) {
-			case 'Increment':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{count: model.count + '1'}),
-					elm$core$Platform$Cmd$none);
-			case 'Decrement':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{count: model.count + '1'}),
-					elm$core$Platform$Cmd$none);
-			case 'Tick':
-				var newTime = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{time: newTime}),
-					elm$core$Platform$Cmd$none);
-			case 'AdjustTimeZone':
-				var newTimezone = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{timeZone: newTimezone}),
-					elm$core$Platform$Cmd$none);
-			case 'ChangeViewTo':
-				var displayType = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{view: displayType}),
-					elm$core$Platform$Cmd$none);
-			case 'TaskDone':
-				var id = msg.a;
-				var tasks = A2(
-					elm$core$List$map,
-					A2(author$project$Update$findAndUpdateLastDone, id, model.time),
-					model.tasks);
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{tasks: tasks}),
-					elm$core$Platform$Cmd$none);
-			case 'AddPersonName':
-				var name = msg.a;
-				var tmp = model.tmpPerson;
-				var newPerson = _Utils_update(
-					tmp,
-					{name: name});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{tmpPerson: newPerson}),
-					elm$core$Platform$Cmd$none);
-			case 'SubmitPerson':
-				var newPerson = model.tmpPerson;
-				var tmpNewPerson = _Utils_update(
-					newPerson,
-					{
-						id: author$project$Update$getNextIdPerson(model.people)
-					});
-				var persons = A2(
-					elm$core$List$append,
-					model.people,
-					_List_fromArray(
-						[tmpNewPerson]));
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							people: persons,
-							tmpPerson: A3(author$project$Person$Person, 0, '', 0)
-						}),
-					author$project$Ports$saveperson(model.tmpPerson));
-			case 'MyDrop1Msg':
-				var state = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{myDrop1State: state}),
-					elm$core$Platform$Cmd$none);
-			case 'AddTaskPersonDropdown':
-				var id = msg.a;
-				var maybeID = elm$core$String$toInt(id);
-				if (maybeID.$ === 'Just') {
-					var id2 = maybeID.a;
-					var maybePerson = A2(
-						elm_community$list_extra$List$Extra$find,
-						function (ln) {
-							return _Utils_eq(ln.id, id2);
-						},
-						model.people);
-					if (maybePerson.$ === 'Just') {
-						var person = maybePerson.a;
-						var newTask = model.tmpTask;
-						var tmpNewTask = _Utils_update(
-							newTask,
-							{currentlyResponsible: person});
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{tmpTask: tmpNewTask}),
-							elm$core$Platform$Cmd$none);
-					} else {
-						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-					}
-				} else {
-					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-				}
-			case 'SubmitTask':
-				var newTask = model.tmpTask;
-				var tmpNewTask = _Utils_update(
-					newTask,
-					{
-						id: author$project$Update$getNextIdTask(model.tasks)
-					});
-				var tasks = A2(
-					elm$core$List$append,
-					model.tasks,
-					_List_fromArray(
-						[tmpNewTask]));
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							tasks: tasks,
-							tmpTask: author$project$HouseTask$Task(0)('')(
-								A3(author$project$Person$Person, 0, '', 0))('')(author$project$Update$mockupExampleDueDate1)(author$project$Update$mockupExampleCreationDate1)(author$project$Update$mockupExampleLastDoneDate1)(
-								A3(author$project$Person$Person, 0, '', 0))(false)(false)
-						}),
-					author$project$Ports$savetask(
-						author$project$Update$preparetask(model.tmpTask)));
-			case 'AddTaskName':
-				var displayName = msg.a;
-				var tmp = model.tmpTask;
-				var newTask = _Utils_update(
-					tmp,
-					{displayName: displayName});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{tmpTask: newTask}),
-					elm$core$Platform$Cmd$none);
-			case 'AddTaskDescription':
-				var description = msg.a;
-				var tmp = model.tmpTask;
-				var newTask = _Utils_update(
-					tmp,
-					{description: description});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{tmpTask: newTask}),
-					elm$core$Platform$Cmd$none);
-			case 'AddTaskDueDate':
-				var time = msg.a;
-				var tmpDueDateParts = A2(justinmimbs$time_extra$Time$Extra$posixToParts, model.timeZone, model.tmpTask.dueDate);
-				var stringList = A2(elm$core$String$split, '-', time);
-				var intList = A2(elm$core$List$map, author$project$Update$stringElmToInt, stringList);
-				var secondElm = A2(elm_community$list_extra$List$Extra$getAt, 1, intList);
-				var thirdElm = A2(elm_community$list_extra$List$Extra$getAt, 2, intList);
-				var firstElm = A2(elm_community$list_extra$List$Extra$getAt, 0, intList);
-				if (firstElm.$ === 'Just') {
-					var year = firstElm.a;
-					if (secondElm.$ === 'Just') {
-						var month = secondElm.a;
-						if (thirdElm.$ === 'Just') {
-							var day = thirdElm.a;
-							var newTask = model.tmpTask;
-							var newDueDateParts = _Utils_update(
-								tmpDueDateParts,
-								{
-									day: day,
-									month: author$project$Formatters$intToMonth(month),
-									year: year
-								});
-							var dueDate = A2(justinmimbs$time_extra$Time$Extra$partsToPosix, model.timeZone, newDueDateParts);
-							var tmpNewTask = _Utils_update(
-								newTask,
-								{dueDate: dueDate});
-							return _Utils_Tuple2(
-								_Utils_update(
-									model,
-									{tmpTask: tmpNewTask}),
-								elm$core$Platform$Cmd$none);
-						} else {
-							return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-						}
-					} else {
-						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-					}
-				} else {
-					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-				}
-			case 'AddTaskDueTime':
-				var time = msg.a;
-				var tmpDueDateParts = A2(justinmimbs$time_extra$Time$Extra$posixToParts, model.timeZone, model.tmpTask.dueDate);
-				var stringList = A2(elm$core$String$split, ':', time);
-				var intList = A2(elm$core$List$map, author$project$Update$stringElmToInt, stringList);
-				var secondElm = A2(elm_community$list_extra$List$Extra$getAt, 1, intList);
-				var firstElm = A2(elm_community$list_extra$List$Extra$getAt, 0, intList);
-				if (firstElm.$ === 'Just') {
-					var hour = firstElm.a;
-					if (secondElm.$ === 'Just') {
-						var minute = secondElm.a;
-						var newTask = model.tmpTask;
-						var newDueDateParts = _Utils_update(
-							tmpDueDateParts,
-							{hour: hour, minute: minute});
-						var dueDate = A2(justinmimbs$time_extra$Time$Extra$partsToPosix, model.timeZone, newDueDateParts);
-						var tmpNewTask = _Utils_update(
-							newTask,
-							{dueDate: dueDate});
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{tmpTask: tmpNewTask}),
-							elm$core$Platform$Cmd$none);
-					} else {
-						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-					}
-				} else {
-					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-				}
-			case 'AddTaskIsRepetitiveTask':
-				var isRepetitiveTask = msg.a;
-				var tmp = model.tmpTask;
-				var newTask = _Utils_update(
-					tmp,
-					{isRepetitiveTask: isRepetitiveTask});
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{tmpTask: newTask}),
-					elm$core$Platform$Cmd$none);
-			case 'NavbarMsg':
-				var state = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{navbarState: state}),
-					elm$core$Platform$Cmd$none);
-			case 'ShowModalAddTask':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{modalAddTask: rundis$elm_bootstrap$Bootstrap$Modal$shown}),
-					elm$core$Platform$Cmd$none);
-			case 'CloseModalAddTask':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{modalAddTask: rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
-					elm$core$Platform$Cmd$none);
-			case 'ShowModalBlamelist':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{modalShowBlamelist: rundis$elm_bootstrap$Bootstrap$Modal$shown}),
-					elm$core$Platform$Cmd$none);
-			case 'CloseModalBlamelist':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{modalShowBlamelist: rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
-					elm$core$Platform$Cmd$none);
-			case 'UpdatePeople':
-				var p = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{people: p}),
-					elm$core$Platform$Cmd$none);
-			case 'UpdateTask':
-				var t = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{tasks: t}),
-					elm$core$Platform$Cmd$none);
-			default:
-				var s = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{debug: s}),
-					elm$core$Platform$Cmd$none);
-		}
-	});
 var elm$html$Html$input = _VirtualDom_node('input');
+var elm$json$Json$Encode$string = _Json_wrap;
 var elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -7890,6 +6623,15 @@ var elm$core$Maybe$map = F2(
 				f(value));
 		} else {
 			return elm$core$Maybe$Nothing;
+		}
+	});
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
 		}
 	});
 var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
@@ -8459,215 +7201,6 @@ var author$project$AddPersonComponent$addPerson = function (model) {
 					]))
 			]));
 };
-var author$project$ListPeopleComponent$getTextFromPerson = function (person) {
-	return A2(
-		elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				elm$html$Html$text(
-				_Utils_ap(
-					elm$core$String$fromInt(person.id),
-					person.name))
-			]));
-};
-var author$project$ListPeopleComponent$listPeople = function (people) {
-	return A2(
-		rundis$elm_bootstrap$Bootstrap$Grid$col,
-		_List_Nil,
-		A2(elm$core$List$map, author$project$ListPeopleComponent$getTextFromPerson, people));
-};
-var author$project$Formatters$boolToString = function (bool) {
-	if (bool) {
-		return 'True';
-	} else {
-		return 'False';
-	}
-};
-var author$project$Formatters$atLeastTwoPlaces = function (day) {
-	return (day >= 10) ? elm$core$String$fromInt(day) : ('0' + elm$core$String$fromInt(day));
-};
-var author$project$Formatters$monthToString = function (month) {
-	switch (month.$) {
-		case 'Jan':
-			return '01';
-		case 'Feb':
-			return '02';
-		case 'Mar':
-			return '03';
-		case 'Apr':
-			return '04';
-		case 'May':
-			return '05';
-		case 'Jun':
-			return '06';
-		case 'Jul':
-			return '07';
-		case 'Aug':
-			return '08';
-		case 'Sep':
-			return '09';
-		case 'Oct':
-			return '10';
-		case 'Nov':
-			return '11';
-		default:
-			return '12';
-	}
-};
-var author$project$Formatters$getFormatedStringFromDate = F2(
-	function (timeZone, date) {
-		var year = elm$core$String$fromInt(
-			A2(elm$time$Time$toYear, timeZone, date));
-		var second = elm$core$String$fromInt(
-			A2(elm$time$Time$toSecond, timeZone, date));
-		var month = author$project$Formatters$monthToString(
-			A2(elm$time$Time$toMonth, timeZone, date));
-		var minute = elm$core$String$fromInt(
-			A2(elm$time$Time$toMinute, timeZone, date));
-		var hour = elm$core$String$fromInt(
-			A2(elm$time$Time$toHour, timeZone, date));
-		var day = author$project$Formatters$atLeastTwoPlaces(
-			A2(elm$time$Time$toDay, timeZone, date));
-		return day + ('.' + (month + ('.' + year)));
-	});
-var author$project$ListTasksComponent$getTextFromTasks = F2(
-	function (timeZone, task) {
-		return A2(
-			elm$html$Html$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					elm$html$Html$text(
-					'\n Displayname:' + (task.displayName + ('\n Description:' + (task.description + ('\n currently resposible:' + (task.currentlyResponsible.name + ('\n DueDate:' + (A2(author$project$Formatters$getFormatedStringFromDate, timeZone, task.dueDate) + ('\n isRepetitiveTask?:' + author$project$Formatters$boolToString(task.isRepetitiveTask))))))))))
-				]));
-	});
-var author$project$ListTasksComponent$listTasks = function (model) {
-	return A2(
-		rundis$elm_bootstrap$Bootstrap$Grid$col,
-		_List_Nil,
-		A2(
-			elm$core$List$map,
-			author$project$ListTasksComponent$getTextFromTasks(model.timeZone),
-			model.tasks));
-};
-var author$project$Msg$ChangeViewTo = function (a) {
-	return {$: 'ChangeViewTo', a: a};
-};
-var author$project$Msg$Decrement = {$: 'Decrement'};
-var author$project$Msg$Increment = {$: 'Increment'};
-var elm$virtual_dom$VirtualDom$node = function (tag) {
-	return _VirtualDom_node(
-		_VirtualDom_noScript(tag));
-};
-var elm$html$Html$node = elm$virtual_dom$VirtualDom$node;
-var elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
-};
-var elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
-var rundis$elm_bootstrap$Bootstrap$CDN$stylesheet = A3(
-	elm$html$Html$node,
-	'link',
-	_List_fromArray(
-		[
-			elm$html$Html$Attributes$rel('stylesheet'),
-			elm$html$Html$Attributes$href('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')
-		]),
-	_List_Nil);
-var rundis$elm_bootstrap$Bootstrap$Grid$container = F2(
-	function (attributes, children) {
-		return A2(
-			elm$html$Html$div,
-			_Utils_ap(
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('container')
-					]),
-				attributes),
-			children);
-	});
-var author$project$AddPersonView$addPersonView = function (model) {
-	return A2(
-		rundis$elm_bootstrap$Bootstrap$Grid$container,
-		_List_Nil,
-		_List_fromArray(
-			[
-				rundis$elm_bootstrap$Bootstrap$CDN$stylesheet,
-				A2(
-				rundis$elm_bootstrap$Bootstrap$Grid$row,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('AddPersonView.elm'),
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(
-										author$project$Msg$ChangeViewTo(author$project$Msg$MainView))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('return to Main')
-									]))
-							])),
-						author$project$ListPeopleComponent$listPeople(model.people),
-						author$project$ListTasksComponent$listTasks(model),
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text(
-								'Number of people: ' + (elm$core$String$fromInt(
-									elm$core$List$length(model.people)) + ('\nNumber of Tasks: ' + elm$core$String$fromInt(
-									elm$core$List$length(model.tasks)))))
-							])),
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(author$project$Msg$Increment)
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('+1')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text(model.count)
-									])),
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(author$project$Msg$Decrement)
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('-1')
-									]))
-							]))
-					])),
-				author$project$AddPersonComponent$addPerson(model)
-			]));
-};
 var elm$html$Html$option = _VirtualDom_node('option');
 var rundis$elm_bootstrap$Bootstrap$Form$Select$Item = function (a) {
 	return {$: 'Item', a: a};
@@ -8737,6 +7270,10 @@ var elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
+var elm$core$Tuple$second = function (_n0) {
+	var y = _n0.b;
+	return y;
+};
 var elm$html$Html$Attributes$classList = function (classes) {
 	return elm$html$Html$Attributes$class(
 		A2(
@@ -8747,6 +7284,7 @@ var elm$html$Html$Attributes$classList = function (classes) {
 				elm$core$Tuple$first,
 				A2(elm$core$List$filter, elm$core$Tuple$second, classes))));
 };
+var elm$json$Json$Encode$bool = _Json_wrap;
 var elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
 		return A2(
@@ -9760,52 +8298,49 @@ var author$project$AddTaskComponent$addTask = function (model) {
 					]))
 			]));
 };
-var author$project$AddTaskView$addTaskView = function (model) {
+var author$project$BlameList$filterFunction = function (person) {
+	return person.blameCounter > 0;
+};
+var rundis$elm_bootstrap$Bootstrap$Table$Td = function (a) {
+	return {$: 'Td', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Table$td = F2(
+	function (options, children) {
+		return rundis$elm_bootstrap$Bootstrap$Table$Td(
+			{children: children, options: options});
+	});
+var rundis$elm_bootstrap$Bootstrap$Table$Row = function (a) {
+	return {$: 'Row', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Table$tr = F2(
+	function (options, cells) {
+		return rundis$elm_bootstrap$Bootstrap$Table$Row(
+			{cells: cells, options: options});
+	});
+var author$project$BlameList$mapPeopleToRows = function (person) {
 	return A2(
-		rundis$elm_bootstrap$Bootstrap$Grid$container,
+		rundis$elm_bootstrap$Bootstrap$Table$tr,
 		_List_Nil,
 		_List_fromArray(
 			[
-				rundis$elm_bootstrap$Bootstrap$CDN$stylesheet,
 				A2(
-				rundis$elm_bootstrap$Bootstrap$Grid$row,
+				rundis$elm_bootstrap$Bootstrap$Table$td,
 				_List_Nil,
 				_List_fromArray(
 					[
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('AddTaskView.elm'),
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(
-										author$project$Msg$ChangeViewTo(author$project$Msg$MainView))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('return to Main')
-									]))
-							])),
-						author$project$ListPeopleComponent$listPeople(model.people),
-						author$project$ListTasksComponent$listTasks(model),
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text(
-								'Number of people: ' + (elm$core$String$fromInt(
-									elm$core$List$length(model.people)) + ('\nNumber of Tasks: ' + elm$core$String$fromInt(
-									elm$core$List$length(model.tasks)))))
-							]))
+						elm$html$Html$text(person.name)
 					])),
-				author$project$AddTaskComponent$addTask(model)
+				A2(
+				rundis$elm_bootstrap$Bootstrap$Table$td,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text(
+						elm$core$String$fromInt(person.blameCounter))
+					]))
 			]));
 };
+var elm$core$List$sortBy = _List_sortBy;
 var rundis$elm_bootstrap$Bootstrap$Table$Bordered = {$: 'Bordered'};
 var rundis$elm_bootstrap$Bootstrap$Table$bordered = rundis$elm_bootstrap$Bootstrap$Table$Bordered;
 var rundis$elm_bootstrap$Bootstrap$Table$Hover = {$: 'Hover'};
@@ -9817,14 +8352,6 @@ var rundis$elm_bootstrap$Bootstrap$Table$thead = F2(
 	function (options, rows) {
 		return rundis$elm_bootstrap$Bootstrap$Table$THead(
 			{options: options, rows: rows});
-	});
-var rundis$elm_bootstrap$Bootstrap$Table$Row = function (a) {
-	return {$: 'Row', a: a};
-};
-var rundis$elm_bootstrap$Bootstrap$Table$tr = F2(
-	function (options, cells) {
-		return rundis$elm_bootstrap$Bootstrap$Table$Row(
-			{cells: cells, options: options});
 	});
 var rundis$elm_bootstrap$Bootstrap$Table$simpleThead = function (cells) {
 	return A2(
@@ -9879,9 +8406,6 @@ var rundis$elm_bootstrap$Bootstrap$Table$KeyedRow = function (a) {
 };
 var rundis$elm_bootstrap$Bootstrap$Table$InversedCell = function (a) {
 	return {$: 'InversedCell', a: a};
-};
-var rundis$elm_bootstrap$Bootstrap$Table$Td = function (a) {
-	return {$: 'Td', a: a};
 };
 var rundis$elm_bootstrap$Bootstrap$Table$Th = function (a) {
 	return {$: 'Th', a: a};
@@ -10010,6 +8534,15 @@ var rundis$elm_bootstrap$Bootstrap$Table$maybeMapInversedTHead = F2(
 					rows: A2(elm$core$List$map, rundis$elm_bootstrap$Bootstrap$Table$mapInversedRow, thead_.rows)
 				}) : thead_);
 	});
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
 var rundis$elm_bootstrap$Bootstrap$Table$maybeWrapResponsive = F2(
 	function (options, table_) {
 		var responsiveClass = elm$html$Html$Attributes$class(
@@ -10357,11 +8890,6 @@ var rundis$elm_bootstrap$Bootstrap$Table$tbody = F2(
 		return rundis$elm_bootstrap$Bootstrap$Table$TBody(
 			{attributes: attributes, rows: rows});
 	});
-var rundis$elm_bootstrap$Bootstrap$Table$td = F2(
-	function (options, children) {
-		return rundis$elm_bootstrap$Bootstrap$Table$Td(
-			{children: children, options: options});
-	});
 var rundis$elm_bootstrap$Bootstrap$Table$th = F2(
 	function (options, children) {
 		return rundis$elm_bootstrap$Bootstrap$Table$Th(
@@ -10385,29 +8913,16 @@ var author$project$BlameList$showBlamelist = function (model) {
 							tbody: A2(
 								rundis$elm_bootstrap$Bootstrap$Table$tbody,
 								_List_Nil,
-								_List_fromArray(
-									[
+								A2(
+									elm$core$List$map,
+									author$project$BlameList$mapPeopleToRows,
+									elm$core$List$reverse(
 										A2(
-										rundis$elm_bootstrap$Bootstrap$Table$tr,
-										_List_Nil,
-										_List_fromArray(
-											[
-												A2(
-												rundis$elm_bootstrap$Bootstrap$Table$td,
-												_List_Nil,
-												_List_fromArray(
-													[
-														elm$html$Html$text('Eintrag1')
-													])),
-												A2(
-												rundis$elm_bootstrap$Bootstrap$Table$td,
-												_List_Nil,
-												_List_fromArray(
-													[
-														elm$html$Html$text('Eintrag2')
-													]))
-											]))
-									])),
+											elm$core$List$sortBy,
+											function ($) {
+												return $.blameCounter;
+											},
+											A2(elm$core$List$filter, author$project$BlameList$filterFunction, model.people))))),
 							thead: rundis$elm_bootstrap$Bootstrap$Table$simpleThead(
 								_List_fromArray(
 									[
@@ -10423,13 +8938,332 @@ var author$project$BlameList$showBlamelist = function (model) {
 										_List_Nil,
 										_List_fromArray(
 											[
-												elm$html$Html$text('Task not done')
+												elm$html$Html$text('#Tasks not done')
 											]))
 									]))
 						})
 					]))
 			]));
 };
+var elm$core$Basics$clamp = F3(
+	function (low, high, number) {
+		return (_Utils_cmp(number, low) < 0) ? low : ((_Utils_cmp(number, high) > 0) ? high : number);
+	});
+var justinmimbs$date$Date$RD = function (a) {
+	return {$: 'RD', a: a};
+};
+var justinmimbs$date$Date$isLeapYear = function (y) {
+	return ((!A2(elm$core$Basics$modBy, 4, y)) && A2(elm$core$Basics$modBy, 100, y)) || (!A2(elm$core$Basics$modBy, 400, y));
+};
+var justinmimbs$date$Date$daysBeforeMonth = F2(
+	function (y, m) {
+		var leapDays = justinmimbs$date$Date$isLeapYear(y) ? 1 : 0;
+		switch (m.$) {
+			case 'Jan':
+				return 0;
+			case 'Feb':
+				return 31;
+			case 'Mar':
+				return 59 + leapDays;
+			case 'Apr':
+				return 90 + leapDays;
+			case 'May':
+				return 120 + leapDays;
+			case 'Jun':
+				return 151 + leapDays;
+			case 'Jul':
+				return 181 + leapDays;
+			case 'Aug':
+				return 212 + leapDays;
+			case 'Sep':
+				return 243 + leapDays;
+			case 'Oct':
+				return 273 + leapDays;
+			case 'Nov':
+				return 304 + leapDays;
+			default:
+				return 334 + leapDays;
+		}
+	});
+var justinmimbs$date$Date$floorDiv = F2(
+	function (a, b) {
+		return elm$core$Basics$floor(a / b);
+	});
+var justinmimbs$date$Date$daysBeforeYear = function (y1) {
+	var y = y1 - 1;
+	var leapYears = (A2(justinmimbs$date$Date$floorDiv, y, 4) - A2(justinmimbs$date$Date$floorDiv, y, 100)) + A2(justinmimbs$date$Date$floorDiv, y, 400);
+	return (365 * y) + leapYears;
+};
+var justinmimbs$date$Date$daysInMonth = F2(
+	function (y, m) {
+		switch (m.$) {
+			case 'Jan':
+				return 31;
+			case 'Feb':
+				return justinmimbs$date$Date$isLeapYear(y) ? 29 : 28;
+			case 'Mar':
+				return 31;
+			case 'Apr':
+				return 30;
+			case 'May':
+				return 31;
+			case 'Jun':
+				return 30;
+			case 'Jul':
+				return 31;
+			case 'Aug':
+				return 31;
+			case 'Sep':
+				return 30;
+			case 'Oct':
+				return 31;
+			case 'Nov':
+				return 30;
+			default:
+				return 31;
+		}
+	});
+var justinmimbs$date$Date$fromCalendarDate = F3(
+	function (y, m, d) {
+		return justinmimbs$date$Date$RD(
+			(justinmimbs$date$Date$daysBeforeYear(y) + A2(justinmimbs$date$Date$daysBeforeMonth, y, m)) + A3(
+				elm$core$Basics$clamp,
+				1,
+				A2(justinmimbs$date$Date$daysInMonth, y, m),
+				d));
+	});
+var justinmimbs$date$Date$toRataDie = function (_n0) {
+	var rd = _n0.a;
+	return rd;
+};
+var justinmimbs$time_extra$Time$Extra$dateToMillis = function (date) {
+	var daysSinceEpoch = justinmimbs$date$Date$toRataDie(date) - 719163;
+	return daysSinceEpoch * 86400000;
+};
+var elm$time$Time$posixToMillis = function (_n0) {
+	var millis = _n0.a;
+	return millis;
+};
+var elm$time$Time$flooredDiv = F2(
+	function (numerator, denominator) {
+		return elm$core$Basics$floor(numerator / denominator);
+	});
+var elm$time$Time$toAdjustedMinutesHelp = F3(
+	function (defaultOffset, posixMinutes, eras) {
+		toAdjustedMinutesHelp:
+		while (true) {
+			if (!eras.b) {
+				return posixMinutes + defaultOffset;
+			} else {
+				var era = eras.a;
+				var olderEras = eras.b;
+				if (_Utils_cmp(era.start, posixMinutes) < 0) {
+					return posixMinutes + era.offset;
+				} else {
+					var $temp$defaultOffset = defaultOffset,
+						$temp$posixMinutes = posixMinutes,
+						$temp$eras = olderEras;
+					defaultOffset = $temp$defaultOffset;
+					posixMinutes = $temp$posixMinutes;
+					eras = $temp$eras;
+					continue toAdjustedMinutesHelp;
+				}
+			}
+		}
+	});
+var elm$time$Time$toAdjustedMinutes = F2(
+	function (_n0, time) {
+		var defaultOffset = _n0.a;
+		var eras = _n0.b;
+		return A3(
+			elm$time$Time$toAdjustedMinutesHelp,
+			defaultOffset,
+			A2(
+				elm$time$Time$flooredDiv,
+				elm$time$Time$posixToMillis(time),
+				60000),
+			eras);
+	});
+var elm$core$Basics$ge = _Utils_ge;
+var elm$time$Time$toCivil = function (minutes) {
+	var rawDay = A2(elm$time$Time$flooredDiv, minutes, 60 * 24) + 719468;
+	var era = (((rawDay >= 0) ? rawDay : (rawDay - 146096)) / 146097) | 0;
+	var dayOfEra = rawDay - (era * 146097);
+	var yearOfEra = ((((dayOfEra - ((dayOfEra / 1460) | 0)) + ((dayOfEra / 36524) | 0)) - ((dayOfEra / 146096) | 0)) / 365) | 0;
+	var dayOfYear = dayOfEra - (((365 * yearOfEra) + ((yearOfEra / 4) | 0)) - ((yearOfEra / 100) | 0));
+	var mp = (((5 * dayOfYear) + 2) / 153) | 0;
+	var month = mp + ((mp < 10) ? 3 : (-9));
+	var year = yearOfEra + (era * 400);
+	return {
+		day: (dayOfYear - ((((153 * mp) + 2) / 5) | 0)) + 1,
+		month: month,
+		year: year + ((month <= 2) ? 1 : 0)
+	};
+};
+var elm$time$Time$toDay = F2(
+	function (zone, time) {
+		return elm$time$Time$toCivil(
+			A2(elm$time$Time$toAdjustedMinutes, zone, time)).day;
+	});
+var elm$time$Time$Apr = {$: 'Apr'};
+var elm$time$Time$Aug = {$: 'Aug'};
+var elm$time$Time$Dec = {$: 'Dec'};
+var elm$time$Time$Feb = {$: 'Feb'};
+var elm$time$Time$Jan = {$: 'Jan'};
+var elm$time$Time$Jul = {$: 'Jul'};
+var elm$time$Time$Jun = {$: 'Jun'};
+var elm$time$Time$Mar = {$: 'Mar'};
+var elm$time$Time$May = {$: 'May'};
+var elm$time$Time$Nov = {$: 'Nov'};
+var elm$time$Time$Oct = {$: 'Oct'};
+var elm$time$Time$Sep = {$: 'Sep'};
+var elm$time$Time$toMonth = F2(
+	function (zone, time) {
+		var _n0 = elm$time$Time$toCivil(
+			A2(elm$time$Time$toAdjustedMinutes, zone, time)).month;
+		switch (_n0) {
+			case 1:
+				return elm$time$Time$Jan;
+			case 2:
+				return elm$time$Time$Feb;
+			case 3:
+				return elm$time$Time$Mar;
+			case 4:
+				return elm$time$Time$Apr;
+			case 5:
+				return elm$time$Time$May;
+			case 6:
+				return elm$time$Time$Jun;
+			case 7:
+				return elm$time$Time$Jul;
+			case 8:
+				return elm$time$Time$Aug;
+			case 9:
+				return elm$time$Time$Sep;
+			case 10:
+				return elm$time$Time$Oct;
+			case 11:
+				return elm$time$Time$Nov;
+			default:
+				return elm$time$Time$Dec;
+		}
+	});
+var elm$time$Time$toYear = F2(
+	function (zone, time) {
+		return elm$time$Time$toCivil(
+			A2(elm$time$Time$toAdjustedMinutes, zone, time)).year;
+	});
+var justinmimbs$date$Date$fromPosix = F2(
+	function (zone, posix) {
+		return A3(
+			justinmimbs$date$Date$fromCalendarDate,
+			A2(elm$time$Time$toYear, zone, posix),
+			A2(elm$time$Time$toMonth, zone, posix),
+			A2(elm$time$Time$toDay, zone, posix));
+	});
+var elm$time$Time$toHour = F2(
+	function (zone, time) {
+		return A2(
+			elm$core$Basics$modBy,
+			24,
+			A2(
+				elm$time$Time$flooredDiv,
+				A2(elm$time$Time$toAdjustedMinutes, zone, time),
+				60));
+	});
+var elm$time$Time$toMillis = F2(
+	function (_n0, time) {
+		return A2(
+			elm$core$Basics$modBy,
+			1000,
+			elm$time$Time$posixToMillis(time));
+	});
+var elm$time$Time$toMinute = F2(
+	function (zone, time) {
+		return A2(
+			elm$core$Basics$modBy,
+			60,
+			A2(elm$time$Time$toAdjustedMinutes, zone, time));
+	});
+var elm$time$Time$toSecond = F2(
+	function (_n0, time) {
+		return A2(
+			elm$core$Basics$modBy,
+			60,
+			A2(
+				elm$time$Time$flooredDiv,
+				elm$time$Time$posixToMillis(time),
+				1000));
+	});
+var justinmimbs$time_extra$Time$Extra$timeFromClock = F4(
+	function (hour, minute, second, millisecond) {
+		return (((hour * 3600000) + (minute * 60000)) + (second * 1000)) + millisecond;
+	});
+var justinmimbs$time_extra$Time$Extra$timeFromPosix = F2(
+	function (zone, posix) {
+		return A4(
+			justinmimbs$time_extra$Time$Extra$timeFromClock,
+			A2(elm$time$Time$toHour, zone, posix),
+			A2(elm$time$Time$toMinute, zone, posix),
+			A2(elm$time$Time$toSecond, zone, posix),
+			A2(elm$time$Time$toMillis, zone, posix));
+	});
+var justinmimbs$time_extra$Time$Extra$toOffset = F2(
+	function (zone, posix) {
+		var millis = elm$time$Time$posixToMillis(posix);
+		var localMillis = justinmimbs$time_extra$Time$Extra$dateToMillis(
+			A2(justinmimbs$date$Date$fromPosix, zone, posix)) + A2(justinmimbs$time_extra$Time$Extra$timeFromPosix, zone, posix);
+		return ((localMillis - millis) / 60000) | 0;
+	});
+var justinmimbs$time_extra$Time$Extra$posixFromDateTime = F3(
+	function (zone, date, time) {
+		var millis = justinmimbs$time_extra$Time$Extra$dateToMillis(date) + time;
+		var offset0 = A2(
+			justinmimbs$time_extra$Time$Extra$toOffset,
+			zone,
+			elm$time$Time$millisToPosix(millis));
+		var posix1 = elm$time$Time$millisToPosix(millis - (offset0 * 60000));
+		var offset1 = A2(justinmimbs$time_extra$Time$Extra$toOffset, zone, posix1);
+		if (_Utils_eq(offset0, offset1)) {
+			return posix1;
+		} else {
+			var posix2 = elm$time$Time$millisToPosix(millis - (offset1 * 60000));
+			var offset2 = A2(justinmimbs$time_extra$Time$Extra$toOffset, zone, posix2);
+			return _Utils_eq(offset1, offset2) ? posix2 : posix1;
+		}
+	});
+var justinmimbs$time_extra$Time$Extra$partsToPosix = F2(
+	function (zone, _n0) {
+		var year = _n0.year;
+		var month = _n0.month;
+		var day = _n0.day;
+		var hour = _n0.hour;
+		var minute = _n0.minute;
+		var second = _n0.second;
+		var millisecond = _n0.millisecond;
+		return A3(
+			justinmimbs$time_extra$Time$Extra$posixFromDateTime,
+			zone,
+			A3(justinmimbs$date$Date$fromCalendarDate, year, month, day),
+			A4(
+				justinmimbs$time_extra$Time$Extra$timeFromClock,
+				A3(elm$core$Basics$clamp, 0, 23, hour),
+				A3(elm$core$Basics$clamp, 0, 59, minute),
+				A3(elm$core$Basics$clamp, 0, 59, second),
+				A3(elm$core$Basics$clamp, 0, 999, millisecond)));
+	});
+var justinmimbs$time_extra$Time$Extra$posixToParts = F2(
+	function (zone, posix) {
+		return {
+			day: A2(elm$time$Time$toDay, zone, posix),
+			hour: A2(elm$time$Time$toHour, zone, posix),
+			millisecond: A2(elm$time$Time$toMillis, zone, posix),
+			minute: A2(elm$time$Time$toMinute, zone, posix),
+			month: A2(elm$time$Time$toMonth, zone, posix),
+			second: A2(elm$time$Time$toSecond, zone, posix),
+			year: A2(elm$time$Time$toYear, zone, posix)
+		};
+	});
 var author$project$DayTasksComponent$getBeginningOfDay = F2(
 	function (timeZone, date) {
 		var asParts = A2(justinmimbs$time_extra$Time$Extra$posixToParts, timeZone, date);
@@ -11019,6 +9853,53 @@ var author$project$DayTasksComponent$getEndOfWeek = F2(
 				A4(justinmimbs$time_extra$Time$Extra$add, justinmimbs$time_extra$Time$Extra$Week, 1, timeZone, date)));
 		return newDate;
 	});
+var author$project$Formatters$atLeastTwoPlaces = function (day) {
+	return (day >= 10) ? elm$core$String$fromInt(day) : ('0' + elm$core$String$fromInt(day));
+};
+var author$project$Formatters$monthToString = function (month) {
+	switch (month.$) {
+		case 'Jan':
+			return '01';
+		case 'Feb':
+			return '02';
+		case 'Mar':
+			return '03';
+		case 'Apr':
+			return '04';
+		case 'May':
+			return '05';
+		case 'Jun':
+			return '06';
+		case 'Jul':
+			return '07';
+		case 'Aug':
+			return '08';
+		case 'Sep':
+			return '09';
+		case 'Oct':
+			return '10';
+		case 'Nov':
+			return '11';
+		default:
+			return '12';
+	}
+};
+var author$project$Formatters$getFormatedStringFromDate = F2(
+	function (timeZone, date) {
+		var year = elm$core$String$fromInt(
+			A2(elm$time$Time$toYear, timeZone, date));
+		var second = elm$core$String$fromInt(
+			A2(elm$time$Time$toSecond, timeZone, date));
+		var month = author$project$Formatters$monthToString(
+			A2(elm$time$Time$toMonth, timeZone, date));
+		var minute = elm$core$String$fromInt(
+			A2(elm$time$Time$toMinute, timeZone, date));
+		var hour = elm$core$String$fromInt(
+			A2(elm$time$Time$toHour, timeZone, date));
+		var day = author$project$Formatters$atLeastTwoPlaces(
+			A2(elm$time$Time$toDay, timeZone, date));
+		return day + ('.' + (month + ('.' + year)));
+	});
 var author$project$DayTasksComponent$getTaskCardFromTasks = F4(
 	function (timeZone, time, weekOffset, task) {
 		return A2(
@@ -11344,19 +10225,47 @@ var author$project$DayTasksComponent$dayTasks = F2(
 						]))
 			});
 	});
-var author$project$Msg$AddPersonView = {$: 'AddPersonView'};
+var author$project$Msg$ChangeViewTo = function (a) {
+	return {$: 'ChangeViewTo', a: a};
+};
+var author$project$Msg$CloseModalAddPerson = {$: 'CloseModalAddPerson'};
 var author$project$Msg$CloseModalAddTask = {$: 'CloseModalAddTask'};
 var author$project$Msg$CloseModalBlamelist = {$: 'CloseModalBlamelist'};
+var author$project$Msg$MainView = {$: 'MainView'};
+var author$project$Msg$NavbarMsg = function (a) {
+	return {$: 'NavbarMsg', a: a};
+};
 var author$project$Msg$NextWeekView = {$: 'NextWeekView'};
 var author$project$Msg$PreviousWeekView = {$: 'PreviousWeekView'};
+var author$project$Msg$ShowModalAddPerson = {$: 'ShowModalAddPerson'};
 var author$project$Msg$ShowModalAddTask = {$: 'ShowModalAddTask'};
 var author$project$Msg$ShowModalBlamelist = {$: 'ShowModalBlamelist'};
-var elm$html$Html$h1 = _VirtualDom_node('h1');
+var elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
 var rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined = function (a) {
 	return {$: 'Outlined', a: a};
 };
 var rundis$elm_bootstrap$Bootstrap$Button$outlinePrimary = rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined(rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary));
+var elm$virtual_dom$VirtualDom$node = function (tag) {
+	return _VirtualDom_node(
+		_VirtualDom_noScript(tag));
+};
+var elm$html$Html$node = elm$virtual_dom$VirtualDom$node;
+var elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
+var rundis$elm_bootstrap$Bootstrap$CDN$stylesheet = A3(
+	elm$html$Html$node,
+	'link',
+	_List_fromArray(
+		[
+			elm$html$Html$Attributes$rel('stylesheet'),
+			elm$html$Html$Attributes$href('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')
+		]),
+	_List_Nil);
 var rundis$elm_bootstrap$Bootstrap$Grid$containerFluid = F2(
 	function (attributes, children) {
 		return A2(
@@ -11567,6 +10476,7 @@ var rundis$elm_bootstrap$Bootstrap$Modal$backdrop = F2(
 				A2(elm$html$Html$div, attributes, _List_Nil)
 			]);
 	});
+var elm$core$String$contains = _String_contains;
 var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$className = A2(
 	elm$json$Json$Decode$at,
 	_List_fromArray(
@@ -11960,8 +10870,18 @@ var rundis$elm_bootstrap$Bootstrap$Navbar$shouldHideMenu = F2(
 			rundis$elm_bootstrap$Bootstrap$Navbar$sizeToComparable(winMedia),
 			rundis$elm_bootstrap$Bootstrap$Navbar$sizeToComparable(options.toggleAt)) > 0;
 	});
+var rundis$elm_bootstrap$Bootstrap$Navbar$State = function (a) {
+	return {$: 'State', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Navbar$mapState = F2(
+	function (mapper, _n0) {
+		var state = _n0.a;
+		return rundis$elm_bootstrap$Bootstrap$Navbar$State(
+			mapper(state));
+	});
 var rundis$elm_bootstrap$Bootstrap$Navbar$AnimatingDown = {$: 'AnimatingDown'};
 var rundis$elm_bootstrap$Bootstrap$Navbar$AnimatingUp = {$: 'AnimatingUp'};
+var rundis$elm_bootstrap$Bootstrap$Navbar$Hidden = {$: 'Hidden'};
 var rundis$elm_bootstrap$Bootstrap$Navbar$Shown = {$: 'Shown'};
 var rundis$elm_bootstrap$Bootstrap$Navbar$StartDown = {$: 'StartDown'};
 var rundis$elm_bootstrap$Bootstrap$Navbar$StartUp = {$: 'StartUp'};
@@ -12665,22 +11585,11 @@ var author$project$MainView$mainView = function (model) {
 											_List_fromArray(
 												[
 													elm$html$Html$Events$onClick(
-													author$project$Msg$ChangeViewTo(author$project$Msg$AddPersonView))
+													author$project$Msg$ChangeViewTo(author$project$Msg$MainView))
 												]),
 											_List_fromArray(
 												[
-													elm$html$Html$text('Add a Person')
-												])),
-											A2(
-											rundis$elm_bootstrap$Bootstrap$Navbar$itemLink,
-											_List_fromArray(
-												[
-													elm$html$Html$Events$onClick(
-													author$project$Msg$ChangeViewTo(author$project$Msg$AddPersonView))
-												]),
-											_List_fromArray(
-												[
-													elm$html$Html$text('Blamelist')
+													elm$html$Html$text('This Week')
 												])),
 											A2(
 											rundis$elm_bootstrap$Bootstrap$Navbar$itemLink,
@@ -12707,6 +11616,73 @@ var author$project$MainView$mainView = function (model) {
 												]),
 											rundis$elm_bootstrap$Bootstrap$Navbar$withAnimation(
 												rundis$elm_bootstrap$Bootstrap$Navbar$config(author$project$Msg$NavbarMsg))))))
+							]))
+					])),
+				A2(
+				rundis$elm_bootstrap$Bootstrap$Grid$row,
+				_List_fromArray(
+					[rundis$elm_bootstrap$Bootstrap$Grid$Row$centerXs]),
+				_List_fromArray(
+					[
+						A2(
+						rundis$elm_bootstrap$Bootstrap$Grid$col,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								rundis$elm_bootstrap$Bootstrap$Button$button,
+								_List_fromArray(
+									[
+										rundis$elm_bootstrap$Bootstrap$Button$attrs(
+										_List_fromArray(
+											[
+												elm$html$Html$Events$onClick(author$project$Msg$ShowModalAddPerson)
+											]))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Add a Person')
+									])),
+								A2(
+								rundis$elm_bootstrap$Bootstrap$Modal$view,
+								model.modalAddPerson,
+								A3(
+									rundis$elm_bootstrap$Bootstrap$Modal$footer,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											rundis$elm_bootstrap$Bootstrap$Button$button,
+											_List_fromArray(
+												[
+													rundis$elm_bootstrap$Bootstrap$Button$outlinePrimary,
+													rundis$elm_bootstrap$Bootstrap$Button$attrs(
+													_List_fromArray(
+														[
+															elm$html$Html$Events$onClick(author$project$Msg$CloseModalAddPerson)
+														]))
+												]),
+											_List_fromArray(
+												[
+													elm$html$Html$text('Close')
+												]))
+										]),
+									A3(
+										rundis$elm_bootstrap$Bootstrap$Modal$body,
+										_List_Nil,
+										_List_fromArray(
+											[
+												author$project$AddPersonComponent$addPerson(model)
+											]),
+										A3(
+											rundis$elm_bootstrap$Bootstrap$Modal$h5,
+											_List_Nil,
+											_List_fromArray(
+												[
+													elm$html$Html$text('Add a Person')
+												]),
+											rundis$elm_bootstrap$Bootstrap$Modal$small(
+												rundis$elm_bootstrap$Bootstrap$Modal$config(author$project$Msg$CloseModalAddPerson))))))
 							]))
 					])),
 				A2(
@@ -12774,7 +11750,14 @@ var author$project$MainView$mainView = function (model) {
 												]),
 											rundis$elm_bootstrap$Bootstrap$Modal$small(
 												rundis$elm_bootstrap$Bootstrap$Modal$config(author$project$Msg$CloseModalAddTask))))))
-							])),
+							]))
+					])),
+				A2(
+				rundis$elm_bootstrap$Bootstrap$Grid$row,
+				_List_fromArray(
+					[rundis$elm_bootstrap$Bootstrap$Grid$Row$centerXs]),
+				_List_fromArray(
+					[
 						A2(
 						rundis$elm_bootstrap$Bootstrap$Grid$col,
 						_List_Nil,
@@ -12838,44 +11821,6 @@ var author$project$MainView$mainView = function (model) {
 					])),
 				A2(
 				rundis$elm_bootstrap$Bootstrap$Grid$row,
-				_List_fromArray(
-					[rundis$elm_bootstrap$Bootstrap$Grid$Row$centerXs]),
-				_List_fromArray(
-					[
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$h1,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('DEBUGINFORMATION')
-									]))
-							]))
-					])),
-				A2(
-				rundis$elm_bootstrap$Bootstrap$Grid$row,
-				_List_Nil,
-				_List_fromArray(
-					[
-						author$project$ListPeopleComponent$listPeople(model.people),
-						author$project$ListTasksComponent$listTasks(model),
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text(
-								'Number of people: ' + (elm$core$String$fromInt(
-									elm$core$List$length(model.people)) + ('\nNumber of Tasks: ' + (elm$core$String$fromInt(
-									elm$core$List$length(model.tasks)) + model.debug))))
-							]))
-					])),
-				A2(
-				rundis$elm_bootstrap$Bootstrap$Grid$row,
 				_List_Nil,
 				_List_fromArray(
 					[
@@ -12884,185 +11829,1354 @@ var author$project$MainView$mainView = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								A2(author$project$DayTasksComponent$dayTasks, model, 0)
+								function () {
+								var _n0 = model.view;
+								switch (_n0.$) {
+									case 'MainView':
+										return A2(author$project$DayTasksComponent$dayTasks, model, 0);
+									case 'NextWeekView':
+										return A2(author$project$DayTasksComponent$dayTasks, model, 1);
+									case 'PreviousWeekView':
+										return A2(author$project$DayTasksComponent$dayTasks, model, -1);
+									default:
+										return A2(author$project$DayTasksComponent$dayTasks, model, 0);
+								}
+							}()
 							]))
 					]))
 			]));
 };
-var author$project$NextWeekView$nextWeekView = function (model) {
-	return A2(
-		rundis$elm_bootstrap$Bootstrap$Grid$container,
-		_List_Nil,
-		_List_fromArray(
-			[
-				rundis$elm_bootstrap$Bootstrap$CDN$stylesheet,
-				A2(
-				rundis$elm_bootstrap$Bootstrap$Grid$row,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('NextWeekView'),
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(
-										author$project$Msg$ChangeViewTo(author$project$Msg$MainView))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('return to Main')
-									]))
-							])),
-						author$project$ListPeopleComponent$listPeople(model.people),
-						author$project$ListTasksComponent$listTasks(model),
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text(
-								'Number of people: ' + (elm$core$String$fromInt(
-									elm$core$List$length(model.people)) + ('\nNumber of Tasks: ' + elm$core$String$fromInt(
-									elm$core$List$length(model.tasks)))))
-							])),
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(author$project$Msg$Increment)
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('+1')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text(model.count)
-									])),
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(author$project$Msg$Decrement)
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('-1')
-									]))
-							]))
-					])),
-				A2(author$project$DayTasksComponent$dayTasks, model, 1)
-			]));
+var author$project$Model$Model = function (count) {
+	return function (people) {
+		return function (tasks) {
+			return function (time) {
+				return function (timeZone) {
+					return function (view) {
+						return function (tmpPerson) {
+							return function (tmpTask) {
+								return function (tmpDueDate) {
+									return function (myDrop1State) {
+										return function (navbarState) {
+											return function (modalAddTask) {
+												return function (modalAddPerson) {
+													return function (modalShowBlamelist) {
+														return function (debug) {
+															return {count: count, debug: debug, modalAddPerson: modalAddPerson, modalAddTask: modalAddTask, modalShowBlamelist: modalShowBlamelist, myDrop1State: myDrop1State, navbarState: navbarState, people: people, tasks: tasks, time: time, timeZone: timeZone, tmpDueDate: tmpDueDate, tmpPerson: tmpPerson, tmpTask: tmpTask, view: view};
+														};
+													};
+												};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
 };
-var author$project$PreviousWeekView$previousWeekView = function (model) {
-	return A2(
-		rundis$elm_bootstrap$Bootstrap$Grid$container,
-		_List_Nil,
-		_List_fromArray(
-			[
-				rundis$elm_bootstrap$Bootstrap$CDN$stylesheet,
+var elm$time$Time$utc = A2(elm$time$Time$Zone, 0, _List_Nil);
+var justinmimbs$time_extra$Time$Extra$Parts = F7(
+	function (year, month, day, hour, minute, second, millisecond) {
+		return {day: day, hour: hour, millisecond: millisecond, minute: minute, month: month, second: second, year: year};
+	});
+var author$project$Model$mockupExampleCreationDate1 = A2(
+	justinmimbs$time_extra$Time$Extra$partsToPosix,
+	elm$time$Time$utc,
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 5, 6, 0, 0, 0));
+var author$project$Model$mockupExampleDueDate1 = A2(
+	justinmimbs$time_extra$Time$Extra$partsToPosix,
+	elm$time$Time$utc,
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Mar, 8, 6, 0, 0, 0));
+var author$project$Model$mockupExampleLastDoneDate1 = A2(
+	justinmimbs$time_extra$Time$Extra$partsToPosix,
+	elm$time$Time$utc,
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 3900, elm$time$Time$Jan, 0, 0, 0, 0, 0));
+var author$project$Model$sortPeople = F2(
+	function (person1, person2) {
+		return (_Utils_cmp(person1.id, person2.id) > -1) ? elm$core$Basics$GT : elm$core$Basics$LT;
+	});
+var author$project$Model$sortTasks = F2(
+	function (task1, task2) {
+		return (_Utils_cmp(task1.id, task2.id) > -1) ? elm$core$Basics$GT : elm$core$Basics$LT;
+	});
+var author$project$Model$persondecoder = A4(
+	elm$json$Json$Decode$map3,
+	author$project$Person$Person,
+	A2(elm$json$Json$Decode$field, 'id', elm$json$Json$Decode$int),
+	A2(elm$json$Json$Decode$field, 'name', elm$json$Json$Decode$string),
+	A2(elm$json$Json$Decode$field, 'blameCounter', elm$json$Json$Decode$int));
+var author$project$Model$taskdecoder = A2(
+	elm_community$json_extra$Json$Decode$Extra$andMap,
+	A2(elm$json$Json$Decode$field, 'isDeleted', elm$json$Json$Decode$bool),
+	A2(
+		elm_community$json_extra$Json$Decode$Extra$andMap,
+		A2(elm$json$Json$Decode$field, 'isRepetitiveTask', elm$json$Json$Decode$bool),
+		A2(
+			elm_community$json_extra$Json$Decode$Extra$andMap,
+			A2(elm$json$Json$Decode$field, 'lastDoneBy', author$project$Model$persondecoder),
+			A2(
+				elm_community$json_extra$Json$Decode$Extra$andMap,
+				A2(elm$json$Json$Decode$field, 'lastDone', elm_community$json_extra$Json$Decode$Extra$datetime),
 				A2(
-				rundis$elm_bootstrap$Bootstrap$Grid$row,
-				_List_Nil,
-				_List_fromArray(
-					[
+					elm_community$json_extra$Json$Decode$Extra$andMap,
+					A2(elm$json$Json$Decode$field, 'creationDate', elm_community$json_extra$Json$Decode$Extra$datetime),
+					A2(
+						elm_community$json_extra$Json$Decode$Extra$andMap,
+						A2(elm$json$Json$Decode$field, 'dueDate', elm_community$json_extra$Json$Decode$Extra$datetime),
 						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('PreviousWeekView'),
+							elm_community$json_extra$Json$Decode$Extra$andMap,
+							A2(elm$json$Json$Decode$field, 'description', elm$json$Json$Decode$string),
+							A2(
+								elm_community$json_extra$Json$Decode$Extra$andMap,
+								A2(elm$json$Json$Decode$field, 'currentlyResponsible', author$project$Model$persondecoder),
 								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(
-										author$project$Msg$ChangeViewTo(author$project$Msg$MainView))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('return to Main')
-									]))
-							])),
-						author$project$ListPeopleComponent$listPeople(model.people),
-						author$project$ListTasksComponent$listTasks(model),
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text(
-								'Number of people: ' + (elm$core$String$fromInt(
-									elm$core$List$length(model.people)) + ('\nNumber of Tasks: ' + elm$core$String$fromInt(
-									elm$core$List$length(model.tasks)))))
-							])),
-						A2(
-						rundis$elm_bootstrap$Bootstrap$Grid$col,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(author$project$Msg$Increment)
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('+1')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text(model.count)
-									])),
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(author$project$Msg$Decrement)
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('-1')
-									]))
-							]))
-					])),
-				A2(author$project$DayTasksComponent$dayTasks, model, -1)
-			]));
+									elm_community$json_extra$Json$Decode$Extra$andMap,
+									A2(elm$json$Json$Decode$field, 'displayName', elm$json$Json$Decode$string),
+									A2(
+										elm_community$json_extra$Json$Decode$Extra$andMap,
+										A2(elm$json$Json$Decode$field, 'id', elm$json$Json$Decode$int),
+										elm$json$Json$Decode$succeed(author$project$HouseTask$Task)))))))))));
+var author$project$Model$tasklistdecoder = elm$json$Json$Decode$list(author$project$Model$taskdecoder);
+var author$project$Msg$AdjustTimeZone = function (a) {
+	return {$: 'AdjustTimeZone', a: a};
 };
-var author$project$View$view = function (model) {
-	var _n0 = model.view;
-	switch (_n0.$) {
-		case 'MainView':
-			return author$project$MainView$mainView(model);
-		case 'NextWeekView':
-			return author$project$NextWeekView$nextWeekView(model);
-		case 'PreviousWeekView':
-			return author$project$PreviousWeekView$previousWeekView(model);
-		case 'AddPersonView':
-			return author$project$AddPersonView$addPersonView(model);
-		default:
-			return author$project$AddTaskView$addTaskView(model);
+var elm$core$Debug$log = _Debug_log;
+var elm$core$List$sortWith = _List_sortWith;
+var elm$core$Platform$Cmd$batch = _Platform_batch;
+var elm$core$Task$Perform = function (a) {
+	return {$: 'Perform', a: a};
+};
+var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
+var elm$core$Task$map = F2(
+	function (func, taskA) {
+		return A2(
+			elm$core$Task$andThen,
+			function (a) {
+				return elm$core$Task$succeed(
+					func(a));
+			},
+			taskA);
+	});
+var elm$core$Task$spawnCmd = F2(
+	function (router, _n0) {
+		var task = _n0.a;
+		return _Scheduler_spawn(
+			A2(
+				elm$core$Task$andThen,
+				elm$core$Platform$sendToApp(router),
+				task));
+	});
+var elm$core$Task$onEffects = F3(
+	function (router, commands, state) {
+		return A2(
+			elm$core$Task$map,
+			function (_n0) {
+				return _Utils_Tuple0;
+			},
+			elm$core$Task$sequence(
+				A2(
+					elm$core$List$map,
+					elm$core$Task$spawnCmd(router),
+					commands)));
+	});
+var elm$core$Task$onSelfMsg = F3(
+	function (_n0, _n1, _n2) {
+		return elm$core$Task$succeed(_Utils_Tuple0);
+	});
+var elm$core$Task$cmdMap = F2(
+	function (tagger, _n0) {
+		var task = _n0.a;
+		return elm$core$Task$Perform(
+			A2(elm$core$Task$map, tagger, task));
+	});
+_Platform_effectManagers['Task'] = _Platform_createManager(elm$core$Task$init, elm$core$Task$onEffects, elm$core$Task$onSelfMsg, elm$core$Task$cmdMap);
+var elm$core$Task$command = _Platform_leaf('Task');
+var elm$core$Task$perform = F2(
+	function (toMessage, task) {
+		return elm$core$Task$command(
+			elm$core$Task$Perform(
+				A2(elm$core$Task$map, toMessage, task)));
+	});
+var elm$time$Time$here = _Time_here(_Utils_Tuple0);
+var rundis$elm_bootstrap$Bootstrap$Dropdown$Closed = {$: 'Closed'};
+var rundis$elm_bootstrap$Bootstrap$Dropdown$State = function (a) {
+	return {$: 'State', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$Area = F4(
+	function (top, left, width, height) {
+		return {height: height, left: left, top: top, width: width};
+	});
+var rundis$elm_bootstrap$Bootstrap$Dropdown$initialState = rundis$elm_bootstrap$Bootstrap$Dropdown$State(
+	{
+		menuSize: A4(rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$Area, 0, 0, 0, 0),
+		status: rundis$elm_bootstrap$Bootstrap$Dropdown$Closed,
+		toggleSize: A4(rundis$elm_bootstrap$Bootstrap$Utilities$DomHelper$Area, 0, 0, 0, 0)
+	});
+var rundis$elm_bootstrap$Bootstrap$Modal$Hide = {$: 'Hide'};
+var rundis$elm_bootstrap$Bootstrap$Modal$hidden = rundis$elm_bootstrap$Bootstrap$Modal$Hide;
+var elm$browser$Browser$External = function (a) {
+	return {$: 'External', a: a};
+};
+var elm$browser$Browser$Internal = function (a) {
+	return {$: 'Internal', a: a};
+};
+var elm$browser$Browser$Dom$NotFound = function (a) {
+	return {$: 'NotFound', a: a};
+};
+var elm$core$Basics$never = function (_n0) {
+	never:
+	while (true) {
+		var nvr = _n0.a;
+		var $temp$_n0 = nvr;
+		_n0 = $temp$_n0;
+		continue never;
 	}
 };
+var elm$core$String$dropLeft = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3(
+			elm$core$String$slice,
+			n,
+			elm$core$String$length(string),
+			string);
+	});
+var elm$core$String$startsWith = _String_startsWith;
+var elm$url$Url$Http = {$: 'Http'};
+var elm$url$Url$Https = {$: 'Https'};
+var elm$core$String$indexes = _String_indexes;
+var elm$core$String$left = F2(
+	function (n, string) {
+		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
+	});
+var elm$url$Url$Url = F6(
+	function (protocol, host, port_, path, query, fragment) {
+		return {fragment: fragment, host: host, path: path, port_: port_, protocol: protocol, query: query};
+	});
+var elm$url$Url$chompBeforePath = F5(
+	function (protocol, path, params, frag, str) {
+		if (elm$core$String$isEmpty(str) || A2(elm$core$String$contains, '@', str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, ':', str);
+			if (!_n0.b) {
+				return elm$core$Maybe$Just(
+					A6(elm$url$Url$Url, protocol, str, elm$core$Maybe$Nothing, path, params, frag));
+			} else {
+				if (!_n0.b.b) {
+					var i = _n0.a;
+					var _n1 = elm$core$String$toInt(
+						A2(elm$core$String$dropLeft, i + 1, str));
+					if (_n1.$ === 'Nothing') {
+						return elm$core$Maybe$Nothing;
+					} else {
+						var port_ = _n1;
+						return elm$core$Maybe$Just(
+							A6(
+								elm$url$Url$Url,
+								protocol,
+								A2(elm$core$String$left, i, str),
+								port_,
+								path,
+								params,
+								frag));
+					}
+				} else {
+					return elm$core$Maybe$Nothing;
+				}
+			}
+		}
+	});
+var elm$url$Url$chompBeforeQuery = F4(
+	function (protocol, params, frag, str) {
+		if (elm$core$String$isEmpty(str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, '/', str);
+			if (!_n0.b) {
+				return A5(elm$url$Url$chompBeforePath, protocol, '/', params, frag, str);
+			} else {
+				var i = _n0.a;
+				return A5(
+					elm$url$Url$chompBeforePath,
+					protocol,
+					A2(elm$core$String$dropLeft, i, str),
+					params,
+					frag,
+					A2(elm$core$String$left, i, str));
+			}
+		}
+	});
+var elm$url$Url$chompBeforeFragment = F3(
+	function (protocol, frag, str) {
+		if (elm$core$String$isEmpty(str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, '?', str);
+			if (!_n0.b) {
+				return A4(elm$url$Url$chompBeforeQuery, protocol, elm$core$Maybe$Nothing, frag, str);
+			} else {
+				var i = _n0.a;
+				return A4(
+					elm$url$Url$chompBeforeQuery,
+					protocol,
+					elm$core$Maybe$Just(
+						A2(elm$core$String$dropLeft, i + 1, str)),
+					frag,
+					A2(elm$core$String$left, i, str));
+			}
+		}
+	});
+var elm$url$Url$chompAfterProtocol = F2(
+	function (protocol, str) {
+		if (elm$core$String$isEmpty(str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, '#', str);
+			if (!_n0.b) {
+				return A3(elm$url$Url$chompBeforeFragment, protocol, elm$core$Maybe$Nothing, str);
+			} else {
+				var i = _n0.a;
+				return A3(
+					elm$url$Url$chompBeforeFragment,
+					protocol,
+					elm$core$Maybe$Just(
+						A2(elm$core$String$dropLeft, i + 1, str)),
+					A2(elm$core$String$left, i, str));
+			}
+		}
+	});
+var elm$url$Url$fromString = function (str) {
+	return A2(elm$core$String$startsWith, 'http://', str) ? A2(
+		elm$url$Url$chompAfterProtocol,
+		elm$url$Url$Http,
+		A2(elm$core$String$dropLeft, 7, str)) : (A2(elm$core$String$startsWith, 'https://', str) ? A2(
+		elm$url$Url$chompAfterProtocol,
+		elm$url$Url$Https,
+		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
+};
+var elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
+var rundis$elm_bootstrap$Bootstrap$Navbar$initWindowSize = F2(
+	function (toMsg, state) {
+		return A2(
+			elm$core$Task$perform,
+			function (vp) {
+				return toMsg(
+					A2(
+						rundis$elm_bootstrap$Bootstrap$Navbar$mapState,
+						function (s) {
+							return _Utils_update(
+								s,
+								{
+									windowWidth: elm$core$Maybe$Just(vp.viewport.width)
+								});
+						},
+						state));
+			},
+			elm$browser$Browser$Dom$getViewport);
+	});
+var rundis$elm_bootstrap$Bootstrap$Navbar$initialState = function (toMsg) {
+	var state = rundis$elm_bootstrap$Bootstrap$Navbar$State(
+		{dropdowns: elm$core$Dict$empty, height: elm$core$Maybe$Nothing, visibility: rundis$elm_bootstrap$Bootstrap$Navbar$Hidden, windowWidth: elm$core$Maybe$Nothing});
+	return _Utils_Tuple2(
+		state,
+		A2(rundis$elm_bootstrap$Bootstrap$Navbar$initWindowSize, toMsg, state));
+};
+var author$project$Model$init = function (flags) {
+	var result = A2(elm$json$Json$Decode$decodeValue, author$project$Model$tasklistdecoder, flags.tasks);
+	var initPeople = A2(elm$core$List$sortWith, author$project$Model$sortPeople, flags.people);
+	var initNavTup = rundis$elm_bootstrap$Bootstrap$Navbar$initialState(author$project$Msg$NavbarMsg);
+	var initNav = initNavTup.a;
+	var initCmd = elm$core$Platform$Cmd$batch(
+		_List_fromArray(
+			[
+				initNavTup.b,
+				A2(elm$core$Task$perform, author$project$Msg$AdjustTimeZone, elm$time$Time$here)
+			]));
+	if (result.$ === 'Ok') {
+		var tasks = result.a;
+		var sortedTasks = A2(elm$core$List$sortWith, author$project$Model$sortTasks, tasks);
+		var debugComputedTasks = A2(elm$core$Debug$log, '', tasks);
+		var debugComputedPeople = A2(elm$core$Debug$log, '', initPeople);
+		var computedTasks = sortedTasks;
+		var computedPeople = initPeople;
+		return _Utils_Tuple2(
+			author$project$Model$Model('0')(computedPeople)(computedTasks)(
+				elm$time$Time$millisToPosix(0))(elm$time$Time$utc)(author$project$Msg$MainView)(
+				A3(author$project$Person$Person, 0, '', 0))(
+				author$project$HouseTask$Task(0)('')(
+					A3(author$project$Person$Person, 0, '', 0))('')(author$project$Model$mockupExampleDueDate1)(author$project$Model$mockupExampleCreationDate1)(author$project$Model$mockupExampleLastDoneDate1)(
+					A3(author$project$Person$Person, 0, '', 0))(false)(false))(
+				A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 14, 30, 0, 0))(rundis$elm_bootstrap$Bootstrap$Dropdown$initialState)(initNav)(rundis$elm_bootstrap$Bootstrap$Modal$hidden)(rundis$elm_bootstrap$Bootstrap$Modal$hidden)(rundis$elm_bootstrap$Bootstrap$Modal$hidden)(''),
+			initCmd);
+	} else {
+		var err = result.a;
+		return _Utils_Tuple2(
+			author$project$Model$Model('0')(initPeople)(_List_Nil)(
+				elm$time$Time$millisToPosix(0))(elm$time$Time$utc)(author$project$Msg$MainView)(
+				A3(author$project$Person$Person, 0, '', 0))(
+				author$project$HouseTask$Task(0)('')(
+					A3(author$project$Person$Person, 0, '', 0))('')(author$project$Model$mockupExampleDueDate1)(author$project$Model$mockupExampleCreationDate1)(author$project$Model$mockupExampleLastDoneDate1)(
+					A3(author$project$Person$Person, 0, '', 0))(false)(false))(
+				A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 14, 30, 0, 0))(rundis$elm_bootstrap$Bootstrap$Dropdown$initialState)(initNav)(rundis$elm_bootstrap$Bootstrap$Modal$hidden)(rundis$elm_bootstrap$Bootstrap$Modal$hidden)(rundis$elm_bootstrap$Bootstrap$Modal$hidden)(''),
+			initCmd);
+	}
+};
+var author$project$BlameLogic$PeopleAndTasks = F2(
+	function (people, tasks) {
+		return {people: people, tasks: tasks};
+	});
+var author$project$BlameLogic$emptyDate = function (timeZone) {
+	return A2(
+		justinmimbs$time_extra$Time$Extra$partsToPosix,
+		timeZone,
+		A7(justinmimbs$time_extra$Time$Extra$Parts, 3900, elm$time$Time$Jan, 0, 0, 0, 0, 0));
+};
+var author$project$BlameLogic$nobody = A3(author$project$Person$Person, -1, '', 0);
+var elm_community$list_extra$List$Extra$find = F2(
+	function (predicate, list) {
+		find:
+		while (true) {
+			if (!list.b) {
+				return elm$core$Maybe$Nothing;
+			} else {
+				var first = list.a;
+				var rest = list.b;
+				if (predicate(first)) {
+					return elm$core$Maybe$Just(first);
+				} else {
+					var $temp$predicate = predicate,
+						$temp$list = rest;
+					predicate = $temp$predicate;
+					list = $temp$list;
+					continue find;
+				}
+			}
+		}
+	});
+var author$project$BlameLogic$findPersonByIdAndIncrementBlame = F2(
+	function (people, id) {
+		var findPersonFunk = function (elem) {
+			return _Utils_eq(elem.id, id);
+		};
+		var person = A2(elm_community$list_extra$List$Extra$find, findPersonFunk, people);
+		if (person.$ === 'Just') {
+			var val = person.a;
+			return _Utils_update(
+				val,
+				{blameCounter: val.blameCounter + 1});
+		} else {
+			return author$project$BlameLogic$nobody;
+		}
+	});
+var elm_community$list_extra$List$Extra$findIndexHelp = F3(
+	function (index, predicate, list) {
+		findIndexHelp:
+		while (true) {
+			if (!list.b) {
+				return elm$core$Maybe$Nothing;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (predicate(x)) {
+					return elm$core$Maybe$Just(index);
+				} else {
+					var $temp$index = index + 1,
+						$temp$predicate = predicate,
+						$temp$list = xs;
+					index = $temp$index;
+					predicate = $temp$predicate;
+					list = $temp$list;
+					continue findIndexHelp;
+				}
+			}
+		}
+	});
+var elm_community$list_extra$List$Extra$findIndex = elm_community$list_extra$List$Extra$findIndexHelp(0);
+var elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var elm_community$list_extra$List$Extra$getAt = F2(
+	function (idx, xs) {
+		return (idx < 0) ? elm$core$Maybe$Nothing : elm$core$List$head(
+			A2(elm$core$List$drop, idx, xs));
+	});
+var author$project$BlameLogic$getNextPersonResponsible = F2(
+	function (people, currentlyResponsible) {
+		var personIndex = A2(
+			elm_community$list_extra$List$Extra$findIndex,
+			function (elem) {
+				return _Utils_eq(elem.id, currentlyResponsible.id);
+			},
+			people);
+		if (personIndex.$ === 'Just') {
+			var val = personIndex.a;
+			var length = elm$core$List$length(people);
+			var index = A2(elm$core$Basics$modBy, length, val + 1);
+			var tmp = A2(elm_community$list_extra$List$Extra$getAt, index, people);
+			if (tmp.$ === 'Just') {
+				var result = tmp.a;
+				return result;
+			} else {
+				return currentlyResponsible;
+			}
+		} else {
+			return currentlyResponsible;
+		}
+	});
+var author$project$BlameLogic$isBefore = F3(
+	function (timeZone, time1, time2) {
+		var timeDiff = A4(justinmimbs$time_extra$Time$Extra$diff, justinmimbs$time_extra$Time$Extra$Minute, timeZone, time1, time2);
+		return timeDiff > 0;
+	});
+var author$project$BlameLogic$timeIsEqual = F4(
+	function (timeZone, precision, time1, time2) {
+		return !A4(justinmimbs$time_extra$Time$Extra$diff, precision, timeZone, time1, time2);
+	});
+var author$project$BlameLogic$mainLogic = F4(
+	function (timeZone, currentTime, people, task) {
+		var lastDone = task.lastDone;
+		var dueDate = task.dueDate;
+		if (A4(
+			author$project$BlameLogic$timeIsEqual,
+			timeZone,
+			justinmimbs$time_extra$Time$Extra$Minute,
+			lastDone,
+			author$project$BlameLogic$emptyDate(timeZone))) {
+			return task;
+		} else {
+			if (A3(author$project$BlameLogic$isBefore, timeZone, currentTime, dueDate) && (!A3(author$project$BlameLogic$isBefore, timeZone, currentTime, lastDone))) {
+				return task;
+			} else {
+				var updatedLastDoneBy = A2(author$project$BlameLogic$findPersonByIdAndIncrementBlame, people, task.currentlyResponsible.id);
+				var nextResponsiblePerson = A2(author$project$BlameLogic$getNextPersonResponsible, people, task.currentlyResponsible);
+				var nextDueDate = task.isRepetitiveTask ? A4(justinmimbs$time_extra$Time$Extra$add, justinmimbs$time_extra$Time$Extra$Week, 1, timeZone, task.dueDate) : task.dueDate;
+				var newTask = _Utils_update(
+					task,
+					{currentlyResponsible: nextResponsiblePerson, dueDate: nextDueDate, lastDone: task.dueDate, lastDoneBy: updatedLastDoneBy});
+				return newTask;
+			}
+		}
+	});
+var author$project$BlameLogic$updatePeopleFromTask = F2(
+	function (people, task) {
+		var mapFunction = function (person) {
+			return _Utils_eq(person.id, task.lastDoneBy.id) ? task.currentlyResponsible : person;
+		};
+		return A2(elm$core$List$map, mapFunction, people);
+	});
+var elm$core$List$takeReverse = F3(
+	function (n, list, kept) {
+		takeReverse:
+		while (true) {
+			if (n <= 0) {
+				return kept;
+			} else {
+				if (!list.b) {
+					return kept;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs,
+						$temp$kept = A2(elm$core$List$cons, x, kept);
+					n = $temp$n;
+					list = $temp$list;
+					kept = $temp$kept;
+					continue takeReverse;
+				}
+			}
+		}
+	});
+var elm$core$List$takeTailRec = F2(
+	function (n, list) {
+		return elm$core$List$reverse(
+			A3(elm$core$List$takeReverse, n, list, _List_Nil));
+	});
+var elm$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (n <= 0) {
+			return _List_Nil;
+		} else {
+			var _n0 = _Utils_Tuple2(n, list);
+			_n0$1:
+			while (true) {
+				_n0$5:
+				while (true) {
+					if (!_n0.b.b) {
+						return list;
+					} else {
+						if (_n0.b.b.b) {
+							switch (_n0.a) {
+								case 1:
+									break _n0$1;
+								case 2:
+									var _n2 = _n0.b;
+									var x = _n2.a;
+									var _n3 = _n2.b;
+									var y = _n3.a;
+									return _List_fromArray(
+										[x, y]);
+								case 3:
+									if (_n0.b.b.b.b) {
+										var _n4 = _n0.b;
+										var x = _n4.a;
+										var _n5 = _n4.b;
+										var y = _n5.a;
+										var _n6 = _n5.b;
+										var z = _n6.a;
+										return _List_fromArray(
+											[x, y, z]);
+									} else {
+										break _n0$5;
+									}
+								default:
+									if (_n0.b.b.b.b && _n0.b.b.b.b.b) {
+										var _n7 = _n0.b;
+										var x = _n7.a;
+										var _n8 = _n7.b;
+										var y = _n8.a;
+										var _n9 = _n8.b;
+										var z = _n9.a;
+										var _n10 = _n9.b;
+										var w = _n10.a;
+										var tl = _n10.b;
+										return (ctr > 1000) ? A2(
+											elm$core$List$cons,
+											x,
+											A2(
+												elm$core$List$cons,
+												y,
+												A2(
+													elm$core$List$cons,
+													z,
+													A2(
+														elm$core$List$cons,
+														w,
+														A2(elm$core$List$takeTailRec, n - 4, tl))))) : A2(
+											elm$core$List$cons,
+											x,
+											A2(
+												elm$core$List$cons,
+												y,
+												A2(
+													elm$core$List$cons,
+													z,
+													A2(
+														elm$core$List$cons,
+														w,
+														A3(elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
+									} else {
+										break _n0$5;
+									}
+							}
+						} else {
+							if (_n0.a === 1) {
+								break _n0$1;
+							} else {
+								break _n0$5;
+							}
+						}
+					}
+				}
+				return list;
+			}
+			var _n1 = _n0.b;
+			var x = _n1.a;
+			return _List_fromArray(
+				[x]);
+		}
+	});
+var elm$core$List$take = F2(
+	function (n, list) {
+		return A3(elm$core$List$takeFast, 0, n, list);
+	});
+var elm_community$list_extra$List$Extra$updateAt = F3(
+	function (index, fn, list) {
+		if (index < 0) {
+			return list;
+		} else {
+			var tail = A2(elm$core$List$drop, index, list);
+			var head = A2(elm$core$List$take, index, list);
+			if (tail.b) {
+				var x = tail.a;
+				var xs = tail.b;
+				return _Utils_ap(
+					head,
+					A2(
+						elm$core$List$cons,
+						fn(x),
+						xs));
+			} else {
+				return list;
+			}
+		}
+	});
+var elm_community$list_extra$List$Extra$setAt = F2(
+	function (index, value) {
+		return A2(
+			elm_community$list_extra$List$Extra$updateAt,
+			index,
+			elm$core$Basics$always(value));
+	});
+var author$project$BlameLogic$forEachTask = F6(
+	function (timeZone, currentTime, index, length, tasks, people) {
+		forEachTask:
+		while (true) {
+			if (_Utils_cmp(index, length) < 0) {
+				var maybeTask = A2(elm_community$list_extra$List$Extra$getAt, index, tasks);
+				if (maybeTask.$ === 'Just') {
+					var task = maybeTask.a;
+					var newTask = A4(author$project$BlameLogic$mainLogic, timeZone, currentTime, people, task);
+					var newPeople = A2(author$project$BlameLogic$updatePeopleFromTask, people, newTask);
+					var newMaybeTasks = A3(elm_community$list_extra$List$Extra$setAt, index, newTask, tasks);
+					var $temp$timeZone = timeZone,
+						$temp$currentTime = currentTime,
+						$temp$index = index + 1,
+						$temp$length = length,
+						$temp$tasks = newMaybeTasks,
+						$temp$people = newPeople;
+					timeZone = $temp$timeZone;
+					currentTime = $temp$currentTime;
+					index = $temp$index;
+					length = $temp$length;
+					tasks = $temp$tasks;
+					people = $temp$people;
+					continue forEachTask;
+				} else {
+					return _Utils_Tuple2(people, tasks);
+				}
+			} else {
+				return _Utils_Tuple2(people, tasks);
+			}
+		}
+	});
+var author$project$BlameLogic$isWorkToDoHelp = F3(
+	function (timeZone, currentTime, task) {
+		var isRepetable = task.isRepetitiveTask;
+		var isBetween = A3(author$project$BlameLogic$isBefore, timeZone, currentTime, task.dueDate) && (!A3(author$project$BlameLogic$isBefore, timeZone, currentTime, task.lastDone));
+		var isNotBetween = !isBetween;
+		var hasBeenDoneBefore = A4(
+			author$project$BlameLogic$timeIsEqual,
+			timeZone,
+			justinmimbs$time_extra$Time$Extra$Minute,
+			task.lastDone,
+			author$project$BlameLogic$emptyDate(timeZone));
+		return isRepetable && (hasBeenDoneBefore && isNotBetween);
+	});
+var author$project$BlameLogic$isWorkToDo = F3(
+	function (timeZone, currentTime, tasks) {
+		return A2(
+			elm$core$List$any,
+			A2(author$project$BlameLogic$isWorkToDoHelp, timeZone, currentTime),
+			tasks);
+	});
+var author$project$BlameLogic$iterateOverTasks = F4(
+	function (timeZone, currentTime, people, tasks) {
+		iterateOverTasks:
+		while (true) {
+			var workToDo = A3(author$project$BlameLogic$isWorkToDo, timeZone, currentTime, tasks);
+			if (workToDo) {
+				var tuple = A6(
+					author$project$BlameLogic$forEachTask,
+					timeZone,
+					currentTime,
+					0,
+					elm$core$List$length(tasks),
+					tasks,
+					people);
+				var newTasks = tuple.b;
+				var newPeople = tuple.a;
+				var $temp$timeZone = timeZone,
+					$temp$currentTime = currentTime,
+					$temp$people = newPeople,
+					$temp$tasks = newTasks;
+				timeZone = $temp$timeZone;
+				currentTime = $temp$currentTime;
+				people = $temp$people;
+				tasks = $temp$tasks;
+				continue iterateOverTasks;
+			} else {
+				return _Utils_Tuple2(people, tasks);
+			}
+		}
+	});
+var author$project$BlameLogic$getNewTasksAndPeople = F4(
+	function (timeZone, currentTime, people, tasks) {
+		var tuple = A4(author$project$BlameLogic$iterateOverTasks, timeZone, currentTime, people, tasks);
+		var newTasks = tuple.b;
+		var newPeople = tuple.a;
+		return A2(author$project$BlameLogic$PeopleAndTasks, newPeople, newTasks);
+	});
+var author$project$Formatters$intToMonth = function (_int) {
+	switch (_int) {
+		case 1:
+			return elm$time$Time$Jan;
+		case 2:
+			return elm$time$Time$Feb;
+		case 3:
+			return elm$time$Time$Mar;
+		case 4:
+			return elm$time$Time$Apr;
+		case 5:
+			return elm$time$Time$May;
+		case 6:
+			return elm$time$Time$Jun;
+		case 7:
+			return elm$time$Time$Jul;
+		case 8:
+			return elm$time$Time$Aug;
+		case 9:
+			return elm$time$Time$Sep;
+		case 10:
+			return elm$time$Time$Oct;
+		case 11:
+			return elm$time$Time$Nov;
+		case 12:
+			return elm$time$Time$Dec;
+		default:
+			return elm$time$Time$Jan;
+	}
+};
+var elm$json$Json$Encode$int = _Json_wrap;
+var elm$json$Json$Encode$object = function (pairs) {
+	return _Json_wrap(
+		A3(
+			elm$core$List$foldl,
+			F2(
+				function (_n0, obj) {
+					var k = _n0.a;
+					var v = _n0.b;
+					return A3(_Json_addField, k, v, obj);
+				}),
+			_Json_emptyObject(_Utils_Tuple0),
+			pairs));
+};
+var author$project$Ports$saveperson = _Platform_outgoingPort(
+	'saveperson',
+	function ($) {
+		return elm$json$Json$Encode$object(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					'blameCounter',
+					elm$json$Json$Encode$int($.blameCounter)),
+					_Utils_Tuple2(
+					'id',
+					elm$json$Json$Encode$int($.id)),
+					_Utils_Tuple2(
+					'name',
+					elm$json$Json$Encode$string($.name))
+				]));
+	});
+var author$project$Ports$savetask = _Platform_outgoingPort(
+	'savetask',
+	function ($) {
+		return elm$json$Json$Encode$object(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					'creationDate',
+					elm$json$Json$Encode$int($.creationDate)),
+					_Utils_Tuple2(
+					'currentlyResponsible',
+					function ($) {
+						return elm$json$Json$Encode$object(
+							_List_fromArray(
+								[
+									_Utils_Tuple2(
+									'blameCounter',
+									elm$json$Json$Encode$int($.blameCounter)),
+									_Utils_Tuple2(
+									'id',
+									elm$json$Json$Encode$int($.id)),
+									_Utils_Tuple2(
+									'name',
+									elm$json$Json$Encode$string($.name))
+								]));
+					}($.currentlyResponsible)),
+					_Utils_Tuple2(
+					'description',
+					elm$json$Json$Encode$string($.description)),
+					_Utils_Tuple2(
+					'displayName',
+					elm$json$Json$Encode$string($.displayName)),
+					_Utils_Tuple2(
+					'dueDate',
+					elm$json$Json$Encode$int($.dueDate)),
+					_Utils_Tuple2(
+					'id',
+					elm$json$Json$Encode$int($.id)),
+					_Utils_Tuple2(
+					'isDeleted',
+					elm$json$Json$Encode$bool($.isDeleted)),
+					_Utils_Tuple2(
+					'isRepetitiveTask',
+					elm$json$Json$Encode$bool($.isRepetitiveTask)),
+					_Utils_Tuple2(
+					'lastDone',
+					elm$json$Json$Encode$int($.lastDone)),
+					_Utils_Tuple2(
+					'lastDoneBy',
+					function ($) {
+						return elm$json$Json$Encode$object(
+							_List_fromArray(
+								[
+									_Utils_Tuple2(
+									'blameCounter',
+									elm$json$Json$Encode$int($.blameCounter)),
+									_Utils_Tuple2(
+									'id',
+									elm$json$Json$Encode$int($.id)),
+									_Utils_Tuple2(
+									'name',
+									elm$json$Json$Encode$string($.name))
+								]));
+					}($.lastDoneBy))
+				]));
+	});
+var author$project$Update$findAndUpdateLastDone = F3(
+	function (id, time, task) {
+		return _Utils_eq(task.id, id) ? _Utils_update(
+			task,
+			{lastDone: time}) : task;
+	});
+var author$project$Update$getNextIdPerson = function (people) {
+	var tmpPerson = elm$core$List$head(
+		elm$core$List$reverse(people));
+	if (tmpPerson.$ === 'Just') {
+		var val = tmpPerson.a;
+		return val.id + 1;
+	} else {
+		return 0;
+	}
+};
+var author$project$Update$getNextIdTask = function (tasks) {
+	var tmpTask = elm$core$List$head(
+		elm$core$List$reverse(tasks));
+	if (tmpTask.$ === 'Just') {
+		var val = tmpTask.a;
+		return val.id + 1;
+	} else {
+		return 0;
+	}
+};
+var author$project$Update$mockupExampleDueDate1 = A2(
+	justinmimbs$time_extra$Time$Extra$partsToPosix,
+	elm$time$Time$utc,
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 2019, elm$time$Time$Feb, 12, 14, 30, 0, 0));
+var author$project$Update$mockupExampleLastDoneDate1 = A2(
+	justinmimbs$time_extra$Time$Extra$partsToPosix,
+	elm$time$Time$utc,
+	A7(justinmimbs$time_extra$Time$Extra$Parts, 3900, elm$time$Time$Jan, 0, 0, 0, 0, 0));
+var author$project$HouseTaskTransfer$TransferTask = function (id) {
+	return function (displayName) {
+		return function (currentlyResponsible) {
+			return function (description) {
+				return function (dueDate) {
+					return function (creationDate) {
+						return function (lastDone) {
+							return function (lastDoneBy) {
+								return function (isRepetitiveTask) {
+									return function (isDeleted) {
+										return {creationDate: creationDate, currentlyResponsible: currentlyResponsible, description: description, displayName: displayName, dueDate: dueDate, id: id, isDeleted: isDeleted, isRepetitiveTask: isRepetitiveTask, lastDone: lastDone, lastDoneBy: lastDoneBy};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var author$project$Update$preparetask = function (task) {
+	return author$project$HouseTaskTransfer$TransferTask(task.id)(task.displayName)(task.currentlyResponsible)(task.description)(
+		elm$time$Time$posixToMillis(task.dueDate))(
+		elm$time$Time$posixToMillis(task.creationDate))(
+		elm$time$Time$posixToMillis(task.lastDone))(task.lastDoneBy)(task.isRepetitiveTask)(task.isDeleted);
+};
+var author$project$Update$stringElmToInt = function (elm) {
+	var maybeInt = elm$core$String$toInt(elm);
+	if (maybeInt.$ === 'Just') {
+		var _int = maybeInt.a;
+		return _int;
+	} else {
+		return 0;
+	}
+};
+var elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
+		}
+	});
+var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
+var rundis$elm_bootstrap$Bootstrap$Modal$Show = {$: 'Show'};
+var rundis$elm_bootstrap$Bootstrap$Modal$shown = rundis$elm_bootstrap$Bootstrap$Modal$Show;
+var author$project$Update$update = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'Increment':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{count: model.count + '1'}),
+					elm$core$Platform$Cmd$none);
+			case 'Decrement':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{count: model.count + '1'}),
+					elm$core$Platform$Cmd$none);
+			case 'Tick':
+				var newTime = msg.a;
+				var peopleAndTasks = A4(author$project$BlameLogic$getNewTasksAndPeople, model.timeZone, newTime, model.people, model.tasks);
+				var newTasks = peopleAndTasks.tasks;
+				var newPeople = peopleAndTasks.people;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tasks: newTasks, time: newTime}),
+					elm$core$Platform$Cmd$none);
+			case 'AdjustTimeZone':
+				var newTimezone = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{timeZone: newTimezone}),
+					elm$core$Platform$Cmd$none);
+			case 'ChangeViewTo':
+				var displayType = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{view: displayType}),
+					elm$core$Platform$Cmd$none);
+			case 'TaskDone':
+				var id = msg.a;
+				var tasks = A2(
+					elm$core$List$map,
+					A2(author$project$Update$findAndUpdateLastDone, id, model.time),
+					model.tasks);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tasks: tasks}),
+					elm$core$Platform$Cmd$none);
+			case 'AddPersonName':
+				var name = msg.a;
+				var tmp = model.tmpPerson;
+				var newPerson = _Utils_update(
+					tmp,
+					{name: name});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tmpPerson: newPerson}),
+					elm$core$Platform$Cmd$none);
+			case 'SubmitPerson':
+				var newPerson = model.tmpPerson;
+				var tmpNewPerson = _Utils_update(
+					newPerson,
+					{
+						id: author$project$Update$getNextIdPerson(model.people)
+					});
+				var persons = A2(
+					elm$core$List$append,
+					model.people,
+					_List_fromArray(
+						[tmpNewPerson]));
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							people: persons,
+							tmpPerson: A3(author$project$Person$Person, 0, '', 0)
+						}),
+					author$project$Ports$saveperson(tmpNewPerson));
+			case 'MyDrop1Msg':
+				var state = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{myDrop1State: state}),
+					elm$core$Platform$Cmd$none);
+			case 'AddTaskPersonDropdown':
+				var id = msg.a;
+				var maybeID = elm$core$String$toInt(id);
+				if (maybeID.$ === 'Just') {
+					var id2 = maybeID.a;
+					var maybePerson = A2(
+						elm_community$list_extra$List$Extra$find,
+						function (ln) {
+							return _Utils_eq(ln.id, id2);
+						},
+						model.people);
+					if (maybePerson.$ === 'Just') {
+						var person = maybePerson.a;
+						var newTask = model.tmpTask;
+						var tmpNewTask = _Utils_update(
+							newTask,
+							{currentlyResponsible: person});
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{tmpTask: tmpNewTask}),
+							elm$core$Platform$Cmd$none);
+					} else {
+						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+					}
+				} else {
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				}
+			case 'SubmitTask':
+				var newTask = model.tmpTask;
+				var tmpNewTask = _Utils_update(
+					newTask,
+					{
+						id: author$project$Update$getNextIdTask(model.tasks)
+					});
+				var tasks = A2(
+					elm$core$List$append,
+					model.tasks,
+					_List_fromArray(
+						[tmpNewTask]));
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							tasks: tasks,
+							tmpTask: author$project$HouseTask$Task(0)('')(
+								A3(author$project$Person$Person, 0, '', 0))('')(author$project$Update$mockupExampleDueDate1)(model.time)(author$project$Update$mockupExampleLastDoneDate1)(
+								A3(author$project$Person$Person, 0, '', 0))(false)(false)
+						}),
+					author$project$Ports$savetask(
+						author$project$Update$preparetask(model.tmpTask)));
+			case 'AddTaskName':
+				var displayName = msg.a;
+				var tmp = model.tmpTask;
+				var newTask = _Utils_update(
+					tmp,
+					{displayName: displayName});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tmpTask: newTask}),
+					elm$core$Platform$Cmd$none);
+			case 'AddTaskDescription':
+				var description = msg.a;
+				var tmp = model.tmpTask;
+				var newTask = _Utils_update(
+					tmp,
+					{description: description});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tmpTask: newTask}),
+					elm$core$Platform$Cmd$none);
+			case 'AddTaskDueDate':
+				var time = msg.a;
+				var tmpDueDateParts = A2(justinmimbs$time_extra$Time$Extra$posixToParts, model.timeZone, model.tmpTask.dueDate);
+				var stringList = A2(elm$core$String$split, '-', time);
+				var intList = A2(elm$core$List$map, author$project$Update$stringElmToInt, stringList);
+				var secondElm = A2(elm_community$list_extra$List$Extra$getAt, 1, intList);
+				var thirdElm = A2(elm_community$list_extra$List$Extra$getAt, 2, intList);
+				var firstElm = A2(elm_community$list_extra$List$Extra$getAt, 0, intList);
+				if (firstElm.$ === 'Just') {
+					var year = firstElm.a;
+					if (secondElm.$ === 'Just') {
+						var month = secondElm.a;
+						if (thirdElm.$ === 'Just') {
+							var day = thirdElm.a;
+							var newTask = model.tmpTask;
+							var newDueDateParts = _Utils_update(
+								tmpDueDateParts,
+								{
+									day: day,
+									month: author$project$Formatters$intToMonth(month),
+									year: year
+								});
+							var dueDate = A2(justinmimbs$time_extra$Time$Extra$partsToPosix, model.timeZone, newDueDateParts);
+							var tmpNewTask = _Utils_update(
+								newTask,
+								{dueDate: dueDate});
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{tmpTask: tmpNewTask}),
+								elm$core$Platform$Cmd$none);
+						} else {
+							return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+						}
+					} else {
+						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+					}
+				} else {
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				}
+			case 'AddTaskDueTime':
+				var time = msg.a;
+				var tmpDueDateParts = A2(justinmimbs$time_extra$Time$Extra$posixToParts, model.timeZone, model.tmpTask.dueDate);
+				var stringList = A2(elm$core$String$split, ':', time);
+				var intList = A2(elm$core$List$map, author$project$Update$stringElmToInt, stringList);
+				var secondElm = A2(elm_community$list_extra$List$Extra$getAt, 1, intList);
+				var firstElm = A2(elm_community$list_extra$List$Extra$getAt, 0, intList);
+				if (firstElm.$ === 'Just') {
+					var hour = firstElm.a;
+					if (secondElm.$ === 'Just') {
+						var minute = secondElm.a;
+						var newTask = model.tmpTask;
+						var newDueDateParts = _Utils_update(
+							tmpDueDateParts,
+							{hour: hour, minute: minute});
+						var dueDate = A2(justinmimbs$time_extra$Time$Extra$partsToPosix, model.timeZone, newDueDateParts);
+						var tmpNewTask = _Utils_update(
+							newTask,
+							{dueDate: dueDate});
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{tmpTask: tmpNewTask}),
+							elm$core$Platform$Cmd$none);
+					} else {
+						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+					}
+				} else {
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				}
+			case 'AddTaskIsRepetitiveTask':
+				var isRepetitiveTask = msg.a;
+				var tmp = model.tmpTask;
+				var newTask = _Utils_update(
+					tmp,
+					{isRepetitiveTask: isRepetitiveTask});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tmpTask: newTask}),
+					elm$core$Platform$Cmd$none);
+			case 'NavbarMsg':
+				var state = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{navbarState: state}),
+					elm$core$Platform$Cmd$none);
+			case 'ShowModalAddTask':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{modalAddTask: rundis$elm_bootstrap$Bootstrap$Modal$shown}),
+					elm$core$Platform$Cmd$none);
+			case 'CloseModalAddTask':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{modalAddTask: rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
+					elm$core$Platform$Cmd$none);
+			case 'ShowModalAddPerson':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{modalAddPerson: rundis$elm_bootstrap$Bootstrap$Modal$shown}),
+					elm$core$Platform$Cmd$none);
+			case 'CloseModalAddPerson':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{modalAddPerson: rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
+					elm$core$Platform$Cmd$none);
+			case 'ShowModalBlamelist':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{modalShowBlamelist: rundis$elm_bootstrap$Bootstrap$Modal$shown}),
+					elm$core$Platform$Cmd$none);
+			case 'CloseModalBlamelist':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{modalShowBlamelist: rundis$elm_bootstrap$Bootstrap$Modal$hidden}),
+					elm$core$Platform$Cmd$none);
+			case 'UpdatePeople':
+				var p = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{people: p}),
+					elm$core$Platform$Cmd$none);
+			case 'UpdateTask':
+				var t = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tasks: t}),
+					elm$core$Platform$Cmd$none);
+			default:
+				var s = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{debug: s}),
+					elm$core$Platform$Cmd$none);
+		}
+	});
 var elm$browser$Browser$element = _Browser_element;
 var author$project$Main$main = elm$browser$Browser$element(
-	{init: author$project$Model$initMockup, subscriptions: author$project$Main$subscriptions, update: author$project$Update$update, view: author$project$View$view});
-_Platform_export({'Main':{'init':author$project$Main$main(elm$json$Json$Decode$int)(0)}});}(this));
+	{init: author$project$Model$init, subscriptions: author$project$Main$subscriptions, update: author$project$Update$update, view: author$project$MainView$mainView});
+_Platform_export({'Main':{'init':author$project$Main$main(
+	A2(
+		elm$json$Json$Decode$andThen,
+		function (tasks) {
+			return A2(
+				elm$json$Json$Decode$andThen,
+				function (people) {
+					return elm$json$Json$Decode$succeed(
+						{people: people, tasks: tasks});
+				},
+				A2(
+					elm$json$Json$Decode$field,
+					'people',
+					elm$json$Json$Decode$list(
+						A2(
+							elm$json$Json$Decode$andThen,
+							function (name) {
+								return A2(
+									elm$json$Json$Decode$andThen,
+									function (id) {
+										return A2(
+											elm$json$Json$Decode$andThen,
+											function (blameCounter) {
+												return elm$json$Json$Decode$succeed(
+													{blameCounter: blameCounter, id: id, name: name});
+											},
+											A2(elm$json$Json$Decode$field, 'blameCounter', elm$json$Json$Decode$int));
+									},
+									A2(elm$json$Json$Decode$field, 'id', elm$json$Json$Decode$int));
+							},
+							A2(elm$json$Json$Decode$field, 'name', elm$json$Json$Decode$string)))));
+		},
+		A2(elm$json$Json$Decode$field, 'tasks', elm$json$Json$Decode$value)))(0)}});}(this));

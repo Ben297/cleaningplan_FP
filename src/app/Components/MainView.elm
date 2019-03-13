@@ -32,17 +32,40 @@ mainView model =
             |> Navbar.brand [ href "#"] [ text "Cleaningplan - Clean your Apartment"]
             |> Navbar.dark
             |> Navbar.items
-                [
-                    Navbar.itemLink [ onClick (ChangeViewTo PreviousWeekView) ] [ text "Previous Week" ]
-                    , Navbar.itemLink [ onClick (ChangeViewTo MainView) ] [ text "This Week"]
-                    , Navbar.itemLink [ onClick (ChangeViewTo NextWeekView) ] [ text "Next Week"]
+                [ Navbar.itemLink [ onClick (ChangeViewTo PreviousWeekView) ] [ text "Previous Week" ]
+                , Navbar.itemLink [ onClick (ChangeViewTo MainView) ] [ text "This Week" ]
+                , Navbar.itemLink [ onClick (ChangeViewTo NextWeekView) ] [ text "Next Week"]
                 ]
+
             |> Navbar.view model.navbarState
            ]
         ]
         , Grid.row [Row.centerXs]
         [
             Grid.col[]
+                [ Button.button
+                     [ Button.attrs [ onClick ShowModalAddPerson ] ]
+                    [ text "Add a Person" ]
+                , Modal.config CloseModalAddPerson
+                    |> Modal.small
+                    |> Modal.h5 [] [ text "Add a Person" ]
+                    |> Modal.body []
+                        [
+                            addPerson model
+                        ]
+                    |> Modal.footer []
+                        [ Button.button
+                            [ Button.outlinePrimary
+                            , Button.attrs [ onClick CloseModalAddPerson ]
+                            ]
+                            [ text "Close" ]
+                        ]
+                    |> Modal.view model.modalAddPerson
+                ]
+        ]
+        , Grid.row [Row.centerXs]
+        [
+             Grid.col[]
             [ Button.button
                 [ Button.attrs [ onClick ShowModalAddTask ] ]
                 [ text "Add a Task" ]
@@ -51,7 +74,7 @@ mainView model =
                 |> Modal.h5 [] [ text "Add a Task" ]
                 |> Modal.body []
                     [
-                        addTask model
+                    addTask model
                     ]
                 |> Modal.footer []
                     [ Button.button
@@ -62,51 +85,34 @@ mainView model =
                     ]
                 |> Modal.view model.modalAddTask
             ]
-
-            , Grid.col[]
-                [ Button.button
-                    [ Button.attrs [ onClick ShowModalBlamelist ] ]
-                    [ text "Blamelist" ]
-                , Modal.config CloseModalBlamelist
-                    |> Modal.small
-                    |> Modal.h5 [] [ text "Blamelist" ]
-                    |> Modal.body []
-                        [
-                        showBlamelist model
-                        ]
-                    |> Modal.footer []
-                        [ Button.button
-                            [ Button.outlinePrimary
-                            , Button.attrs [ onClick CloseModalBlamelist ]
-                            ]
-                            [ text "Close" ]
-                        ]
-                    |> Modal.view model.modalShowBlamelist
-                ]
-                , Grid.col[]
-                    [ Button.button
-                        [ Button.attrs [ onClick ShowModalAddPerson ] ]
-                        [ text "add Person" ]
-                    , Modal.config CloseModalAddPerson
-                        |> Modal.small
-                        |> Modal.h5 [] [ text "Blamelist" ]
-                        |> Modal.body []
-                            [
-                                addPerson model
-                            ]
-                        |> Modal.footer []
-                            [ Button.button
-                                [ Button.outlinePrimary
-                                , Button.attrs [ onClick CloseModalAddPerson ]
-                                ]
-                                [ text "Close" ]
-                            ]
-                        |> Modal.view model.modalShowAddPerson
+        ]
+        , Grid.row [Row.centerXs]
+        [
+            Grid.col[]
+            [ Button.button
+                [ Button.attrs [ onClick ShowModalBlamelist ] ]
+                [ text "Blamelist" ]
+            , Modal.config CloseModalBlamelist
+                |> Modal.small
+                |> Modal.h5 [] [ text "Blamelist" ]
+                |> Modal.body []
+                    [
+                    showBlamelist model
                     ]
+                |> Modal.footer []
+                    [ Button.button
+                        [ Button.outlinePrimary
+                        , Button.attrs [ onClick CloseModalBlamelist ]
+                        ]
+                        [ text "Close" ]
+                    ]
+                |> Modal.view model.modalShowBlamelist
+            ]
         ]
         , Grid.row []
         [
-             Grid.col []
+
+            Grid.col []
             [
                 case model.view of
                     MainView ->

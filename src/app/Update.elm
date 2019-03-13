@@ -70,7 +70,6 @@ update msg model =
         SubmitPerson ->
             let
                 newPerson = model.tmpPerson
-
                 tmpNewPerson = {newPerson | id = getNextIdPerson model.people}
                 persons = List.append model.people [tmpNewPerson]
             in
@@ -113,14 +112,11 @@ update msg model =
         SubmitTask ->
             let
                 newTask = model.tmpTask
-                tmpNewTask = log "tmpNewTask" {newTask | id = getNextIdTask model.tasks}
-                debug = log "\ntmpNewTask-dueDate" (Formatters.getFormatedStringFromDate model.timeZone tmpNewTask.dueDate)
-                debug2 = log "\ntmpNewTask-dueDate" (Formatters.getFormatedStringFromDate model.timeZone tmpNewTask.creationDate)
-                debug3 = log "\ntmpNewTask-dueDate" (Formatters.getFormatedStringFromDate model.timeZone tmpNewTask.lastDone)
+                tmpNewTask = {newTask | id = getNextIdTask model.tasks}
                 tasks = List.append model.tasks [tmpNewTask]
             in
-            ( {model | tasks = tasks, tmpTask = (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 model.time mockupExampleLastDoneDate1 (Person 0 "" 0) False False), tmpDueDate = model.time}
-                , savetask (preparetask tmpNewTask)
+            ( {model | tasks = tasks, tmpTask = (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 model.time mockupExampleLastDoneDate1 (Person 0 "" 0) False False)}
+                , savetask (preparetask model.tmpTask)
             )
 
         AddTaskName displayName ->
@@ -143,7 +139,6 @@ update msg model =
 
         AddTaskDueDate time ->
             let
-                debug = log "datestring: " time
                 stringList = String.split "-" time
                 intList = List.map stringElmToInt stringList
                 firstElm = List.Extra.getAt 0 intList
@@ -231,6 +226,16 @@ update msg model =
             , Cmd.none
             )
 
+        ShowModalAddPerson ->
+            ( { model | modalAddPerson = Modal.shown }
+            , Cmd.none
+            )
+
+        CloseModalAddPerson ->
+            ( { model | modalAddPerson = Modal.hidden }
+            , Cmd.none
+            )
+
         ShowModalBlamelist ->
             ( { model | modalShowBlamelist = Modal.shown }
             , Cmd.none
@@ -238,16 +243,6 @@ update msg model =
 
         CloseModalBlamelist ->
             ( { model | modalShowBlamelist = Modal.hidden }
-            , Cmd.none
-            )
-
-        ShowModalAddPerson ->
-            ( { model | modalShowAddPerson = Modal.shown }
-            , Cmd.none
-            )
-
-        CloseModalAddPerson ->
-            ( { model | modalShowAddPerson = Modal.hidden }
             , Cmd.none
             )
 

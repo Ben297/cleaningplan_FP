@@ -4,6 +4,7 @@ import Browser
 import MainView exposing (mainView)
 import Msg exposing (..)
 import Model exposing (init, Model, Flags)
+import View exposing (view)
 import Update exposing (update, decodeTaskValue)
 import Time
 import Ports exposing (..)

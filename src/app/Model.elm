@@ -32,8 +32,8 @@ type alias Model =
         , myDrop1State : Dropdown.State
         , navbarState : Navbar.State
         , modalAddTask : Modal.Visibility
+        , modalAddPerson : Modal.Visibility
         , modalShowBlamelist : Modal.Visibility
-        , modalShowAddPerson : Modal.Visibility
         , debug: String
     }
 
@@ -51,6 +51,7 @@ init flags =
         initCmd = Cmd.batch [(Tuple.second initNavTup), SystemTask.perform Msg.AdjustTimeZone Time.here]
         result = (D.decodeValue tasklistdecoder flags.tasks)
         initPeople = List.sortWith sortPeople flags.people
+        --debugPeople = log "people: " initPeople
     in
         case result of
         Ok tasks ->
@@ -97,6 +98,30 @@ sortPeople person1 person2 = if person1.id >= person2.id
     else
         LT
 
+
+mockupPeople: List Person
+mockupPeople =
+    [
+        Person 1 "Peter2" 0
+        , Person 2 "Paul" 0
+        , Person 3 "Marry" 0
+    ]
+
+mockupTasks: List Task
+mockupTasks =
+    let
+        defaultPerson = Person 0 "Default" 0
+        firstPerson = (Maybe.withDefault defaultPerson (getAt 0 mockupPeople))
+        secondPerson = (Maybe.withDefault defaultPerson (getAt 1 mockupPeople))
+        thirdPerson = (Maybe.withDefault defaultPerson (getAt 2 mockupPeople))
+    in
+    [
+        Task 1 "clean the floor" firstPerson "just clean the damn floor!" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 firstPerson True False
+        , Task 2 "dispose garbage" secondPerson "dispose all unnecessary garbage in the provided containers!" mockupExampleDueDate2 mockupExampleCreationDate2 mockupExampleLastDoneDate2 secondPerson True False
+        , Task 3 "kill roaches in the cellar" thirdPerson "kill all the roaches!!!" mockupExampleDueDate3 mockupExampleCreationDate3 mockupExampleLastDoneDate3 thirdPerson True False
+        -- , Task id : String , displayName : String , currentlyResponsible : Person , description : String , dueDate : Posix , creationDate : Posix , lastDone : Posix , lastDoneBy : Person , isRepetitiveTask : Bool , isDeleted :Bool
+    ]
+
     -- HouseTask:
     -- id : String
     -- , displayName : String
@@ -111,8 +136,8 @@ sortPeople person1 person2 = if person1.id >= person2.id
 --Mockup dates for use in mockup tasks
 
 --dueDate: "2019-03-08T06:00:00Z",
-mockupExampleDueDate1 : Posix
-mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Feb 12 14 30 0 0)
+mockupExampleDueDate1: Posix
+mockupExampleDueDate1 = partsToPosix utc (Parts 2019 Mar 8 6 0 0 0)
 
 --creationDate: "2019-03-05T06:00:00Z",
 mockupExampleCreationDate1: Posix
