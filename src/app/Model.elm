@@ -1,4 +1,4 @@
-module Model exposing (Model, init, initMockup, Flags)
+module Model exposing (Model, init, Flags)
 import Basics exposing (Order(..))
 import Json.Encode as E
 import Msg exposing (Msg)
@@ -32,6 +32,7 @@ type alias Model =
         , myDrop1State : Dropdown.State
         , navbarState : Navbar.State
         , modalAddTask : Modal.Visibility
+        , modalAddPerson : Modal.Visibility
         , modalShowBlamelist : Modal.Visibility
         , debug: String
     }
@@ -62,9 +63,9 @@ init flags =
                 debugComputedTasks = log "" tasks
                 debugComputedPeople = log "" initPeople
             in
-                (Model "0" computedPeople computedTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
+                (Model "0" computedPeople computedTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden Modal.hidden "", initCmd)
         Err err ->
-            (Model "0" initPeople [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "", initCmd)
+            (Model "0" initPeople [] (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden Modal.hidden "", initCmd)
 
 setBlamecounterOnPeople: List Person -> List Task -> List Person
 setBlamecounterOnPeople people tasks = List.map (mapPerson tasks) people
@@ -97,14 +98,6 @@ sortPeople person1 person2 = if person1.id >= person2.id
     else
         LT
 
-initMockup: Flags -> (Model, Cmd Msg)
-initMockup flags =
-    let
-        initNavTup = Navbar.initialState NavbarMsg
-        initNav = Tuple.first initNavTup
-        initCmd = Cmd.batch [(Tuple.second initNavTup), SystemTask.perform Msg.AdjustTimeZone Time.here]
-    in
-        (Model "0" mockupPeople mockupTasks (Time.millisToPosix 0) Time.utc MainView (Person 0 "" 0) (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False) (Parts 2019 Feb 12 14 30 0 0) Dropdown.initialState initNav Modal.hidden Modal.hidden "" , initCmd)
 
 mockupPeople: List Person
 mockupPeople =
@@ -152,7 +145,7 @@ mockupExampleCreationDate1 = partsToPosix utc (Parts 2019 Mar 5 6 0 0 0)
 
 --lastDone: "2019-03-06T06:00:00Z",
 mockupExampleLastDoneDate1: Posix
-mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Mar 12 6 0 0 0)
+mockupExampleLastDoneDate1 = partsToPosix utc (Parts 3900 Jan 0 0 0 0 0)
 
 mockupExampleDueDate2: Posix
 mockupExampleDueDate2 = partsToPosix utc (Parts 2019 Sep 26 14 30 0 0)

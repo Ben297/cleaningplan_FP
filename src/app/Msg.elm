@@ -30,6 +30,8 @@ type Msg
     | CloseModalAddTask
     | ShowModalBlamelist
     | CloseModalBlamelist
+    | ShowModalAddPerson
+    | CloseModalAddPerson
     | UpdatePeople (List Person)
     | UpdateTask (List Task)
     | TaskErr String

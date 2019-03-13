@@ -74,7 +74,7 @@ update msg model =
                 persons = List.append model.people [tmpNewPerson]
             in
             ( {model | people = persons, tmpPerson = (Person 0 "" 0)}
-                , saveperson model.tmpPerson
+                , saveperson tmpNewPerson
             )
 
         MyDrop1Msg state ->
@@ -115,7 +115,7 @@ update msg model =
                 tmpNewTask = {newTask | id = getNextIdTask model.tasks}
                 tasks = List.append model.tasks [tmpNewTask]
             in
-            ( {model | tasks = tasks, tmpTask = (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 mockupExampleCreationDate1 mockupExampleLastDoneDate1 (Person 0 "" 0) False False)}
+            ( {model | tasks = tasks, tmpTask = (Task 0 "" (Person 0 "" 0) "" mockupExampleDueDate1 model.time mockupExampleLastDoneDate1 (Person 0 "" 0) False False)}
                 , savetask (preparetask model.tmpTask)
             )
 
@@ -226,6 +226,16 @@ update msg model =
             , Cmd.none
             )
 
+        ShowModalAddPerson ->
+            ( { model | modalAddPerson = Modal.shown }
+            , Cmd.none
+            )
+
+        CloseModalAddPerson ->
+            ( { model | modalAddPerson = Modal.hidden }
+            , Cmd.none
+            )
+
         ShowModalBlamelist ->
             ( { model | modalShowBlamelist = Modal.shown }
             , Cmd.none
@@ -288,7 +298,7 @@ mockupExampleCreationDate1 : Posix
 mockupExampleCreationDate1 = partsToPosix utc (Parts 2018 Feb 11 10 17 0 0)
 
 mockupExampleLastDoneDate1 : Posix
-mockupExampleLastDoneDate1 = partsToPosix utc (Parts 2019 Feb 12 10 17 0 0)
+mockupExampleLastDoneDate1 = partsToPosix utc (Parts 3900 Jan 0 0 0 0 0)
 
 
 stringElmToInt : String -> Int

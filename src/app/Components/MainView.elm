@@ -1,5 +1,6 @@
 module MainView exposing (mainView)
 
+import AddPersonComponent exposing (addPerson)
 import Html exposing (..)
 import Html.Events exposing (onClick)
 import Bootstrap.CDN as CDN
@@ -44,6 +45,29 @@ mainView model =
         , Grid.row [Row.centerXs]
         [
             Grid.col[]
+                [ Button.button
+                     [ Button.attrs [ onClick ShowModalAddPerson ] ]
+                    [ text "Add a Person" ]
+                , Modal.config CloseModalAddPerson
+                    |> Modal.small
+                    |> Modal.h5 [] [ text "Add a Person" ]
+                    |> Modal.body []
+                        [
+                            addPerson model
+                        ]
+                    |> Modal.footer []
+                        [ Button.button
+                            [ Button.outlinePrimary
+                            , Button.attrs [ onClick CloseModalAddPerson ]
+                            ]
+                            [ text "Close" ]
+                        ]
+                    |> Modal.view model.modalAddPerson
+                ]
+        ]
+        , Grid.row [Row.centerXs]
+        [
+             Grid.col[]
             [ Button.button
                 [ Button.attrs [ onClick ShowModalAddTask ] ]
                 [ text "Add a Task" ]
@@ -63,31 +87,34 @@ mainView model =
                     ]
                 |> Modal.view model.modalAddTask
             ]
-
-            , Grid.col[]
-                [ Button.button
-                    [ Button.attrs [ onClick ShowModalBlamelist ] ]
-                    [ text "Blamelist" ]
-                , Modal.config CloseModalBlamelist
-                    |> Modal.small
-                    |> Modal.h5 [] [ text "Blamelist" ]
-                    |> Modal.body []
-                        [
-                        showBlamelist model
+        ]
+        , Grid.row [Row.centerXs]
+        [
+            Grid.col[]
+            [ Button.button
+                [ Button.attrs [ onClick ShowModalBlamelist ] ]
+                [ text "Blamelist" ]
+            , Modal.config CloseModalBlamelist
+                |> Modal.small
+                |> Modal.h5 [] [ text "Blamelist" ]
+                |> Modal.body []
+                    [
+                    showBlamelist model
+                    ]
+                |> Modal.footer []
+                    [ Button.button
+                        [ Button.outlinePrimary
+                        , Button.attrs [ onClick CloseModalBlamelist ]
                         ]
-                    |> Modal.footer []
-                        [ Button.button
-                            [ Button.outlinePrimary
-                            , Button.attrs [ onClick CloseModalBlamelist ]
-                            ]
-                            [ text "Close" ]
-                        ]
-                    |> Modal.view model.modalShowBlamelist
-                ]
+                        [ text "Close" ]
+                    ]
+                |> Modal.view model.modalShowBlamelist
+            ]
         ]
         , Grid.row []
         [
-             Grid.col []
+
+            Grid.col []
             [
                 case model.view of
                     MainView ->

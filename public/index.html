@@ -180,11 +180,6 @@
 
                             //--Subscriptions to elm-commands
 
-                            app.ports.initialFetch.subscribe( () => {
-                                console.log("initial Fetch ongoing...");
-
-                            });
-
                             app.ports.saveperson.subscribe(function (data) {
                                 console.log('person: ' + data.name);
 
