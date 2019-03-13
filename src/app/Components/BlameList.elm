@@ -6,8 +6,8 @@ import Bootstrap.Table as Table
 import Html exposing (..)
 
 import Bootstrap.Grid as Grid
-
 import Bootstrap.Button as Button
+import Person exposing (Person)
 
 import Formatters exposing (getFormatedStringFromDate)
 
@@ -21,22 +21,25 @@ showBlamelist model =
                     { options = [  Table.hover, Table.bordered ]
                     , thead =  Table.simpleThead
                         [ Table.th [] [ text "Person" ]
-                        , Table.th [] [ text "Task not done"]
+                        , Table.th [] [ text "#Tasks not done"]
                         ]
 
                     , tbody =
-                        Table.tbody []
-                            [ Table.tr []
-                                [ Table.td [] [ text "Eintrag1" ]
-                                , Table.td [] [ text "Eintrag2"]
-                                ]
+                        Table.tbody [] (List.map mapPeopleToRows (List.reverse (List.sortBy .blameCounter (List.filter filterFunction model.people))))
 
-                            ]
 
                     }
-
-
             ]
-
-
         ]
+
+
+
+mapPeopleToRows: Person -> Table.Row msg
+mapPeopleToRows person =
+    Table.tr []
+    [ Table.td [] [ text person.name ]
+    , Table.td [] [ text (String.fromInt person.blameCounter) ]
+    ]
+
+filterFunction: Person -> Bool
+filterFunction person = person.blameCounter > 0

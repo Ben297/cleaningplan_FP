@@ -32,11 +32,9 @@ update msg model =
 
         Tick newTime ->
             let
-                debug = log "in Tick" "!"
                 peopleAndTasks = getNewTasksAndPeople model.timeZone newTime model.people model.tasks
                 newPeople = peopleAndTasks.people
                 newTasks = peopleAndTasks.tasks
-                debug2 = log "in Tick" "!"
             in
                 ( { model | time = newTime, tasks = newTasks }
                     , Cmd.none
